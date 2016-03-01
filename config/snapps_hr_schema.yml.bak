@@ -1,0 +1,1302 @@
+---
+hr: 
+  _attributes: 
+    package: lib.model.hr
+  hr_employee: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    employee_no: 
+      type: VARCHAR
+      size: 50
+      required: true
+    lastname: 
+      type: VARCHAR
+      size: 120
+    firstname: 
+      type: VARCHAR
+      size: 120
+    midname: 
+      type: VARCHAR
+      size: 120
+    hr_company_id: 
+      type: BIGINT
+    ic_no: 
+      type: VARCHAR
+      size: 30
+    name: 
+      type: VARCHAR
+      size: 90
+    date_of_birth: 
+      type: DATE
+    birth_place: 
+      type: VARCHAR
+      size: 160
+    blood_type: 
+      type: VARCHAR
+      size: 12
+    organ_donor: 
+      type: VARCHAR
+      size: 12
+    street: 
+      type: VARCHAR
+      size: 160
+    bldg_room_no: 
+      type: VARCHAR
+      size: 160
+    city: 
+      type: VARCHAR
+      size: 160
+    province: 
+      type: VARCHAR
+      size: 160
+    zip_code: 
+      type: VARCHAR
+      size: 24
+    tel_no: 
+      type: VARCHAR
+      size: 68
+    cell_no: 
+      type: VARCHAR
+      size: 68
+    email_add: 
+      type: VARCHAR
+      size: 120
+    status: 
+      type: VARCHAR
+      size: 10
+    gender: 
+      type: VARCHAR
+      size: 4
+    rank_code: 
+      type: VARCHAR
+      size: 48
+    job_title: 
+      type: VARCHAR
+      size: 120
+    date_hired: 
+      type: DATE
+    bank: 
+      type: VARCHAR
+      size: 48
+    acct_no: 
+      type: VARCHAR
+      size: 80
+    cost_center_code: 
+      type: VARCHAR
+      size: 48
+    emp_status: 
+      type: VARCHAR
+      size: 4
+    type_of_employment: 
+      type: VARCHAR
+      size: 30
+    tax_id: 
+      type: VARCHAR
+      size: 120
+    sin_id: 
+      type: VARCHAR
+      size: 80
+    active: 
+      type: VARCHAR
+      size: 4
+    photo: 
+      type: VARCHAR
+      size: 254
+    name_notified: 
+      type: VARCHAR
+      size: 100
+    relation: 
+      type: VARCHAR
+      size: 30
+    address: 
+      type: VARCHAR
+      size: 150
+    contact_no: 
+      type: VARCHAR
+      size: 50
+    date_resigned: 
+      type: DATE
+    fin_no: 
+      type: VARCHAR
+      size: 50
+    nationality:
+      type: VARCHAR
+      size: 50
+    commence_date: 
+      type: DATE
+    type: 
+      type: VARCHAR
+      size: 50
+    race: 
+      type: VARCHAR
+      size: 30
+    bank: 
+      type: VARCHAR
+      size: 30
+    address: 
+      type: VARCHAR
+      size: 80
+    remark: 
+      type: VARCHAR
+      size: 80
+    team: 
+      type: VARCHAR
+      size: 30
+    permit_no: 
+      type: VARCHAR
+      size: 80
+    permit_renew: 
+      type: DATE
+    permit_expiry: 
+      type: DATE
+    passport_expiry: 
+      type: DATE
+    employment_as: 
+      type: VARCHAR
+      size: 50
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP
+    profession: 
+      type: VARCHAR
+      size: 45
+    mom_group: 
+      type: VARCHAR
+      size: 45   
+    mom_group: 
+      type: CHAR
+      size: 1
+    levy_tier: 
+      type: BIGINT
+    annual_leave: 
+      type: BIGINT 
+      
+  hr_employee_satisfaction_questionaire: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    header: 
+      type: LONGVARCHAR
+    question: 
+      type: LONGVARCHAR
+    group: 
+      type: VARCHAR
+      size: 10
+      required: true
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP
+  hr_employee_satisfaction_survey: 
+    id: 
+      type: BIGINT
+      required: true
+    questionaire_id: 
+      type: BIGINT
+      required: true
+    rating: 
+      type: VARCHAR
+      size: 2
+    recommendation: 
+      type: LONGVARCHAR
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP
+  hr_employee_education: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    employee_no: 
+      type: VARCHAR
+      size: 50
+      required: true
+    name: 
+      type: VARCHAR
+      size: 100
+      required: true
+    primary_ed: 
+      type: VARCHAR
+      size: 100
+      required: true
+    primary_grade: 
+      type: VARCHAR
+      size: 10
+      required: true
+    secondary: 
+      type: VARCHAR
+      size: 100
+      required: true
+    secondary_grade: 
+      type: VARCHAR
+      size: 10
+      required: true
+    tertiary: 
+      type: VARCHAR
+      size: 100
+      required: true
+    tertiary_grade: 
+      type: VARCHAR
+      size: 10
+      required: true
+    jr_college: 
+      type: VARCHAR
+      size: 100
+      required: true
+    jr_college_grade: 
+      type: VARCHAR
+      size: 10
+      required: true
+    post_graduate: 
+      type: VARCHAR
+      size: 100
+      required: true
+    post_graduate_grade: 
+      type: VARCHAR
+      size: 10
+      required: true
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP
+      hr_fiscal_year: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+  fiscal_year: 
+    id: 
+      type: VARCHAR
+      size: 5
+      required: true
+    previous_year: 
+      type: VARCHAR
+      size: 5
+      required: true
+    start_date: 
+      type: DATE
+    end_date: 
+      type: DATE
+    Remarks: 
+      type: VARCHAR
+      size: 255
+      required: true
+    is_current: 
+      type: CHAR
+      size: 1
+      required: true
+      default: 'N' 
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP 
+
+  sms_messagein: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    sender: 
+      type: VARCHAR
+      size: 30
+      default:
+    receiver: 
+      type: VARCHAR
+      size: 30
+      default:
+    msg: 
+      type: VARCHAR
+      size: 1024
+      default: 
+    senttime: 
+      type: VARCHAR
+      size: 100
+      default: 
+    receivedtime: 
+      type: VARCHAR
+      size: 100
+      default: 
+    operator: 
+      type: VARCHAR
+      size: 100
+      default: 
+    msgtype: 
+      type: VARCHAR
+      size: 160
+      default:
+    is_updated: 
+      type: CHAR
+      size: 1
+      default: 'N'
+    update_remark: 
+      type: VARCHAR
+      size: 254
+      default: 
+    employee_no: 
+      type: VARCHAR
+      size: 50
+      default: 
+    name: 
+      type: VARCHAR
+      size: 100
+      default: 
+      
+  sms_messageout: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    sender: 
+      type: VARCHAR
+      size: 30
+      default:
+    receiver: 
+      type: VARCHAR
+      size: 30
+      default:
+    msg: 
+      type: VARCHAR
+      size: 1024
+      default: 
+    senttime: 
+      type: VARCHAR
+      size: 100
+      default:
+    status: 
+      type: VARCHAR
+      size: 20
+      default: 
+    receivedtime: 
+      type: VARCHAR
+      size: 100
+      default: 
+    operator: 
+      type: VARCHAR
+      size: 100
+      default: 
+    msgtype: 
+      type: VARCHAR
+      size: 160
+      default: 
+    period_code: 
+      type: VARCHAR
+      size: 50
+  sms_service_to_employee: 
+    _attributes: 
+      idMethod: native
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    trans_date: 
+      type: TIMESTAMP
+    employee_no: 
+      type: VARCHAR
+      size: 50
+      required: true
+      default: 
+    service_code: 
+      type: VARCHAR
+      size: 20
+      required: true
+      default: 
+    remarks: 
+      type: VARCHAR
+      size: 250
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP
+  sms_log: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    sender: 
+      type: VARCHAR
+      size: 30
+      default:
+    receiver: 
+      type: VARCHAR
+      size: 30
+      default:
+    msg: 
+      type: VARCHAR
+      size: 1024
+      default: 
+    senttime: 
+      type: VARCHAR
+      size: 100
+      default:
+    receivedtime: 
+      type: VARCHAR
+      size: 100
+      default: 
+    operator: 
+      type: VARCHAR
+      size: 100
+      default: 
+    msgtype: 
+      type: VARCHAR
+      size: 160
+      default: 
+    period_code: 
+      type: VARCHAR
+      size: 50
+    employee_no: 
+      type: VARCHAR
+      size: 50
+    module: 
+      type: VARCHAR
+      size: 50
+    bank_cash: 
+      type: VARCHAR
+      size: 40
+    date_modified: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 20
+      default:
+    date_created: 
+      type: TIMESTAMP
+    created_by: 
+      type: VARCHAR
+      size: 20
+      default:  
+  hr_company: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    comp_code: 
+      type: VARCHAR
+      size: 12
+      required: true
+      default: 
+    comp_name: 
+      type: VARCHAR
+      size: 40
+      required: true
+      default: 
+    comp_address: 
+      type: VARCHAR
+      size: 250
+    comp_header: 
+      type: VARCHAR
+      size: 250
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP      
+  hr_department: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    dept_code: 
+      type: VARCHAR
+      size: 12
+      required: true
+      default: 
+    dept_name: 
+      type: VARCHAR
+      size: 30
+      required: true
+      default: 
+    comp_code: 
+      type: VARCHAR
+      size: 12
+    dept_head: 
+      type: VARCHAR
+      size: 30
+    building: 
+      type: VARCHAR
+      size: 30
+    tel_no: 
+      type: VARCHAR
+      size: 17
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP 
+  pay_basic_pay: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    employee_no: 
+      type: VARCHAR
+      size: 50
+      required: true
+      default: 
+    name: 
+      type: VARCHAR
+      size: 50
+    department: 
+      type: VARCHAR
+      size: 30
+    company: 
+      type: VARCHAR
+      size: 40
+    basic_amount: 
+      type: FLOAT
+      size: 9
+      scale: 2
+      required: true
+      default: 0.00
+    scheduled_amount: 
+      type: FLOAT
+      size: 9
+      scale: 2
+      required: true
+      default: 0.00
+    hourly_rate: 
+      type: FLOAT
+      size: 9
+      scale: 2
+    ot_rate: 
+      type: FLOAT
+      size: 9
+      scale: 2
+      required: true
+      default: 0.00
+    allowance: 
+      type: FLOAT
+      size: 9
+      scale: 2
+      required: true
+      default: 0.00
+    levy: 
+      type: FLOAT
+      size: 9
+      scale: 2
+      required: true
+      default: 0.00      
+    taxable_amount: 
+      type: DECIMAL
+      size: 9
+      scale: 2
+      required: true
+      default: 0.00
+    gross_pay: 
+      type: FLOAT
+      size: 9
+      scale: 2
+      required: true
+      default: 0.00
+    frequency: 
+      type: VARCHAR
+      size: 15
+    acct_code: 
+      type: VARCHAR
+      size: 12
+      required: true
+      default:
+    cpf: 
+      type: CHAR
+      size: 3
+    cpf_amount: 
+      type: FLOAT
+      size: 9
+      scale: 2
+      default: 0.00
+    cpf_citizenship: 
+      type: BIGINT
+      size: 5
+    effectivity_date: 
+      type: DATE
+    paid_type: 
+      type: VARCHAR
+      size: 10
+    status: 
+      type: CHAR
+      size: 1
+      default: 'A'
+    remark: 
+      type: VARCHAR
+      size: 80
+    date_resigned: 
+      type: DATE
+    resigned_remark: 
+      type: VARCHAR
+      size: 80      
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP
+  tk_dtrmaster: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    employee_no: 
+      type: VARCHAR
+      size: 50
+      required: true
+      default: 
+    company: 
+      type: VARCHAR
+      size: 30
+    name: 
+      type: VARCHAR
+      size: 30
+    am_time_in: 
+      type: VARCHAR
+      size: 20
+    pm_time_out: 
+      type: VARCHAR
+      size: 20
+    type_of_employment: 
+      type: VARCHAR
+      size: 30
+    department: 
+      type: VARCHAR
+      size: 30
+    tk_worktemplate_no: 
+      type: CHAR
+      size: 30
+      required: true
+      default: 
+    hr_company_id: 
+      type: BIGINT
+      foreignTable: hr_company
+      foreignReference: id
+      onDelete: RESTRICT
+      onUpdate: RESTRICT
+    hr_department_id: 
+      type: BIGINT
+      foreignTable: hr_department
+      foreignReference: id
+      onDelete: RESTRICT
+      onUpdate: RESTRICT            
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP  
+  tk_worktemplate: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    worktemp_no: 
+      type: CHAR
+      size: 30
+      required: true
+      default: 
+    description: 
+      type: VARCHAR
+      size: 50
+    fiscal_year: 
+      type: VARCHAR
+      size: 5
+    am_pm_ev: 
+      type: INTEGER
+    dayoff: 
+      type: INTEGER
+    dayoff_day: 
+      type: VARCHAR
+      size: 15
+    template: 
+      type: VARCHAR
+      size: 5      
+    hrs_per_day:
+      type: FLOAT
+      required: true
+      default: 0
+    hrs_per_week:
+      type: FLOAT
+      default: 0
+    days_per_month:
+      type: FLOAT
+      required: true
+      default: 0
+    acct_code: 
+      type: CHAR
+      size: 5
+    acct_desc: 
+      type: VARCHAR
+      size: 200
+    allowance_days: 
+      type: VARCHAR
+      size: 30
+    mealbreak:
+      type: FLOAT
+      required: true
+      default: 0
+    allowance_amt:
+      type: FLOAT
+      required: true
+    base_nohours:
+      type: FLOAT
+      required: true
+    timein_allowance:
+      type: INTEGER
+    timeout_allowance:
+      type: INTEGER
+    endurance:
+      type: FLOAT
+    ot1:
+      type: FLOAT
+    ot2:
+      type: FLOAT
+    ot3:
+      type: FLOAT
+    min_ot:
+      type: FLOAT
+    min_time:
+      type: VARCHAR
+      size: 4
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP      
+  tk_worktemplate_detail: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    day: 
+      type: INTEGER
+      required: true
+    is_working: 
+      type: INTEGER
+      required: true
+    date_det: 
+      type: DATE
+    tk_worktemplate_no: 
+      type: CHAR
+      size: 30
+      foreignTable: tk_worktemplate
+      foreignReference: worktemp_no
+      onDelete: RESTRICT
+      onUpdate: RESTRICT
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP
+    _indexes: 
+      fk_tk_worktemplate_detail_tk_worktemplate: 
+        - tk_worktemplate_id
+  tk_fiscal_year: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    code: 
+      type: CHAR
+      size: 4
+      required: true
+      default: 
+    description: 
+      type: VARCHAR
+      size: 100
+      required: true
+      default: 
+    is_current: 
+      type: CHAR
+      size: 1
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP 
+  hr_fiscal_year: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    fiscal_year: 
+      type: VARCHAR
+      size: 5
+      required: true
+      default: 
+    previous_year: 
+      type: VARCHAR
+      size: 5
+      required: true
+      default:
+    start_date: 
+      type: DATE
+    end_date: 
+      type: DATE
+    Remarks: 
+      type: VARCHAR
+      size: 255
+      required: true
+      default: 
+    is_current: 
+      type: CHAR
+      size: 1
+      required: true
+      default: 'N' 
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP 
+  hr_employee_leave_credits: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    hr_employee_id: 
+      type: BIGINT
+    employee_no: 
+      type: VARCHAR
+      size: 50
+    name: 
+      type: VARCHAR
+      size: 50
+    hr_leave_id: 
+      type: BIGINT
+    leave_type: 
+      type: BIGINT
+    credits: 
+      type: DECIMAL
+      size: 5
+      scale: 2
+      default: 0.00      
+    consumed: 
+      type: DECIMAL
+      size: 5
+      scale: 2
+      default: 0.00      
+    previous_balance: 
+      type: DECIMAL
+      size: 5
+      scale: 2
+      default: 0.00      
+    fiscal_year: 
+      type: VARCHAR
+      size: 5
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP      
+    _indexes: 
+      hr_employee_id: 
+        - hr_employee_id
+  hr_employee_leave: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    employee_no: 
+      type: VARCHAR
+      size: 50
+    name: 
+      type: VARCHAR
+      size: 60
+    ic_no: 
+      type: VARCHAR
+      size: 30
+    contact_no: 
+      type: VARCHAR
+      size: 30
+    hr_leave_id: 
+      type: BIGINT
+    hr_employee_id: 
+      type: BIGINT
+    hr_department_id: 
+      type: BIGINT
+    hr_company_id: 
+      type: BIGINT
+    date_filed: 
+      type: TIMESTAMP
+    leave_type: 
+      type: VARCHAR
+      size: 50
+    reason_leave: 
+      type: LONGVARCHAR
+    inclusive_datefrom: 
+      type: TIMESTAMP
+    inclusive_dateto: 
+      type: TIMESTAMP
+    fiscal_year: 
+      type: VARCHAR
+      size: 5
+    no_days: 
+      type: FLOAT
+      size: 3
+      scale: 1
+    half_day: 
+      type: VARCHAR
+      size: 8
+    verified: 
+      type: VARCHAR
+      size: 2
+    verified_by: 
+      type: VARCHAR
+      size: 40
+    date_verified: 
+      type: TIMESTAMP
+    approved: 
+      type: VARCHAR
+      size: 2
+    approved_by: 
+      type: VARCHAR
+      size: 40
+    date_approved: 
+      type: TIMESTAMP
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP
+
+
+  hr_holiday: 
+    id: 
+      type: INTEGER
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    date_hol: 
+      type: DATE
+      required: true
+    holiday_code: 
+      type: VARCHAR
+      size: 50
+    holiday: 
+      type: VARCHAR
+      size: 50
+      required: true
+      default: 
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP  
+
+  tk_worktemplate_detail: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    day: 
+      type: INTEGER
+      required: true
+    is_working: 
+      type: INTEGER
+      required: true
+    date_det: 
+      type: DATE
+    tk_worktemplate_no: 
+      type: CHAR
+      size: 30
+      foreignTable: tk_worktemplate
+      foreignReference: worktemp_no
+      onDelete: RESTRICT
+      onUpdate: RESTRICT
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP
+    _indexes: 
+      fk_tk_worktemplate_detail_tk_worktemplate: 
+        - tk_worktemplate_id
+
+  tk_dtrsummary: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    employee_no:
+      type: VARCHAR
+      size: 50
+    name:
+      type: VARCHAR
+      size: 50      
+    trans_date: 
+      type: DATE
+    multiplier: 
+      type: FLOAT
+      size: 2
+      scale: 1
+    attendance: 
+      type: CHAR
+      size: 1
+      default: P
+    holiday_code: 
+      type: VARCHAR
+      size: 50
+    leave_type: 
+      type: VARCHAR
+      size: 50
+    dayoff: 
+      type: CHAR
+      size: 1
+    overtimes: 
+      type: FLOAT
+    extra_ot_pay: 
+      type: FLOAT
+    extra_ot: 
+      type: FLOAT
+    normal: 
+      type: FLOAT
+    undertime: 
+      type: FLOAT
+    duration: 
+      type: FLOAT
+      required: true
+      default: 0
+    income_prepost_batch: 
+      type: VARCHAR
+      size: 50
+    deduction_prepost_batch: 
+      type: VARCHAR
+      size: 50
+    posted_amount: 
+      type: FLOAT
+    meal: 
+      type: FLOAT
+    allowance: 
+      type: FLOAT
+      size: 9
+      scale: 2
+    levy: 
+      type: FLOAT
+      size: 9
+      scale: 2
+    income_deduction:
+      type: CHAR
+      size: 1
+    is_posted:
+      type: CHAR
+      size: 1
+      default: N     
+    posted_date: 
+      type: TIMESTAMP
+    ac_dura: 
+      type: FLOAT
+    part_time_income: 
+      type: FLOAT
+    rate_per_hour: 
+      type: FLOAT
+    team:
+      type: VARCHAR
+      size: 50
+    unedited_duration: 
+      type: FLOAT
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    tk_attendance_id:
+      type: BIGINT
+    hr_employee_leave_id:
+      type: BIGINT
+    hr_holiday_id:
+      type: BIGINT
+    date_modified: 
+      type: TIMESTAMP  
+      
+  hr_employee_leave_signature: 
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    approval: 
+      type: VARCHAR
+      required: true
+    verified: 
+      type: VARCHAR
+      required: true
+    hr_employee_leave_id: 
+      type: BIGINT
+      required: true
+    date_created: 
+      type: TIMESTAMP
+    created_by: 
+      type: VARCHAR
+      size: 45
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP
+    date_approved: 
+      type: TIMESTAMP
+    date_verified: 
+      type: TIMESTAMP
+
+  hr_leave_approver: 
+    _attributes: 
+      idMethod: native
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    employee_no: 
+      type: VARCHAR
+      size: 50
+      required: true
+      default: null
+    name: 
+      type: VARCHAR
+      size: 100
+    approver: 
+      type: VARCHAR
+      size: 50
+    verifier: 
+      type: VARCHAR
+      size: 50
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP
+    _uniques: 
+      id: 
+        - id

@@ -1,0 +1,1 @@
+<?php echo HTMLLib::CreateSelect('team', $sf_params->get('team'), $teams, 'span4'); ?>

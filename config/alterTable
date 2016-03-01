@@ -1,0 +1,1 @@
+ALTER TABLE `hr_individual_leave` ADD `remark` TEXT NULL AFTER `fiscal_year` ;

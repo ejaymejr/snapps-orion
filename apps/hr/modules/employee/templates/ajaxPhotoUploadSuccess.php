@@ -1,0 +1,1 @@
+<?php include_partial('upload_photo',array('id'=> $sf_params->get('id') ))?>

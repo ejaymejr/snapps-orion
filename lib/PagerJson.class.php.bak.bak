@@ -1,0 +1,666 @@
+<?php
+/*
+ *
+* This is the working code on how it appears in HTML Format
+*
+*
+*
+<table class="table striped hovered dataTable" id="dataTables-1">
+<thead>
+<tr>
+<th class="text-left">Action</th>
+<th class="text-left">Seq</th>
+<th class="text-left">Send To</th>
+<th class="text-left">Date Sent</th>
+<th class="text-left">Sent By</th>
+<th class="text-left">Token</th>
+</tr>
+</thead>
+
+<tbody>
+</tbody>
+
+<tfoot>
+<tr>
+<th class="text-left">Action</th>
+<th class="text-left">Seq</th>
+<th class="text-left">Send To</th>
+<th class="text-left">Date Sent</th>
+<th class="text-left">Sent By</th>
+<th class="text-left">Token</th>
+</tr>
+</tfoot>
+</table>
+<?php
+$fileID = HrLib::randomID(20).'.json';
+$filename = PagerJson::UploadEdit_EmailPager($fileID, $pager);
+?>
+<script>
+$(function(){
+		$('#dataTables-1').dataTable( {
+				"bProcessing": true,
+				"sAjaxSource": "<?php echo $filename ?>",
+				"aoColumns": [
+{ "mData": "action" } ,
+{ "mData": "seq" } ,
+{ "mData": "send_to" },
+{ "mData": "date_sent" },
+{ "mData": "sent_by" },
+{ "mData": "token" }
+				]
+				} );
+		});
+</script>
+
+*/
+class PagerJson 
+{
+	const TEST_SERVER_DIRECTORY = '/opt/httpd/htdocs_i/symfony/snapps-micronclean/web/json/';
+	const PROD_SERVER_DIRECTORY = '/opt/sites/ext/app.microncleansingapore.com/symfony/snapps-micronclean/web/json/';
+	
+	public static function TableHeaderFooter($cols = null, $jsonData=null, $showRow = null, $totalRecord=null)
+	{
+		$dataTableID = HrLib::randomID(10);
+		if (!$cols || !$jsonData):
+			return 'no columns specified / filename.json required!';
+		endif;
+		$mess = '';
+
+		$mess .= '  <a id="clickToExcel" href=javascript:ExportToExcel("'.$dataTableID.'") class="button success " ><i class="icon-file-excel"></i> Export To Excel</a>
+					<br><p class="fg-green"><small>*Note: To Remove the Boxes Goto Excel and Tools > Customize > Toolbars : Tick "Exit Design Mode"</small></p>
+					<script type="text/javascript">
+//						 $(window).load(function(){
+//							$("#clickToExcel").click(function() { 
+//								var dtltbl = $("#table_2").html();     
+//								window.open("data:application/vnd.ms-excel," + $("# mytbl").html());
+//							});
+//						}); 
+						
+						function ExportToExcel(mytblId)
+					    {
+					        var htmltable= document.getElementById(mytblId);
+					        var html = htmltable.outerHTML;
+							// MS OFFICE 2003  : data:application/vnd.ms-excel
+							// MS OFFICE 2007  : application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+					        window.open("data:application/vnd.ms-excel," + encodeURIComponent(html));
+					    }
+					    
+					    //http://codeglogic.blogspot.sg/2012/11/export-html-table-to-excel-javascript.html
+					</script>
+				 ';
+		
+		$mess .= '
+				<table class="table striped hovered dataTable" id="'.$dataTableID.'">
+                <thead>
+                <tr>';
+				foreach($cols as $col):
+                	 $mess .= '<th class="text-left"><small>'.HrLib::camelCase($col).'<small></th>';
+                endforeach;
+        $mess .= '
+                </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+
+                <tfoot>
+                <tr>';
+      
+				foreach($cols as $col):
+					 $searchNameID = 'search_'.$col;
+					 $searchValue = $col ;
+                	 $mess .= '<th class="text-left">
+                	 			<div class="input-control text">	
+                	 				<input type="text" name="'.$searchNameID.'" class="search_init" placeholder="'.$searchValue.'"/>
+                	 			</div>
+                	 		</th>';
+                endforeach;
+        $test = 'chest';
+        $mess .= '
+                </tr>
+                </tfoot>
+            </table>
+            
+				';
+//        $mess .= '	
+//			<script>
+//				$("#'.$dataTableID.'").find("tr").click( function(){
+//				  var row = $(this).find("td:first").text();
+//				  alert("You clicked " + row);
+//				});
+//				});
+//			</script>';
+        $totalRecord = $totalRecord ?  $showRow .', 25, 50, ' . $totalRecord : 100;
+		$jsonData = substr($jsonData, 1, strlen($jsonData) - 2);
+		$shownumberOfRows = $totalRecord;
+	    //"sPaginationType": "full_numbers",
+        $mess .= '<script>
+	        $(function(){
+	            var asInitVals = new Array();
+	        	var oTable = $("#'.$dataTableID.'").dataTable( {
+	        		"bProcessing": true,
+	        		"sPaginationType": "full_numbers",
+	        		"aLengthMenu": ['.$shownumberOfRows.'],
+	        		"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+				          var id = "table_'.$dataTableID.'_row_" + aData.seq;
+				          $(nRow).attr("id",id);
+				          return nRow; },
+	        		'.$jsonData.',
+	        		"aoColumns": [
+	        		';
+        			foreach($cols as $col):
+		        	    $mess .= '{ "mData": "'.$col.'" } ,';
+	     			endforeach;
+	     $mess .= '   		
+	     		]
+	        	} );
+	        	
+	     		';
+	    
+	     $mess .= '
+	     		oTable.$("td").hover( function() {
+		        var iCol = $("td", this.parentNode).index(this) % '.sizeof($cols).';
+		        /*alert(iCol);*/
+		        $("td:nth-child("+(iCol+1)+")", oTable.$("tr")).addClass( "highlighted bg-lime fg-white" );
+		    	}, function() {
+		        	oTable.$("td.highlighted").removeClass("highlighted bg-lime fg-white");
+		    	} ); 
+	     		';
+	     $mess .= '		
+	     		$("tfoot input").keyup( function () {
+					/* Filter on the column (the index) of this element */
+					oTable.fnFilter( this.value, $("tfoot input").index(this) );
+				} );
+
+				$("tfoot input").each( function (i) {
+					asInitVals[i] = this.value;
+				} );
+				
+				$("tfoot input").focus( function () {
+					if ( this.className == "search_init" )
+					{
+						this.className = "";
+						this.value = "";
+					}
+				} );
+				
+				$("tfoot input").blur( function (i) {
+					if ( this.value == "" )
+					{
+						this.className = "search_init";
+						this.value = asInitVals[$("tfoot input").index(this)];
+					}
+				} );
+	        });
+	        </script>';
+		return $mess;
+	}
+	
+	
+	public static function UploadEdit_EmailPager($pager)
+	{
+		$fileID = HrLib::randomID(20).'.json';
+		$editDel = "";
+		$data = array();
+		$seq = 0;
+		// this is the main detail
+		foreach ($pager as $record):
+			$seq ++ ;
+			$token = link_to($record->getEmailToken(),'photo/view?token='. $record->getEmailToken(),'target="_BLANK"');
+			$fileDetail = FileDetailPeer::retrieveByPK($record->getFileDetailId());
+			$data[] = array(
+					  'seq'=>$seq
+					, 'action'=>$editDel
+					, 'send_to'=> $record->getEmailAddress()
+					, 'date_sent'=> $record->getEmailDate()
+					, 'sent_by'=> $record->getCreatedBy()
+					, 'file#'=> $fileDetail->getFileName()
+					, 'token'=> $token 
+					);
+		endforeach;
+		$jsonfile['aaData'] = $data;
+		$filename = self::TEST_SERVER_DIRECTORY . $fileID;
+		$handle = fopen($filename, 'w') or die('Cannot open file:  '.$filename);
+		fwrite($handle, json_encode($jsonfile));
+		fclose($handle);
+		return sfConfig::get('http_intranet').'micronclean/json/'.$fileID;
+	}
+	
+	
+	public static function Upload_RejectPager($pager)
+	{
+		$fileID = HrLib::randomID(20).'.json';
+		$editDel = "";
+		$data = array();
+		$seq = 0;
+		foreach ($pager as $record):
+		$seq ++ ;
+		$edit = link_to('Edit', 'photo/uploadEdit?id='. $record->getId());
+		$editDel = $edit;
+		$data[] = array(
+				  'seq'=>$seq
+				, 'action'=>$editDel
+				, 'date'=> $record->getTransDate()
+				, 'company'=> $record->getName()
+				, 'department'=> $record->getDepartment()
+				, 'shift'=> $record->getShift()
+				, 'garment'=> $record->getGarment()
+				, 'color'=> $record->getColor()
+				, 'size'=> $record->getSize()
+		);
+		endforeach;
+		$jsonfile['aaData'] = $data;
+		$filename = self::TEST_SERVER_DIRECTORY . $fileID;
+		$handle = fopen($filename, 'w') or die('Cannot open file:  '.$filename);
+		fwrite($handle, json_encode($jsonfile));
+		fclose($handle);
+		return sfConfig::get('http_intranet').'micronclean/json/'.$fileID;
+	}
+	
+	public static function EmailManager_Pager($pager)
+	{
+		$fileID = HrLib::randomID(20).'.json';
+		$editDel = "";
+		$data = array();
+		$seq = 0;
+		//$editDel = "Edit | Delete";
+		// this is the main detail
+		foreach ($pager as $record):
+		$seq ++ ;
+		$editUrl = 'photo/emailManagerEdit?id='. $record->getId();
+		$edit = link_to('Edit', $editUrl);
+		$hintPos = ' data-hint-position="top"'; //data-hint-position="top | bottom | left | right"
+		$hinttxt = ' data-hint="Shift/Department|'.EmailContactPeer::GetHint($record->getEmailAddress()).'"';
+		//$email = "<a href='".$editUrl."'" .$hintPos.$hinttxt." >".$record->getEmailAddress()."</a>";
+		$email = link_to($record->getEmailAddress(), $editUrl, array("data-hint-position"=>"top", "data-hint"=>"Shift/Department|".EmailContactPeer::GetHint($record->getEmailAddress()) ) );
+				
+		$editDel = $edit;
+		$data[] = array(
+				  'seq'=>$seq
+				, 'action'=>$editDel
+				, 'email'=> $email
+				, 'company'=> $record->getCompany()
+				, 'department'=> $record->getDepartment()
+				, 'shift'=> $record->getShift()
+				, 'website'=> $record->getWebsite()
+		);
+		endforeach;
+		$jsonfile['aaData'] = $data;
+		$filename = self::TEST_SERVER_DIRECTORY . $fileID;
+		$handle = fopen($filename, 'w') or die('Cannot open file:  '.$filename);
+		fwrite($handle, json_encode($jsonfile));
+		fclose($handle);
+		return sfConfig::get('http_intranet').'micronclean/json/'.$fileID;
+	}
+	
+	public static function SearchReject_Pager($pager)
+	{
+		$fileID = HrLib::randomID(20).'.json';
+		$editDel = "";
+		$data = array();
+		$seq = 0;
+		//$editDel = "Edit | Delete";
+		// this is the main detail
+		foreach ($pager as $record):
+		$seq ++ ;
+		$edit = link_to('show', 'photo/uploadEdit?id='. $record->getId());
+		$editDel = $edit;
+		$data[] = array(
+				  'seq'=>$seq
+				, 'action'=>$editDel
+				, 'date'=> $record->getTransDate()
+				, 'company'=> $record->getName()
+				, 'department'=> $record->getDepartment()
+				, 'shift'=> $record->getShift()
+				, 'garment'=> $record->getGarment()
+				, 'color'=> $record->getColor()
+				, 'size'=> $record->getSize()
+		);
+		endforeach;
+		$jsonfile['aaData'] = $data;
+		$filename = self::TEST_SERVER_DIRECTORY . $fileID;
+		$handle = fopen($filename, 'w') or die('Cannot open file:  '.$filename);
+		fwrite($handle, json_encode($jsonfile));
+		fclose($handle);
+		return sfConfig::get('http_intranet').'micronclean/json/'.$fileID;
+	}
+	
+	public static function EmailReject($pager)
+	{
+		$fileID = HrLib::randomID(20).'.json';
+		$editDel = "";
+		$data = array();
+		$seq = 0;
+		$chkboxID = '';
+		$chkbox = '';
+		$mail = '';
+		$photoCnt = 0;
+		foreach ($pager as $record):
+			//echo $record->getName() . ' - ' . $record->getId();
+			$fileDetail = FileDetailPeer::GetDataByBatchIdForEmail($record->getBatchId());
+			$seq ++ ;
+			$triggerID = 'trigger_'.$record->getId();
+			$chkboxID = 'chkbox_' . $record->getId();
+			$chkbox = '
+				<div class="input-control checkbox">
+				<label>
+					<input type="checkbox" id="'.$chkboxID.'" name="'.$chkboxID.'" />
+					<span class="check"></span>
+				</label>
+				</div>
+				';
+			$mail = '<i class="icon-mail"
+			    style="background: #004050;
+			    color: white;
+			    padding: 10px;
+			    border-radius: 50%"></i>
+				' . self::ShowMessageBox($triggerID, $fileDetail);
+			
+			$edit = $chkbox.' | '. link_to($mail,'#',array('id'=>$triggerID));
+			$editDel = $edit;
+			$data[] = array(
+					 'seq'=>'<span class="alignCenter">'.$seq.'</span>'
+					, 'action'=>$editDel
+					, 'date'=> $record->getTransDate()
+					, 'company'=> $record->getName()
+					, 'department'=> $record->getDepartment()
+					, 'shift'=> $record->getShift()
+					, 'garment'=> $record->getGarment()
+					, 'sent'=> sizeof($fileDetail) .'/'.sizeof($fileDetail) 
+			);
+
+		endforeach;
+		$jsonfile['aaData'] = $data;
+		$filename = self::TEST_SERVER_DIRECTORY . $fileID;
+		$handle = fopen($filename, 'w') or die('Cannot open file:  '.$filename);
+		fwrite($handle, json_encode($jsonfile));
+		fclose($handle);
+		return sfConfig::get('http_intranet').'micronclean/json/'.$fileID;
+		
+// 		$edit = '<button id="createWindow" class="button">Create Window</button>';
+// 		$edit .= '
+// 						<script type="text/javascript">
+// 					 	$(function(){
+// 						$("#createWindow").on("click", function(){
+// 								$.Dialog({
+// 								shadow: true,
+// 								overlay: false,
+// 								icon: "<span class="icon-rocket"></span>",
+// 								title: "Title",
+// 								width: 500,
+// 								padding: 10,
+// 								content: "Window content here"
+// 								});
+// 							});
+// 					   	});
+// 						</script>
+// 					';
+	}
+	
+	public static function ShowMessageBox($triggerID, $fileDetail)
+	{
+		$emails = array();
+		foreach($fileDetail as $r):
+			$emails[] = $r->getFileName();
+		endforeach;
+		$message = '';
+		$message =  '
+		<script>
+		$("#'.$triggerID.'").on("click", function(){
+			$.Dialog({
+				shadow: true,
+				overlay: true,
+				flat: false,
+				draggable: true,
+				icon: "<span class=icon-mail></span>",
+				title: "Title",
+				width: 500,
+				padding: 10,
+				content: "",
+				padding: 10,
+				onShow: function(_dialog){
+					var content = 
+						"<form method=\'post\' action=\'sendEmail\' enctype=\'multipart/form-data\'> " +
+						"<label>Email will be sent to the following: </label>" +
+						';
+						foreach($emails as $email):
+							$message .=  '
+							"<div class=\'input-control checkbox\'>" +
+							"<input type=\'checkbox\' name=\''.$email.'\' checked/>" +
+							"<span class=\'check\'></span>'.$email.'</div></br>"+';
+						endforeach;
+						$message .=  '
+						"<div class=\'form-actions\'>" +
+						"<button class=\'button primary\'>Send Email</button> "+
+						"<button class=\'button\' type=\'button\' onclick=\'$.Dialog.close()\'>Cancel</button> "+
+						"</div>"+
+						"</form>";
+					$.Dialog.title("Email Sending Manager");
+					$.Dialog.content(content);
+					$.Metro.initInputs();
+				}
+			});
+		});
+		</script>
+		';
+		return $message;
+	}
+	
+	public static function scanInPager($pager)
+	{
+		$data = array();
+		$seq = 0;
+		foreach ($pager as $record):
+			$seq ++ ;
+			$dtrmaster = TkDtrmasterPeer::GetDatabyEmployeeNo($record->getEmployeeNo());
+			$data[] = array(
+					 'seq'=>'<span class="alignCenter">'.$seq.'</span>'
+					, 'employee_no'=>$record->getEmployeeNo()
+					, 'name'=> $record->getName()
+					, 'time_in'=> $record->getTimeIn()
+					, 'time_out'=> $record->getTimeOut()
+					, 'duration'=> number_format($record->getDuration() / 3600, 2)
+					, 'company'=> $dtrmaster->getCompany()
+					, 'department'=> $dtrmaster->getDepartment()
+					, 'employment'=> $dtrmaster->getTypeOfEmployment()
+			);
+
+		endforeach;
+		$jsonfile['aaData'] = $data;
+		return json_encode($jsonfile);
+	}
+	
+	
+	public static function DtrPager($pager)
+	{
+		$data = array();
+		$seq = 0;
+		$xuser = sfContext::getInstance()->getUser()->getUsername();
+		//echo AjaxLib::AjaxScriptDynamicUpdateID1('saveTimeInTimeOutMeal', 'dtr/AjaxEdit', 'time_in,time_out,duration,meal', '', 'updateID');
+		foreach ($pager as $record):
+			$seq ++ ;
+			$name 	 = $record->getName();
+			$desc    = HrEmployeePeer::GetNameToolTip($record->getEmployeeNo());
+			$times   = TkAttendancePeer::GetEmpDaily ($record->getEmployeeNo(), $record->getTransDate());
+			$timeIn  = ( $times ?  $times->getTimeIn(): $record->getTransDate());
+			$timeOut = ( $times ?  $times->getTimeOut(): $record->getTransDate());
+			$cday    = $timeIn? $timeIn : $timeOut;
+			$cday    = DateUtils::DUFormat('j', $cday);
+			$log    = TkAttendancePeer::ToolTipLog($record->getAcDura(), $times);
+			$cdura = 0;
+			if ($record->getAcDura() > 0){
+				$cdura = $record->getAcDura();
+			}else{
+				$cdura = DateUtils::DateDiff('h', $timeIn, $timeOut);
+			}
+			if ($record->getLeaveType()){
+				$leaveInfo = HrEmployeeLeavePeer::IsOnleave($record->getEmployeeNo(), $record->getTransDate()	);
+				if ($leaveInfo) {
+					if ($leaveInfo->getHalfDay() == 'none'){
+						$cdura = $record->getNormal();
+					}else{
+						$cdura = $record->getNormal() / 2;
+					}
+					if ($leaveInfo->getHrLeaveId() == 6 || $leaveInfo->getHrLeaveId() == 14 ){
+						$cdura = 0;
+					}
+				}
+				$log = $log . '<div id="divLeaveLabel" ><span class="tk-style55">( '.$cdura.' hrs leave )</span> </div>';
+			}
+			
+			if  ($record->getOvertimes() && $record->getLeaveType()) {
+				$blnk1 = '<blink><span class="negative">';
+				$blnk2 = '</span></blink>';
+			}else{
+				$blnk1 = '';
+				$blnk2 = '';
+			}
+			
+		    if  ($xuser == 'terence' || $xuser == 'adeline' || $xuser == 'kathy' || 
+	    	 $xuser == 'melvin' || $xuser == 'nyoman' || $xuser == 'emmanuel' )
+	    	 {  
+			    $eAmt   = $record->getPostedAmount();
+			    $ePInc  = $record->getPartTimeIncome();
+			    $eAll   = $record->getAllowance();
+			    $eLevy  = $record->getLevy();
+			    $erph   = $record->getRatePerHour();
+	    	 }else{
+			    $eAmt   = 0;
+			    $ePInc  = 0;
+			    $eAll   = 0;
+			    $eLevy  = 0;
+			    $erph   = 0;
+	    	 }	
+	    	 
+ 			$needToCheckTimeIn = $record->getUndertime() < 0? '<p class="text-center bg-lightPink fg-white">'.$timeIn.'</p>' : $timeIn;
+ 			$timeInID = HrLib::randomID(10);
+			$loadUrl = 'ajaxEditDtr' ;
+			$timeInAjax = javascript_tag ("
+			
+				$('#".$timeInID."').on('click', function(){
+							//tableID =  ( $(this).closest('table').attr('id'));
+							rowID   = $(this).closest('tr').attr('id');
+							inputID = 'input_' + rowID;
+							
+                            $.Dialog({
+                                overlay: true,
+                                shadow: true,
+                                flat: false,
+                                draggable: true,
+                                icon: '<img src=\"../../../images/icons/cal2.gif\">',
+                                title: 'Enter TimeIn | TimeOut | Meal',
+                                content: '',
+                                padding: 10,
+                                position: 'default',
+                                onShow: function(_dialog){
+                                    var content = 
+                                    		'<form id=\"timeEntryForm\" class=\"user-input\" method=\"POST\" action=\"AjaxEdits?rowID=\"rowID >' +
+                                    		'<table class=\"table bordered span7 \">' +
+                                    			'<tr>' +
+                                    				'<td>' +
+                                    				'<label>Time In (<small>".$timeIn."</small>)</label>' +
+                                            		'<div class=\"input-control text\"><input type=\"text\" name=\"form_time_in\" id=\"form_time_in\" value=\"".$timeIn."\"><button class=\"btn-clear\" ></button></div>' +
+                                    				'</td>' +
+                                    				'<td>' +
+                                    				'<label>Time Out (<small>".$timeOut."</small>)</label>' +
+                                           			'<div class=\"input-control text\"><input type=\"text\" name=\"form_time_out\" id=\"form_time_out\" value=\"".$timeOut."\"><button class=\"btn-clear\"></button></div>' +
+                                    				'</td>' +
+                                    			'</tr>' +
+                                    			'<tr>' +
+                                    				'<td>' +
+		                                            '<label>Duration</label>'+
+		                                            '<div class=\"input-control text span2\"><input type=\"text\" name=\"form_duration\" id=\"form_duration\" ><button class=\"btn-clear\"></button></div>' +
+                                    				'<td>' +
+		                                            '<label>Meal</label>'+
+		                                            '<div class=\"input-control text span2\"><input type=\"text\" name=\"form_meal\" id=\"form_meal\" value=\"".$record->getMeal()."\" ><input type=\"hidden\" name=\"form_id\" id=\"form_id\" value=\"".$record->getId()."\"><input type=\"hidden\" id=\"form_employee_no\" name=\"form_employee_no\" value=\"".$record->getEmployeeNo()."\"><button class=\"btn-clear\"></button></div>' +
+                                    				'</td>' +
+                                    			'</tr>' +
+                                    		'</table>' +
+                                            
+                                            '<div class=\"form-actions\">' +
+                                            '<input type=\"hidden\" name=\"form_updateID\" id=\"form_updateID\">' +
+                                            '<button class=\"button primary\" id=\"saveTimeInTimeOutMeal\" onclick=\"$.Dialog.close()\">Save</button>&nbsp;'+
+                                            '<button class=\"button\" type=\"button\" onclick=\"$.Dialog.close()\">Cancel</button> '+
+                                            '</div>'+
+                                            '</form>';
+
+                                    $.Dialog.title('Change Timing');
+                                    $.Dialog.content(content);
+                                }
+                            });
+                            updateID = '#'+rowID;
+                            $('#form_updateID').val(rowID); //update input box value
+						  	
+                            
+                            $('#saveTimeInTimeOutMeal').click({loadUrl: '".$loadUrl."'
+								, param: 'form_time_in,form_time_out,form_duration,form_meal,form_employee_no,form_id,form_updateID'
+								, update: updateID
+								}, doAjax);
+                        });
+			");
+			
+			
+			
+ 			$data[] = array(
+					 'seq'=>$seq
+					, 'name'=> '<abbr title="'.$name.'">'.substr($name, 0, 3).':</abbr>'
+					, 'time_in'=> $timeInAjax . '<div  id="'.$timeInID.'"><a href="#" >'.$needToCheckTimeIn.'</a></div>'
+					, 'time_out'=> $timeOut
+					, 'duration'=> '<p class="text-center">'.number_format($record->getDuration()/60/60, 2).'</p>'
+					, 'meal'=> '<span class="text-center">'.$record->getMeal().'</span>'
+					, 'comp_dura'=> '<p class="text-center bg-green fg-white">'.$record->getAcDura().'</p>'
+					, 'normal'=> '<p class="text-center">'.$record->getNormal().'</p>'
+					, 'overtimes'=> '<p class="text-center">'.$record->getOvertimes().'</p>'
+					, 'undertime'=> '<p class="text-center">'.$record->getUndertime().'</p>'
+					, 'multiplier'=> '<p class="text-center">'.$record->getMultiplier().'</p>'
+					, 'holiday_code'=> '<p class="text-center">'.$record->getHolidayCode().'</p>'
+					, 'leave_type'=> '<p class="text-center"><small>'.$record->getLeaveType().'</small></p>'
+					, 'dayoff'=> '<p class="text-center">'.$record->getDayoff().'</p>'
+					, 'posted_amount'=> '<p class="text-center">'.$eAmt.'</p>'
+					, 'Rate_Hr'=> '<p class="text-center">'.$erph.'</p>'
+					, 'PT Income'=> '<p class="text-center">'.$ePInc.'</p>'
+					, 'Allowance'=> '<p class="text-center">'.$eAll.'</p>'
+					, 'Levy'=> '<p class="text-center">'.$eLevy.'</p>'
+					, 'attendance'=> '<p class="text-center">'.$record->getAttendance().'</p>'
+			);
+
+		endforeach;
+		$jsonfile['aaData'] = $data;
+		return json_encode($jsonfile);
+	}
+
+	public static function SearchEmployee($pager, $user=null)
+	{
+		$fileID = HrLib::randomID(20).'.json';
+		$editDel = "";
+		$data = array();
+		$seq = 0; 
+		$editLink = '';
+		$deleteLink = '';
+		foreach ($pager as $record):
+		$seq ++ ;
+		$editLink = link_to('Edit', 'employee/generalInformation?id=' . $record->getId());
+		$deleteLink = link_to('Delete', 'employee/employeeDelete?id=' . $record->getId(),
+                    array('confirm' => 'Record [ '. $record->getName() . ' ]  Sure to delete this record?'));
+        $actionLink = $editLink ;      
+        if ($user == 'emmanuel') $actionLink = $editLink .' | ' . $deleteLink ;
+        $workid = TkDtrmasterPeer::GetWorkSchedulebyEmployeeNo($record->getEmployeeNo());
+		$edit = link_to('show', 'employee/uploadEdit?id='. $record->getId());
+		$editDel = $edit;
+		$data[] = array(
+				  'seq'=>$seq
+				, 'action'=> '<small>'.$actionLink.'<small>'
+				, 'employee_no'=> '<small>'.$record->getEmployeeNo() . '<small>'
+				, 'name'=> '<small>'.$record->getName().'<small>'
+				, 'company'=> '<small>'.HrCompanyPeer::GetNamebyId($record->getHrCompanyId()).'<small>'
+				, 'account_no'=> '<small>'.$record->getAcctNo().'<small>'
+				, 'joined-date'=> '<small>'.$record->getCommenceDate().'<small>'
+				, 'work-schedule'=> '<small>'.TkWorktemplatePeer::GetDescriptionbyWorktempNo($workid).'<small>'
+		);
+		endforeach;
+		$jsonfile['aaData'] = $data;
+		return json_encode($jsonfile);
+	}
+}
+
+

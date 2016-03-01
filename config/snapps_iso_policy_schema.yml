@@ -1,0 +1,58 @@
+---
+iso: 
+  _attributes: 
+    package: lib.model.iso
+  web_policy_detail: 
+    _attributes: 
+      idMethod: native
+    id: 
+      type: INTEGER
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    content: 
+      type: LONGVARCHAR
+      required: true
+    web_policy_header_id: 
+      type: INTEGER    
+    index_no: 
+      type: INTEGER
+      required: true
+      default: 
+    date_created: 
+      type: TIMESTAMP
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+  web_policy_header: 
+    _attributes: 
+      idMethod: native
+    id: 
+      type: INTEGER
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    name: 
+      type: VARCHAR
+      size: 100
+      required: true
+      default: 
+    index_no: 
+      type: INTEGER
+      required: true
+      default: 
+    date_created: 
+      type: TIMESTAMP
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45

@@ -1,0 +1,123 @@
+
+<div class="contentBox">
+<form name="FORMadd" id="IDFORMadd"
+	action="<?php echo url_for('finance/ballastSearch'). '?id=' . $sf_params->get('id');?>"
+	method="post">
+<table class="table bordered condensed">
+<tr>
+	<td colspan="2" class="bg-clearGreen ">BALLAST EXPENSE CHART</td>
+</tr>
+<tr>
+	<td class="bg-clearBlue alignRight span3">Year to Plot</td>
+	<td><?php echo HTMLLib::CreateSelect('year', $sf_params->get('year'), HrFiscalYearPeer::GetFiscalYearListYK(), 'span2' )?> </td>
+</tr>
+<tr>
+	<td class="bg-clearBlue alignRight"></td>
+	<td><?php echo HTMLLib::CreateSubmitButton('filter_year', 'Change Year' )?> </td>
+</tr>
+<tr>
+	<td class="bg-clearBlue alignRight"></td>
+	<td><small>The Chart will not show Salary Costs</small></td>
+</tr>
+<tr>
+	<td colspan="2">
+	<?php 
+		include_partial('ballast_expense_chart', array('ballastData'=> $ballastData) ) 
+		?>
+	</td>
+</tr>
+</table>
+</form>
+
+<?php
+
+//************** save into an array and make a dateto integer
+$datas = array();
+$id = 0;
+$cnt = 0;
+$suffix = '';
+foreach($data as $r):
+	$cnt ++;
+	$genID = str_pad($cnt, 3, '0', STR_PAD_LEFT);
+	$id = DateUtils::DUFormat('Ymd', trim($r['reference_date']) );
+	$genID =  $id . $genID ;
+	$datas[ $genID  ] = array ('company'=>$r['company'], 'category'=>$r['category'], 'reference_date'=>$r['reference_date'], 'vendor'=>$r['vendor'], 'items'=>$r['items'], 'price'=>$r['price']);
+endforeach;
+$id = 0;
+$cnt = 0;
+$suffix = '';
+$hrData = PayEmployeeLedgerArchivePeer::GetSalaryRecordForNanoStartingFrom('2013-03-01');
+foreach($hrData as $r):
+	$cnt ++;
+	$genID = str_pad($cnt, 3, '0', STR_PAD_LEFT);
+	$id = DateUtils::DUFormat('Ymd', trim($r['reference_date']) );
+	$genID =  $id . $genID ;
+	$datas[ $genID ] = array ('company'=>$r['company'], 'category'=>$r['category'], 'reference_date'=>$r['reference_date'], 'vendor'=>$r['vendor'], 'items'=>$r['items'], 'price'=>$r['price']);
+endforeach;
+krsort($datas);
+?>
+
+
+<table class="table bordered hovered condensed" >
+<th colspan="6" class="bg-orange"><h2 class="fg-white">BALLAST WATER TREATMENT EXPENSES</h2></th>
+<tbody>
+<tr  class="dataGridTableHeader">
+	<td class="bg-clearBlue alignCenter">No</td>
+	<td class="bg-clearBlue alignCenter span2">Date</td>
+	<td class="bg-clearBlue alignCenter span2">Vendor</td>
+	<td class="bg-clearBlue alignCenter">Description</td>
+	<td class="bg-clearBlue alignCenter span2">Price</td>
+	<td class="bg-clearBlue alignCenter span2">Labor</td>
+</tr>
+
+<?php 
+$SN = 1;
+$totalMaterials = 0;
+$totalOverall = 0;
+$totalPayroll = 0;
+foreach($datas as $k=>$r):
+	$rowCount = 1;
+	$rowClass = (($rowCount % 2) == 0) ? "dataGridRowOdd" : "dataGridRowEven";	
+	//<td nowrap="" class="alignCenter ">'. $k / 1000 .' : '. $r['reference_date'] .'</td>
+	if (strpos($r['vendor'], 'NANOCLEAN PAYROLL') === false ):
+		$mats =  $r['price'];
+		$payroll = 0;
+		$totalMaterials += $mats;
+		$payrollClass = '';
+	else:
+		$mats = 0;
+		$payroll = $r['price'];
+		$totalPayroll += $payroll;
+		$payrollClass = 'tk-yell';
+	endif;
+	echo '
+	<tr  class="'. $payrollClass .' ">		
+		<td class="alignCenter "><small> '.$SN.'</small></td>
+		<td width="50px" class="alignCenter "><small> '.$r['reference_date'].'</small></td>
+		<td width="50px" class="alignCenter "><small> '.$r['vendor'].'</small></td>
+		<td class="alignLeft "><small>&nbsp;&nbsp; '.$r['items'].'</small></td>
+		<td class="alignRight "><small> '. ($mats > 0? number_format($mats, 3) : '-') . '&nbsp;&nbsp;</small></td>
+		<td class="alignRight "><small> '.($payroll > 0? number_format($payroll, 3) : '-') .'&nbsp;&nbsp;</small></td>
+	</tr>';
+	$totalOverall += $r['price'];
+	//echo $r['company'] . ' ' . $r['reference_date'] . ' ' . $r['category'] . ' ' . $r['items'] . ' ' . $r['price'] . '<br>';
+	$SN++;
+	$rowCount;
+endforeach;
+
+//echo '
+//<tr height="23px" class="bg-clearBlue">
+//	<td nowrap="" class="alignCenter bg-clearBlue"></td>
+//	<td class="alignCenter bg-clearBlue " colspan=3 ><small> TOTAL </small></td>
+//	<td class="alignRight bg-clearBlue "><small> '.number_format($totalOverall, 3).' (Overall)</small></td>
+//	<td class="alignRight bg-clearBlue "><small> '.number_format($totalMaterials, 3).' (P)</small></td>
+//	<td class="alignRight bg-clearBlue "><small> '.number_format($totalPayroll, 3).' (L)</small></td>
+//	<td width="100px" nowrap="" class="alignRight bg-clearBlue"></small></td>
+//		
+//</tr>';
+
+	?>
+	
+		
+</tbody></table>
+</div>

@@ -1,0 +1,761 @@
+<?php
+
+/**
+ * Subclass for performing query and update operations on the 'finance_summary' table.
+ *
+ *
+ *
+ * @package lib.model.finance
+ */
+class FinanceSummaryPeer extends BaseFinanceSummaryPeer
+{
+	const CUSTOM = 'CUSTOM';
+	
+	public static function GetPager($cd)
+	{
+		$startIndex = sfContext::getInstance()->getRequest()->getParameter('startIndex', 0);
+		$rowsPerPage = sfContext::getInstance()->getRequest()->getParameter('results', 1);
+		$page = (int) ( ($startIndex + 1) / $rowsPerPage);
+		if (( ($startIndex + 1) % $rowsPerPage) != 0) {
+			$page++;
+		}
+	
+		$page = sfContext::getInstance()->getRequest()->getParameter('page', 1);
+	
+		$c = clone($cd);
+		$pager = new sfPropelPager('FinanceSummary', $rowsPerPage);
+	
+		$pager->setCriteria($c);
+		$pager->setPage($page);
+		$pager->init();
+		return $pager;
+	}
+	
+	public static function GetSourceCompanyandDate($src, $co, $dt)
+	{
+		$c = new Criteria();
+		$c->add(self::COMPONENT, $src);
+		$c->add(self::COMPANY_ID, $co);
+		$c->add(self::TRANS_DATE, $dt);
+		$rs = self::doSelectOne($c);
+		return $rs;
+	}
+
+	public static function GetForeCastbyDateRange($sdt, $edt, $co=null, $sub=null, $src)
+	{
+		switch($co):
+			case 1:
+			$ACCOUNTS = array(
+					'60400' => 'PURCHASES - CLEANROOM GARMENT',
+					// packing materials
+					'60300' => 'PURCHASES - PACKING MATERIALS',
+					// chemicals
+					'60100' => 'PURCHASES - CHEMICALS',
+					'60500' => 'DIESEL FOR BOILER',
+					'80100' => 'BANK O/D INT & OTHER CHARGES',
+					'80202' => 'CLEANROOM EXPENSES',
+					'80400' => 'ENTERTAINMENT',
+					'905-000' => 'ENTERTAINMENT',
+					'904-001' => 'ENTERTAINMENT',
+					'80502' => 'FLAT FOR WORKERS - UTILITIES & EXPENSES',
+					'80503' => 'FLAT RENTAL - UTILITIES & EXPENSES',
+					'81400' => 'TELEPHONE CHARGES',
+					'81401' => 'TRANSPORTATION',
+					"81501" => "UPKEEP OF HARD & SOFTWARE",
+					"81502" => "UPKEEP INVENTORIES OF OFFICE",
+					"81503" => "UPKEEP OF BUILDING / PREMISES",
+					"81504" => "UPKEEP MOTOR VEHICLE (PRDN. COST)",
+					"81505" => "UPKEEP MOTOR VEHICLE (PERSONNEL OVERHEAD)",
+					'81506' => 'UTILITIES',
+					"81600" => "UPKEEP OF PRODUCTION FACILITIES",
+					"81601" => "UPKEEP OF PROD FAC - PHARMAGG WASHER 1",
+					"81602" => "UPKEEP OF PROD FAC - PHARMAGG WASHER 2",
+					"81603" => "UPKEEP OF PROD FAC - HITACHI WASHING MACHINE",
+					"81611" => "UPKEEP OF PROD FAC - CHERRYTREE DRYER 1",
+					"81612" => "UPKEEP OF PROD FAC - CHERRYTREE DRYER 2",
+					"81621" => "UPKEEP OF PROD FAC - SHOE WASHER 1",
+					"81622" => "UPKEEP OF PROD FAC - SHOE WASHER 2",
+					"81631" => "UPKEEP OF PROD FAC - SHOE DRYER 1",
+					"81632" => "UPKEEP OF PROD FAC - SHOE DRYER 2",
+					"81633" => "UPKEEP OF PROD FAC - SHOE DRYER 3",
+					"81634" => "UPKEEP OF PROD FAC - SHOE DRYER 4",
+					"81635" => "UPKEEP OF PROD FAC - SHOE DRYER 5",
+					"81641" => "UPKEEP OF PROD FAC - DAIKIN CHILLER",
+					"81642" => "UPKEEP OF PROD FAC - HITACHI CHILLER",
+					"81651" => "UPKEEP OF PROD FAC - VACUUM SEALING MACHINE",
+					"81652" => "UPKEEP OF PROD FAC - APC",
+					"81661" => "UPKEEP OF PROD FAC - DI WATER PLANT",
+					"81671" => "UPKEEP OF PROD FAC - CLASS 10 CLEANROOM",
+					"81672" => "UPKEEP OF PROD FAC - SHOE CLEANROOM",
+					"81691" => "UPKEEP OF PROD FAC - GENERAL FACILITIES & MISC",
+					"81692" => "UPKEEP OF PROD FAC - FURNITURE",
+					"81701" => "UPKEEP OF MOTOR VEHICLES - PERSONNEL",
+					"81702" => "UPKEEP OF MOTOR VEHICLES - PRODUCTION",
+					"81800" => "UPKEEP OF PRODUCTION FACILITIES",
+					"81801" => "UPKEEP OF PROD FAC - MACHINE 1211",
+					"81802" => "UPKEEP OF PROD FAC - MACHINE 1232A",
+					"81803" => "UPKEEP OF PROD FAC - MACHINE 1232B",
+					"81804" => "UPKEEP OF PROD FAC - MACHINE 4254",
+					"81805" => "UPKEEP OF PROD FAC - MACHINE 6252",
+					"81806" => "UPKEEP OF PROD FAC - MACHINE 1232C",
+					"81811" => "UPKEEP OF PROD FAC - CLEANROOM 1",
+					"81812" => "UPKEEP OF PROD FAC - CLEANROOM 2",
+					"81821" => "UPKEEP OF PROD FAC - ATLAS COMPRESSOR (BOTTOM)",
+					"81822" => "UPKEEP OF PROD FAC - ATLAS COMPRESSOR (TOP)",
+					"81823" => "UPKEEP OF PROD FAC - KASSER COMPRESSOR 1",
+					"81824" => "UPKEEP OF PROD FAC - KASSER COMPRESSOR 2",
+					"81831" => "UPKEEP OF PROD FAC - VACUUM SEALING MACHINE",
+					"81832" => "UPKEEP OF PROD FAC - APC",
+					"81833" => "UPKEEP OF PROD FAC - METROHM IC",
+					"81834" => "UPKEEP OF PROD FAC - HORIBA LPC",
+					"81835" => "UPKEEP OF PROD FAC - HI-INTENSITY LIGHT",
+					"81836" => "UPKEEP OF PROD FAC - FORKLIFT",
+					"81861" => "UPKEEP OF PROD FAC - GENERAL FACILITIES & MISC",
+					"81862" => "UPKEEP OF PROD FAC - FURNITURE",
+					"921-000" => "UPKEEP OF MOTOR VEHICLE",
+					"921-003" => "UPKEEP PRODUCTION FACILITIES",
+					"920-001" => "UPKEEP OF PLANT & MACHINERIES",
+					"920-002" => "UPKEEP OF MOTOR VEHICLE",
+					"920-004" => "UPKEEP OF FACTORY",
+					"81623" => "UPKEEP OF PROD FAC - SHOE WASHER 3",
+					"81301" => "SUB CONTRACTORS",
+					"81402" => "TRAVELLING EXPENSES",
+					"80600"=>"GENERAL EXPENSES",
+					"sales" => "sales",
+					"sales non-seagate" => "sales non-seagate",
+					"sales seagate" => "sales seagate",
+					"sales seagate cassette" => "sales seagate cassette"
+				);
+				break;
+			case 2:
+				$ACCOUNTS = array(
+						'60200'=>'PURCHASES - PACKING MATERIALS',
+						'61200'=>'WAREHOUSE RENTAL',
+						'80000'=>'AUDIT FEES',
+						'80202'=>'CLEANROOM EXPENSES',
+						'80201'=>'CPF CONTRIBUTION',
+						'80301'=>'DEPRECIATON ON FIXED ASSETS',
+						'80400'=>'ENTERTAINMENT',
+						'80502'=>'FLAT RENTAL - RENTAL',
+						'80503'=>'FLAT RENTAL - UTILITIES & EXPENSES',
+						'80504'=>'FOOD & REFRESHMENT',
+						'80600'=>'GENERAL EXPENSES',
+						'80700'=>'HIRE PURCHASE INTEREST',
+						'80901'=>'LAB TEST EXPENSES',
+						'81002'=>'MANAGEMENT FEES',
+						'81000'=>'MEDICAL FEES',
+						'81300'=>'POSTAGE & COURIER',
+						'81301'=>'PRINTING & STATIONERY',
+						'81401'=>'REPAIR & MAINTENANCE EQUIPMENT',
+						'81500'=>'SALARIES',
+						'81501'=>'SECRETARIAL FEES',
+						'81502'=>'SUB-CONTRACTORS',
+						'81503'=>'SUBSCRIPTIONS',
+						'81603'=>'TAX FEE',
+						'81600'=>'TELEPHONE CHARGES',
+						'81602'=>'TRANSPORTATION',
+						'81601'=>'TRAVELLING EXPENSES',
+						'81700'=>'UTILITIES',
+						'81701'=>'UPKEEP OF MOTOR VEHICLES - PERSONNEL',
+						'81702'=>'UPKEEP OF MOTOR VEHICLES - PRODUCTION',
+						'81832'=>'UPKEEP OF PROD FAC - APC',
+						'81821'=>'UPKEEP OF PROD FAC - ATLAS COMPRESSOR (BOTTOM)',
+						'81822'=>'UPKEEP OF PROD FAC - ATLAS COMPRESSOR (TOP)',
+						'81811'=>'UPKEEP OF PROD FAC - CLEANROOM 1',
+						'81812'=>'UPKEEP OF PROD FAC - CLEANROOM 2',
+						'81836'=>'UPKEEP OF PROD FAC - FORKLIFT',
+						'81862'=>'UPKEEP OF PROD FAC - FURNITURE',
+						'81861'=>'UPKEEP OF PROD FAC - GENERAL FACILITIES & MISC',
+						'81835'=>'UPKEEP OF PROD FAC - HI-INTENSITY LIGHT',
+						'81834'=>'UPKEEP OF PROD FAC - HORIBA LPC',
+						'81823'=>'UPKEEP OF PROD FAC - KASSER COMPRESSOR 1',
+						'81824'=>'UPKEEP OF PROD FAC - KASSER COMPRESSOR 2',
+						'81801'=>'UPKEEP OF PROD FAC - MACHINE 1211',
+						'81802'=>'UPKEEP OF PROD FAC - MACHINE 1232A',
+						'81803'=>'UPKEEP OF PROD FAC - MACHINE 1232B',
+						'81806'=>'UPKEEP OF PROD FAC - MACHINE 1232C',
+						'81804'=>'UPKEEP OF PROD FAC - MACHINE 4254',
+						'81805'=>'UPKEEP OF PROD FAC - MACHINE 6252',
+						'81833'=>'UPKEEP OF PROD FAC - METROHM IC',
+						'81831'=>'UPKEEP OF PROD FAC - VACUUM SEALING MACHINE',
+						'81800'=>'UPKEEP OF PRODUCTION FACILITIES',
+						'81700'=>'UTILITIES',
+						'sharedAcroComponent' => 'SALES SEAGATE CASSETTE',
+						"sales" => "sales",
+						"sales non-seagate" => "sales non-seagate",
+						"sales seagate" => "sales seagate",
+						"sales seagate cassette" => "sales seagate cassette",
+						"DELIVERY & HANDLING CHARGES" => "DELIVERY & HANDLING CHARGES",
+						"PURCHASES - RETAIL" => "PURCHASES - RETAIL",
+						"PURCHASES - LABELS" => "PURCHASES - LABELS"
+								
+				);
+				break;
+			case 5:
+				$ACCOUNTS = array(
+				
+						"919-003" => "SUB CONTRACTOR- OUTSOURCING POWER",
+						"919-003A" => "SUB CONTRACTOR - MANPOWER",
+						"305-008" => "BANK CHARGES",
+						"305-002" => "CONTRACT LABOUR",
+						"200-400" => "CPF CONTRIBUTION",
+						"600-101" => "DELIVERY & HANDLING CHARGES",
+						"617-000" => "DELIVERY & HANDLING CHARGES - TRADING",
+						"200-600" => "DEPOSITS & PREPAYMENTS",
+						"616-000" => "DIRECTOR A/C - PETER CHEN",
+						"917-005" => "DIRECTOR A/C - TERENCE",
+						"919-002" => "ENTERTAINMENT",
+						"405-001" => "FOOD & REFRESHMENT",
+						"921-002" => "FURNITURES & FITTINGS",
+						"200-800" => "GENERAL EXPENSES",
+						"200-100" => "GST INPUT TAX",
+						"903-000" => "HARD & SOFTWARE",
+						"917-002" => "HP CREDITOR - MAYBANK (FORKLIFT)",
+						"600-100" => "INSURANCE",
+						"917-001" => "LEGAL & PROFESSIONAL FEES",
+						"917-004" => "MC CLEAN SINGAPORE PTE LTD",
+						"920-002" => "MEDICAL FEES",
+						"610-020" => "MICRONCLEAN (S) PTE LTD",
+						"905-000" => "MICRONDR INTERNATIONAL PTE LTD - FUNDS TRANSFER",
+						"920-003" => "OFFICE EQUIPMENT",
+						"916-002" => "OTHER CREDITORS",
+						"200-300" => "OTHER DEBTORS",
+						"919-005" => "OVERDUE & LATE PAYMENT INTERESTS",
+						"917-003" => "PLANT & MACHINERIES",
+						"201-100" => "POSTAGE & COURIER",
+						"921-000" => "PURCHASES - CHEMICALS",
+						"305-006" => "PURCHASES - DIESEL",
+						"305-003" => "PURCHASES - GENERAL TRADING",
+						"921-004" => "PURCHASES - LABELS",
+						"906-000" => "PURCHASES - SPONGE",
+						"921-003" => "PURCHASES - SPUTTERING MACHINE PART AND SERVICES",
+						'921-002' => 'UTILITIES',
+						"921-005" => "RENOVATION",
+						"200-500" => "RENOVATION -  EXTENSION OF CLEANROOM",
+						"305-005" => "RENTAL & FACTORY",
+						"610-100" => "RENTAL OF MACHINERY",
+						"200-700" => "REPAIR & MAINTANENCE",
+						"920-000" => "RESEARCH & DEVELOPMENT CHARGES",
+						"200-200" => "SCB SGD A/C 0102071462",
+						"305-007" => "SCB TERM LOAN  (A/C 03379566)",
+						"916-000" => "SECRETARIAL FEES",
+						"907-000" => "SUB CONTRACTOR- OUTSOURCING POWER",
+						"610-400" => "SUBSCRIPTIONS",
+						"921-006" => "TELEPHONE CHARGES",
+						"610-200" => "TOOLS AND EQUIPMENT",
+						"913-000" => "TOP TOP STEAM LAUNDRY SERVICES SDN BHD",
+						"201-300" => "BALLAST WATER TREATMENT LAB",
+						"sales" => "sales",
+						"sales non-seagate" => "sales non-seagate",
+						"sales seagate" => "sales seagate",
+						"sales seagate cassette" => "sales seagate cassette"
+				);
+				break;
+			case 4:
+				$ACCOUNTS = array(
+					"sales" => "sales",
+					"sales non-seagate" => "sales non-seagate",
+					"sales seagate" => "sales seagate",
+					"sales seagate cassette" => "sales seagate cassette"
+							);
+				break;
+			default:
+				$ACCOUNTS = array(
+					"sales" => "sales",
+					"sales non-seagate" => "sales non-seagate",
+					"sales seagate" => "sales seagate",
+					"sales seagate cassette" => "sales seagate cassette"
+							);
+				break;
+		endswitch;
+		
+		//$sharedAcroComponent = array('SALES SEAGATE CASSETTE');
+		$c = new Criteria();
+		$c->add(self::TRANS_DATE,  'DATE(' . self::TRANS_DATE . ') >= \'' . $sdt . '\' AND DATE(' . self::TRANS_DATE . ') <= \'' . $edt . '\'', self::CUSTOM);
+		switch($co):
+			case 1:
+				$c->add(self::COMPANY_ID, $co);
+				$c->add(self::COMPONENT, $ACCOUNTS, Criteria::IN);
+				break;
+			case 2:
+// 				$orCriteria1 = $c->getNewCriterion(self::COMPANY_ID, $co);
+// 				$orCriteria2 = $c->getNewCriterion(self::COMPONENT, $sharedAcroComponent, Criteria::IN);
+// 				$orCriteria1->addOr($orCriteria2);
+// 				$c->add($orCriteria1);
+
+				$c->add(self::COMPANY_ID, $co);
+				$c->add(self::COMPONENT, $ACCOUNTS, Criteria::IN);
+				
+				/* THIS ENCLOSED LINE TELLS US TO GET THE SEAGATE SALES */
+				$ACCOUNTS = array(
+						"sales non-seagate" => "sales non-seagate",
+						"sales seagate" => "sales seagate",
+						"sales seagate cassette" => "sales seagate cassette"
+				);
+				$orCriteria1 = $c->getNewCriterion(self::COMPANY_ID, 5);
+				$orCriteria2 = $c->getNewCriterion(self::COMPONENT, $ACCOUNTS, Criteria::IN);
+				$orCriteria1->addAnd($orCriteria2);
+				$c->addOr($orCriteria1);
+				/* THIS ENCLOSED LINE TELLS US TO GET THE SEAGATE SALES */
+				break;
+			default:
+				$c->add(self::COMPANY_ID, $co);
+				break;
+		endswitch;
+		$c->add(self::DATE_CREATED, '&& || &&', Criteria::CUSTOM);
+		$c->addAscendingOrderByColumn(self::CLASSIFICATION);
+		$c->addAscendingOrderByColumn(self::COMPONENT);
+		$c->addAscendingOrderByColumn(self::TRANS_DATE);
+		$rs = self::doSelect($c);
+
+		//$cList = self::GetComponentList($rs);
+		$foreCast = array('component'=>array(), 'value'=>array(), 'type'=>array(), 'gst'=>array());
+		//		var_dump($src);
+		//		exit();
+		foreach ($rs as $res)
+		{
+			//			echo $res->getComponent() .' - '. $res->getTransDate() .' - '. $res->getValue() . '<br>';
+			// if sales filter by src
+			if (substr($res->getComponent(), 0, 5) == 'SALES') {
+				if ( $res->getSalesSource() == $src )
+				{
+					$foreCast['component'][] = $res->getComponent();
+					$foreCast['value'][]     = $res->getValue() - $res->getGst() ;
+					$foreCast['type'][]      = $res->getIncomeExpense();
+					$foreCast['date'][]      = $res->getTransDate();
+					$foreCast['gst'][]      = $res->getGst();
+				}
+			}else{
+				$foreCast['component'][] = $res->getComponent();
+				$foreCast['value'][]     = $res->getValue();
+				$foreCast['type'][]      = $res->getIncomeExpense();
+				$foreCast['date'][]      = $res->getTransDate();
+				$foreCast['gst'][]      = $res->getGst();
+			}
+		}
+		return $foreCast;
+	}
+
+	private static function GetComponentList($rs)
+	{
+		$list = array();
+		foreach($rs as $res)
+		{
+			$list[$res->getComponent()] = $res->getComponent();
+		}
+		return array_unique($list);
+	}
+
+	public static function GetDailyTransaction($sdt, $edt, $co=null)
+	{
+		$c = new Criteria();
+		$c->add(self::TRANS_DATE,  'DATE(' . self::TRANS_DATE . ') >= \'' . $sdt . '\' AND DATE(' . self::TRANS_DATE . ') <= \'' . $edt . '\'', self::CUSTOM);
+		if ($co)
+		{
+			$c->add(self::COMPANY_ID, $co);
+		}
+		//$c->add(self::ID, '|| && ||', Criteria::CUSTOM);
+		$c->addAscendingOrderByColumn(self::COMPONENT);
+		$c->addAscendingOrderByColumn(self::TRANS_DATE);
+		$rs = self::doSelect($c);
+		$dSumm = array();
+		$cdt = '';
+		for ($x=0; $x< DateUtils::DateDiff('d',$sdt, $edt) + 1; $x++)
+		{
+			$cdt = DateUtils::AddDate($sdt, $x);
+			$dSumm[$cdt] = array(0,0);
+		}
+
+		foreach ($rs as $res)
+		{
+			$dt = $res->getTransDate();
+			$d  = $dt;
+
+			if (!array_key_exists($d, $dSumm)) {
+				$dSumm[$d] = array(0,0);
+			}
+
+			if ( $res->getIncomeExpense() == 'EXPENSE' )
+			{
+				$dSumm[$d][0] += round($res->getValue());
+			}else{
+				$dSumm[$d][1] += round($res->getValue());
+			}
+
+		}
+		return $dSumm;
+	}
+
+	public static function GetDailyTransactionSelectedEmployee($sdt, $edt, $co=null, $empList)
+	{
+		$c = new Criteria();
+		$c->add(self::TRANS_DATE,  'DATE(' . self::TRANS_DATE . ') >= \'' . $sdt . '\' AND DATE(' . self::TRANS_DATE . ') <= \'' . $edt . '\'', self::CUSTOM);
+		if ($co)
+		{
+			$c->add(self::COMPANY_ID, $co);
+		}
+		//$c->add(self::ID, '|| && ||', Criteria::CUSTOM);
+		$c->addAscendingOrderByColumn(self::COMPONENT);
+		$c->addAscendingOrderByColumn(self::TRANS_DATE);
+		$rs = self::doSelect($c);
+		$dSumm = array();
+		$cdt = '';
+		for ($x=0; $x< DateUtils::DateDiff('d',$sdt, $edt) + 1; $x++)
+		{
+			$cdt = DateUtils::AddDate($sdt, $x);
+			$dSumm[$cdt] = array(0,0);
+		}
+
+		foreach ($rs as $res)
+		{
+			$dt = $res->getTransDate();
+			$d  = $dt;
+			$tamt = 0;
+			if (!array_key_exists($d, $dSumm)) {
+				$dSumm[$d] = array(0,0);
+			}
+			$tIncome = 0;
+			foreach($empList as $empNo):
+			$tIncome += TkDtrsummaryPeer::GetEmployeeIncomeEstimateAccount($empNo, $dt, $dt);
+			endforeach;
+			$dSumm[$d][0] = $tIncome;
+			if ( $res->getIncomeExpense() <> 'EXPENSE' )
+			{
+				$dSumm[$d][1] += round($res->getValue());
+			}
+
+		}
+		return $dSumm;
+	}
+
+	public static function GetWeeklyTransaction($sdt, $edt, $co=null)
+	{
+		$coID = HrCompanyPeer::GetIDbyCompanyName($co);
+		$sql = "
+				SELECT sum( if( income_expense = 'income', value, 0 ) ) AS income, sum( if( income_expense = 'expense', value, 0 ) ) AS expense
+				FROM finance_summary
+				WHERE DATE( finance_summary.TRANS_DATE ) >= '".$sdt."'
+				AND DATE( finance_summary.TRANS_DATE ) <= '".$edt."'
+				AND finance_summary.COMPANY_ID = ".$coID."
+				ORDER BY UPPER( finance_summary.COMPONENT ) ASC , finance_summary.TRANS_DATE ASC
+				";
+// 		var_dump($coID);
+// 		exit();
+		$con  = Propel::getConnection('finance');
+		$stmt = $con->PrepareStatement($sql);
+		$rs   = $stmt->executeQuery(ResultSet::FETCHMODE_ASSOC);
+		$dSumm = array('income'=>0, 'expense'=> 0);
+		while($rs->next()):
+			$dSumm['income'] = $rs->get('income');
+			$dSumm['expense'] = $rs->get('expense');
+		endwhile;
+		return $dSumm;
+	}
+
+	public static function GetElementNumberfromKey($keyName, $cArray)
+	{
+		$elem = 0;
+		$pos  = 0;
+		foreach($cArray as $ke=>$ve)
+		{
+			if ( trim($ke) == trim($keyName))
+			{
+				$elem = $pos;
+				//echo $keyName .' == '. $ke . '  // ' . $elem . '<-- test <br>';
+			}
+			$pos ++;
+		}
+
+		return $elem + 1;
+	}
+
+	public static function DeleteData($sdt, $edt)
+	{
+		$sdt = DateUtils::DUFormat('Y-m-01', $sdt);
+		$edt = DateUtils::DUFormat('Y-m-t', $sdt);
+		$c = new Criteria();
+		$c->add(self::TRANS_DATE,  'DATE(' . self::TRANS_DATE . ') >= \'' . $sdt . '\' AND DATE(' . self::TRANS_DATE . ') <= \'' . $edt . '\'', self::CUSTOM);
+		$c->add(self::COMPONENT, 'SUBCON', Criteria::LIKE);
+		$c->addOr(self::COMPONENT, 'ELECTRICAL', Criteria::LIKE );
+		$rs = self::doDelete($c);
+		return $rs;
+	}
+	
+	public static function DeleteNanoPayroll($sdt, $edt)
+	{
+		$sdt = DateUtils::DUFormat('Y-m-01', $sdt);
+		$edt = DateUtils::DUFormat('Y-m-t', $sdt);
+		$c = new Criteria();
+		$c->add(self::TRANS_DATE,  'DATE(' . self::TRANS_DATE . ') >= \'' . $sdt . '\' AND DATE(' . self::TRANS_DATE . ') <= \'' . $edt . '\'', self::CUSTOM);
+		$c->add(self::COMPONENT, 'SUBCON NANOCLEAN ');
+		$rs = self::doDelete($c);
+		return $rs;
+	}
+
+
+	public static function GetSummarizedData($sdt, $edt, $co=null, $company, $sub=null, $src)
+	{
+		$data = FinanceSummaryPeer::GetForeCastbyDateRange($sdt, $edt, $co, $sub, $src);
+		$comp = array_unique($data['component']);
+		$gCost = 0;
+		$dSumm = array('income'=>array(), 'expense'=>array(), 'trans_date'=>array());
+		$power = 0;
+		$gexp  = 0;
+		$ginc  = 0;
+		$iData = array('SALES'=>0);
+		$eData = array('EXPENSE'=>0);
+		$seagateSalesData = array('SALES SEAGATE'=>0);
+		$seagateCassetteSalesData = array('SALES SEAGATE CASSETTE'=>0);
+		$otherSalesData = array('SALES NON-SEAGATE'=>0);
+		
+		foreach($comp as $kd=>$component)
+		{
+			$val = 0;
+			$pos = 0;
+			foreach($data['component'] as $ke=>$kv)
+			{
+
+				if ($component == $kv) // && $component != 'SUBCON - HR Forecast' ) //||$component == 'SUB-CONTRACTORS'))
+				{
+					$val += ($data['value'][$pos]); //round($data['value'][$pos]);
+
+					if ($data['type'][$pos] == 'INCOME')
+					{
+						$ginc   = $ginc + ($data['value'][$pos]);
+						$tinc[] = + ($data['value'][$pos]);
+					}else{
+						$gexp = $gexp + ($data['value'][$pos]);
+						$tded[] = ($data['value'][$pos]);
+					}
+				}
+// 				if (strtolower($kv) == 'sales'):
+// 					echo $data['date'][$ke] .' : '. $data['value'][$ke].' ('. $data['component'][$ke] . ')<br>';
+// 				endif;
+				$pos++;
+			}
+			
+			switch(strtolower($component)):
+			case 'sales':
+				$iData[$component] = ($val);
+				break;
+			case 'sales non-seagate':
+				$otherSalesData['SALES NON-SEAGATE'] = ($val);
+				break;
+			case 'sales seagate':
+				$seagateSalesData['SALES SEAGATE'] = ($val);
+				break;
+			case 'sales seagate cassette':
+				$seagateCassetteSalesData['SALES SEAGATE CASSETTE'] = ($val);
+				break;
+			default:
+				if (strtolower($component) == 'electrical utilities'):
+					switch ($company ):
+						case 'micronclean':
+							$val = ($val * .30);
+							break;
+						case 'acro solution':
+							$val = ($val * .0);
+							break;
+						case 'nanoclean':
+							$val = ($val * .70);
+							break;
+						default:
+							$val = ($val * .00);
+							break;
+					endswitch;
+				endif;
+				$eData[strtolower($component)] = ($val);
+				break;
+			endswitch;
+		}
+// 		var_dump($seagateCassetteSalesData);
+// 		exit();
+		//------------------ additional Expenses Might be Constant
+		if (($company) == 'micronclean')
+		{
+			$eData['management fee (fix)'] = 27700;
+			$eData['flat rental (fix)']    = 3278;
+			$eData['car rental (fix)']     = 2800;
+			$eData['extra salaries']       = 7500;
+			$eData['depreciation (fix)']   = 19000;
+		}
+		
+		if (($company) == 'acro solution')
+		{
+			$eData['depreciation (fix)']   = 2620;
+		}
+		//HTMLLib::vardump($tinc);
+		//exit();
+		unset($iData['subcon - hr forecast']);
+		unset($eData['subcon - hr forecast']);
+		return array($iData, $eData, $seagateSalesData, $otherSalesData,  $seagateCassetteSalesData);
+	}
+	
+	
+
+	public static function GetMonths($sdt, $edt)
+	{
+		//$cnt = DateUtils::DUFormat('m', $edt) - DateUtils::DUFormat('m', $sdt);
+		$cnt = DateUtils::DateDiff('m', $sdt, $edt);
+		$months = array();
+		$xdays = 0;
+		$xmon  = '';
+		$ymon = '';
+		for ($x=0; $x <= $cnt; $x++)
+		{
+			$xdays = ( $x * 32);
+			$xdays = DateUtils::AddDate($sdt, $xdays  );
+			$xmon   = DateUtils::DUFormat('Y-m-01', $xdays);
+			$ymon   = DateUtils::DUFormat('Y-m-t', $xdays);
+			//$mon = DateUtils::DUFormat('Y-'.DateUtils::DUFormat('m', $xdays).'-01', $sdt);
+			$months[$xmon] = $ymon;
+		}
+		return $months;
+	}
+
+	public static function SumData($data)
+	{
+		$tot = 0;
+		if ( is_array($data) )
+		{
+			foreach($data as $kd=>$vd)
+			{
+				if ($kd == 'subcon - hr forecast') {
+					$vd = 0;
+				}
+				$tot = $tot + $vd;
+			}
+		}
+		return $tot;
+	}
+
+
+	public static function ConvertToCalendarFormat($data)
+	{
+		$particular = array();
+		$newData = array();
+
+		//----------------------- get unique particular
+		foreach($data as $kd=>$vd)
+		{
+			foreach($vd as $part=>$amt)
+			{
+				$particular[] = $part;
+			}
+		}
+		$particular = array_unique($particular);
+		sort($particular);
+		foreach($particular as $kd=>$part)
+		{
+			$pos = 0;
+			foreach($data as $kd=>$vd)
+			{
+				foreach($vd as $key=>$amt)
+				{
+					if ($part == $key)
+					{
+						$newData[$part][$pos] = $amt;
+					}else{
+						$newData[$part][$pos] = (isset($newData[$part][$pos])) ? $newData[$part][$pos] : 0;
+					}
+				}
+				$pos++;
+
+			}
+		}
+		return $newData;
+
+	}
+
+	public static function GenerateChartData($data, $months)
+	{
+		$label = array('data'=>array(), 'tickLabels'=>array(), 'ballonLabels'=>array());
+		$month = array();
+		foreach($months as $sdt=>$edt)
+		{
+			$label['tickLabels'][]   = DateUtils::DUFormat('M-Y',$sdt);
+		}
+		$pos = 0;
+		foreach($data as $key=>$pData)
+		{
+			if (is_array($pData))
+			{
+				//$ballon = $pData;
+				foreach($pData as $labels=>$value)
+				{
+					$label['data'][$key][]         = $value;
+				}
+			}
+			$label['ballonLabels'][] = $key;
+			$pos++;
+		}
+		return $label;
+	}
+
+	public static function GetClassification($desc)
+	{
+		$c = new Criteria();
+		$c->add(self::COMPONENT, $desc);
+		$c->add(self::CLASSIFICATION, '', Criteria::NOT_EQUAL);
+		$rs = self::doSelectOne($c);
+		return ( $rs ? $rs->getClassification() : 'EXPENSE');
+	}
+
+	public static function GetSubconByMonth($company, $cdt)
+	{
+		//echo $company . 'here <br>';
+		//exit();
+			
+		switch ($company )
+		{
+			case 'Micronclean':
+				$co = '1';
+				break;
+			case 'Acro Solution':
+				$co = '2';
+				break;
+			case 'NanoClean':
+				$co = '5';
+				break;
+			case 'T.C. Khoo':
+				$co = '4';
+				break;
+			default:
+				$company = '';
+				break;
+		}
+			
+		$sdt = DateUtils::DUFormat('Y-m-'.'01', $cdt);
+		$edt = DateUtils::DUFormat('Y-m-'.DateUtils::DUFormat('t', $cdt), $cdt);
+
+		$c = new Criteria();
+		if ($company) $c->add(self::COMPANY_ID, $co);
+		$c->add(self::TRANS_DATE,  'DATE(' . self::TRANS_DATE . ') >= \'' . $sdt . '\' AND DATE(' . self::TRANS_DATE . ') <= \'' . $edt . '\'', self::CUSTOM);
+		$c->add(self::COMPONENT, '%CONTRACTOR%', Criteria::LIKE);
+		$rs = self::doSelect($c);
+		$tamt = 0;
+		foreach ($rs as $rec)
+		{
+			$tamt = $tamt + $rec->getValue();
+		}
+		return $tamt;
+	}
+
+	public static function GetTotalComponentDateRange($component, $sdt, $edt, $co)
+	{
+		$c = new Criteria();
+		$c->add(self::TRANS_DATE,  'DATE(' . self::TRANS_DATE . ') >= \'' . $sdt . '\' AND DATE(' . self::TRANS_DATE . ') <= \'' . $edt . '\'', self::CUSTOM);
+		$c->add(self::COMPONENT, $component);
+		$c->add(self::COMPANY_ID, $co);
+		$rs = self::doSelect($c);
+		$tot = 0;
+		foreach($rs as $rec)
+		{
+			$tot = $tot + $rec->getValue();
+		}
+		//		var_dump($rs);
+		//		exit();
+		return $tot;
+	}
+
+}/// end class

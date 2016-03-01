@@ -1,0 +1,232 @@
+<?php use_helper('Javascript'); ?>
+
+
+
+
+
+
+<html>
+<head>
+<title>timeanddate.com  - Singapore - Singapore time</title>
+<meta name="description" content="This fullscreen or popup-window displays a clock showing current time in any time zone in the world." />
+<meta name="keywords" content="clock, time zone, local time, international, current, big clock, large clock, date, time, count, counts" />
+<style type="text/css">
+body {font-size:88%;margin:3px;}
+body {font-family:Arial,Helvetica,Sans-serif;}
+div,p,table,th,td {font-size:1.0em;}
+
+h1 {font-size:2.2em;text-align:center;}
+h2 {font-size:1.4em;}
+h3 {font-size:1.2em;}
+h4 {font-size:1em;}
+h1,h2,h3,h4 {margin:0.8em 0 0.3em 0;}
+form {margin:0;}
+hr {width:750px;height:3px;margin-left:auto;margin-right:auto}
+ul,.tophead {margin-top:0;}
+pre,pre span {font-family:"Courier New",Courier,monospace;margin-bottom:2px;}
+a.fx {color:#00a;}
+a.wh {color:#fff;font-size:140%;}
+table.border1,.ff {border:1px solid #00a;background:#E8E8E8;}
+table.border2 {border:2px solid #00a;background:#E8E8E8;}
+.head {background:#a1bdeb;}
+.head a {color:#004;}
+td.r,th.r {text-align:right;white-space:nowrap;}
+.sep {border-left:1px solid #999;}
+.nw {white-space:nowrap;}
+table.rpad td {padding:0 0.3em 0 0;}
+table.spad td {padding:2px 0.5em 2px 2px;vertical-align:top;white-space:nowrap;text-align:right;}
+table.spad th {padding:1px 0.3em 1px 1px;vertical-align:top;}
+table.spad td.p1 {padding-left:0.7em;}
+table.spad td.p2 {padding-right:0.7em;}
+table.hpad td {padding:0 2px;}
+table.hpad td.ml {text-align:right;padding-left:1em;}
+table td.tc {text-align:center;vertical-align:top;}
+table.ta td {vertical-align:top;}
+img {border:0;margin:0;padding:0;}
+div.ic,div.rb {float:right;}
+div.icc,div.ic,div.rb {border:2px #999 solid;margin:0.5em 0 0.5em 0.5em;padding:0.5em;font-size:90%;}
+.ri {float:right;margin:0.2em 0 0.2em 0.2em;}
+div.ic,div.icc {font-style:italic;}
+
+div.fl {float:left;width:47%;margin:0.4em 8px 0 0;}
+div.warn {margin-top:2em;background-color:#ffe;border:2px solid #990;padding:10px;}
+dl {margin:0;padding:0;}
+dt {font-weight:bold;float:left;width:5.5em;clear:both;margin:0 0 0.3em 0;}
+dd {clear:right;margin:0 0 0.3em 6em;}
+
+ul.tb {margin:0;padding:0;}
+ul.tb li {list-style:none;display:inline;float:left;padding:0;margin:0 0.15em;background: #aaa;border: 1px solid #ddd;border-bottom:0px;}
+ul.tb a {color:#000;display:block;text-decoration:none;padding:0.2em 0.5em;margin:0;line-height:1em;}
+ul.tb li.act {background:#a1bdeb;font-weight:bold;border-width:1px;border-color:#a1bdeb;border-bottom:0px;}
+ul.tb a:hover {background:#bdd3f3;}
+
+div.grp {border:0;width:340px;vertical-align:top;margin:0 15px 30px 15px;padding:0;background-color:#e8e8e8;-moz-border-radius:0 0 7px 7px;}
+div.grp h2 {border:0;color:#000;padding:0 0 0px 0;margin:0;background-color:#a1bdeb;text-align:center;-moz-border-radius:7px 7px 0 0;}
+div.grp h2 a {color:#000;}
+div.grp h3 {margin:0.8em 0 0.3em 0;padding:0}
+div.grp h3.fi {margin-top:0;}
+div.grp div.desc {padding:5px;color:#000;}
+
+#svbx,#fabx {margin:0.4em auto 0 auto;width:600px;border:1px #000 solid;text-align:center;padding:0.2em 0;}
+#svbx {background:#6f6;}
+#fabx {background:#fcc;}
+
+.c0 {background:#E8E8E8;}
+.c1,.notes {background:#F0F0F0;}
+.d0 {background:#E0E0E0;}
+.d1 {background:#F8F8F8;}
+
+.d2 td,.d2 th,.d2 th,div.tbboxe {border-bottom:1px solid #a1bdeb;}
+.d2 td td,.d2 td th {border-bottom:none;}
+.tbbox {border:1px solid #a1bdeb;background:#f0f0f0;border-top:0;border-bottom:0;margin:0;}
+
+.f {background:#ccc;}
+.fc {clear:both;}
+.small,.smtop,dd,dt,legend,.ib {font-size:90%;}
+.smaller {font-size:75%;}
+.big,#svbx {font-size:125%;}
+.bigger{font-size:150%;}
+.biggest {font-size:175%;}
+.dbl {font-size:200%;}
+.minititle,.b,.dbl {font-weight:bold;}
+.addiv {margin-top:7px;}
+.smtop,.ntop {vertical-align:top;}
+.bt {border-top:#999 1px solid;}
+.bb {border-right:#999 1px solid;}
+.bordtop,.bordbot,.bordmid {border-color:#00e;border-style:solid;border-left-width:1px;border-right-width:1px;}
+.bordtop {border-top-width:1px;border-bottom-width:0px;}
+.bordmid {border-top-width:0px;border-bottom-width:0px;}
+.bordbot {border-top-width:0px;border-bottom-width:1px;}
+.bord1 {border:1px solid #00a;}
+.bord2 {border:2px solid #00a;}
+.pad30 {padding-left:30px;}
+.ff {padding:5px;margin:0px;text-align:left;}
+.err {text-align:left;margin-top:2em;background-color:#FEE;border:2px solid #f00;padding:10px;margin-bottom:1em;}
+.err img {float:left}
+.err h2 {padding:0 0 0 50px;margin:0;}
+.err ul {list-style-type:none;margin:0;padding:0 0 0 50px}
+.err li {padding-top:0.5em;}
+.errmark {color:#f00;padding-left:0.5em}
+.errf {border:1px solid red;}
+.red {color:#f00;}
+.red2 {color:#00c;}
+.red3 {color:#080;}
+.cal td,.ib {text-align:center;}
+.notes {padding:4px;margin:0.5em 0 0 0}
+.notes h2 {margin:0px;padding:0 0 0.4em 0;font-size:120%;}
+.nbot {padding-bottom:0;margin-bottom:0;}
+.bot {margin:0;padding:0.2em 0 1.2em 0;}
+.ib {line-height:180%;}
+.tm p {margin:0 0 0.9em;}
+.lnks {z-index:1;position:relative;top:-23px;width:730px;text-align:left;line-height:1em;}
+.lnks a,.lnks span {display:block;float:left;line-height:1em;}
+.lnks a {width:90px;}
+.lnks span {width:150px;color:#666;}
+
+.po {display:none;z-index:10;position:absolute;}
+
+ul.mn {margin:0 auto;padding:0;border: 1px solid #2e3293;background-color:#f0f0f0;}
+ul.mn li {list-style: none;}
+ul.mn li a.ls {border-bottom:none;}
+ul.mn li a {text-decoration: none;display:block;color:black;text-align:left;padding:0 0.2em;white-space:nowrap;border-bottom: 1px solid #b6bbdb;}
+ul.mn li a:hover {background-color:#b6bbdb;}
+ul.mn li.h {background-color:#C1E8FB;}
+
+.wf {width:750px;margin:0 auto;}
+.wt {width:730px;}
+.mp,.mo {cursor:help;}
+.w5 {width:7em;}
+.dn {display:none;}
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<script language="JavaScript" type="text/javascript" >
+<script language="JavaScript" type="text/javascript">
+function rs(){var items=["rs1","rs2","rs3","utc"];if(!window.idpref){window.idpref={};}
+for(i=0;i<4;i++){var e=gf(items[i]);if(e){rse(e);return;}}}
+function gt(){document.body.scrollTop=0;}
+function rtf(a,e){var i,n,l,c,o;n=e.childNodes;if(n){l=n.length;for(i=0;i<l;i++){c=n[i];if(c.nodeType==3){var o={st:e.style,si:idpref[e.id]};a[a.length]=o;}else{rtf(a,c);}}}}
+function gp(n,p){var v=n[p];if(!v){v=n.parentNode[p];}
+if(!v){v=1;}
+return v;}
+function ss(a,p){var i;var b;for(i=0;i<a.length;i++){b=a[i];var sc=(b.si)?b.si*p:p;if(sc<10){sc=10;}
+b.st.fontSize=sc+"px";}}
+function fmd(d){if(window.a&&window.ns){ns1=Math.floor(ns*d);if(ns1==ns){ns1=ns+((d>1)?1:-1);}
+ns=Math.max(10,ns1);ss(a,ns);}}
+function rse(e){var i,l,b,db=document.body;a=new Array();rtf(a,e);ns=30;ss(a,ns);for(b=0;b<3;b++){mxw=db.offsetWidth;mxh=db.offsetHeight;msh=db.scrollHeight;mot=gp(e,"offsetTop");elw=gp(e,"scrollWidth");elh=gp(e,"scrollHeight");if(mxh>mot){mxh-=mot;}
+zw=mxw/elw;zh=mxh/elh;z=Math.min(zw,zh);ns=Math.floor(z*ns*0.95);if(ns<10){ns=10;}
+ss(a,ns);}}
+
+ltn=0;pwds="";function gf(f){if(document.getElementById){return document.getElementById(f);}
+if(document.all){return document.all[f];}
+return null;}
+function init(){lt0=0;var a;if(typeof(window.cks)!=="undefined"){for(a in cks){var ck=cks[a];ck.d1=gf(a);ck.d2=gf(a+"a");ck.pa="";}
+sync();}}
+function sync(){var obj=null;try{obj=new ActiveXObject("Msxml2.XMLHTTP");}catch(e){}
+if(!obj){try{obj=new ActiveXObject("Microsoft.XMLHTTP");}catch(e){}}
+if(!obj){try{obj=new XMLHttpRequest();}catch(e){}}
+if(!obj){return;}
+try{obj.open("GET","http://"+document.domain+"/worldclock/ts.php?cb="+Math.random(),true);obj.onreadystatechange=function(){var t=new Date();if(obj&&obj.readyState==4&&obj.status==200){srvadj=Math.floor(parseFloat(obj.responseText)*1E3-(st+t.getTime())/2);obj=null;upd();}};st=new Date().getTime();obj.send("");}
+catch(e){return;}}
+function ih(n,t){if(n){n.innerHTML=t;}}
+function rf(n,t,i,a){ih(gf(n),t);setTimeout("location.reload()",Math.floor(1E3*(i+Math.random()*a)));}
+function pf(v,n){while((v="0000"+v)&&v.length<n){}return v.substring(v.length-n);}
+function p2(v){return((v<10)?"0"+v:v);}
+function upd(){var c,j;var tn=new Date().getTime()+srvadj;if(ltn>tn){rf("tz1","Clock has gone backward - will refresh soon",7,0);return;}
+ltn=tn;wds=new Array();var t0=Math.floor(tn/1E3);if(t0>et){rf("tz1","Will refresh in 10 seconds",10,0);return;}else{if(t0!=lt0){lt0=t0;for(c in cks){var ck=cks[c];var ts=ck.t;var o="",a="";for(var i=0;i<ts.length;i++){if(ts[i].t>t0){break;}
+o=ts[i].o;a=ts[i].a;ad=ts[i].d
+j=i;}
+if(o!==""&&ck.d1){var b=new Date((t0+o)*1E3);ih(ck.d1,ck.f(b));if(c.charAt(0)=="p"){wd=(Math.floor((t0+o)/86400)+4)%7;wds[wd]=(wds[wd]||0)+1;if(dsts){ih(gf(c+"as"),(ad)?" *":"");wds[7]=(wds[7]||0)+(ad||0);}}
+if(ck.pa!=a&&ck.d2){ck.pa=a;ih(ck.d2,a);}
+if(ck.d){rt="Page will be refreshed soon";if(j>0){rf("tz1",rt,30,300);}
+j=b.getUTCDate();if(ck.d!=j){rf("da1",rt,10,150);ih(gf("da2"),rt);ck.d=j;}}}}
+tn=new Date().getTime()+srvadj;}
+if(window.updwds&&wds.length){twds=wds.join(",");if(twds!=pwds){for(i=0;i<8;i++){c=wds[i];if(!c){c=0;}
+nd=gf("smwd"+i);if(nd){nd.style.display=(c)?"block":"none";ih(gf("smwi"+i),updwds(c));}}
+pwds=twds;}}}
+setTimeout(upd,1E3-(tn%1E3));}
+function ofs(e,f){var h=0,w,s,i,o="directories=no,location=no,menubar=no,resizable=yes,scrollbars=no,status=no,toolbar=no";if(s=window.screen){h=s.availHeight-30;w=s.availWidth-10;}
+if(f){o+=",left=0,screenX=0,top=0,screenY=0,fullscreen=yes";if(h){o+=",height="+h+",innerHeight="+h+",width="+w+",innerWidth="+w;}}else{o+=",height=180,width=320";}
+if(i=window.open(e.href,"_blank",o)){return false;}
+alert("Could not open the popup-window, maybe there is a poupup-blocker installed");if(f&&h){window.moveTo(0,0);window.resizeTo(w,h);}
+return true;}
+</script>
+<style type="text/css"><!--
+a {text-decoration:none;color:#000;}
+.t100 {width:100%;height:100%;}
+.tab {margin: 0 auto;}
+body {overflow:hidden;}
+div {font-weight:bold;white-space:nowrap;}
+#nav {float:right;}
+#nav a {font-size:85%;text-decoration:none;color:#999;}
+-->
+</style>
+
+</head>
+<body onload="init();rs();" onresize="rs()" onscroll="gt()">
+
+<div id="nav">
+<a href="#" onmouseover="window.status='Increase';return true;" onmouseout="window.status=''" onclick="fmd(1.25)" title="Increase font size">++</a>
+<a href="#" onmouseover="window.status='Increase';return true;" onmouseout="window.status=''" onclick="fmd(1.05)" title="Increase font size (small)">+</a>
+<a href="#" onmouseover="window.status='Decrease';return true;" onmouseout="window.status=''"  onclick="fmd(0.95)" title="Decrease font size (small)">-</a>
+<a href="#" onmouseover="window.status='Decrease';return true;" onmouseout="window.status=''"  onclick="fmd(0.80)" title="Decrease font size">--</a>
+<a href="#" onmouseover="window.status='Auto';return true;" onmouseout="window.status=''"  onclick="rs()" title="Automatic font size">auto</a>
+<a href="#" onmouseover="window.status='Close';return true;" onmouseout="window.status=''"  onclick="window.close()" title="Close window">Close</a>
+</div>
+
+<a href="/" target="_blank"><img src="/gfx/mainlogo5.png" width="269" height="26" alt="timeanddate.com" border="0" /></a><table cellpadding="0" cellspacing="0" border="0" class="tab t100"><tr><td id="c1" align="center" valign="middle">
+<table border="0" align="center"><tr><td align="center"><div id="rs1"><div>Local time in Singapore</div><div id="i_date">Tuesday, November 24, 2009</div><div id="i_time">4:38:44 PM</div></div><script language="JavaScript1.5" type="text/javascript">
+<!--
+et=1259223724;function f0(d){return ld[d.getUTCDay()]+','+' '+lm[d.getUTCMonth()]+' '+d.getUTCDate()+','+' '+pf(d.getUTCFullYear(),4)+' at '+((d.getUTCHours()+11)%12+1)+':'+p2(d.getUTCMinutes())+':'+p2(d.getUTCSeconds())+' '+ap(d);}
+function f1(d){return ld[d.getUTCDay()]+','+' '+lm[d.getUTCMonth()]+' '+d.getUTCDate()+','+' '+pf(d.getUTCFullYear(),4)+' at '+p2(d.getUTCHours())+':'+p2(d.getUTCMinutes())+':'+p2(d.getUTCSeconds());}
+function f2(d){return ld[d.getUTCDay()]+','+' '+lm[d.getUTCMonth()]+' '+d.getUTCDate()+','+' '+pf(d.getUTCFullYear(),4);}
+function f3(d){return ((d.getUTCHours()+11)%12+1)+':'+p2(d.getUTCMinutes())+':'+p2(d.getUTCSeconds())+' '+ap(d);}
+cks={ctu:{t:[{t:0,o:0,a:'UTC'}],f:f1},i_date:{t:[{t:1259051924,o:28800,a:''}],f:f2},i_time:{t:[{t:1259051924,o:28800,a:''}],f:f3},ct:{t:[{t:1259051924,o:28800,a:''}],f:f0,d:24}};
+lm=new Array();lm[10]='November';ld=new Array();ld[2]='Tuesday';ld[3]='Wednesday';ld[4]='Thursday';
+function ap(d) {var t=Math.floor(d.getTime()/1000)%86400;if (t===0) {return 'Midnight';}if (t==43200) {return 'Noon';}if (t<43200) {return 'AM';}return 'PM';}
+dsts=1;idpref={i_date:1.2,i_time:5};//-->
+</script></td></tr></table>
+</td></tr></table>
+</body>
+</html>
+

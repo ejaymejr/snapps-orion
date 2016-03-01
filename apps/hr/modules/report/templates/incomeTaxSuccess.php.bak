@@ -1,0 +1,176 @@
+<?php use_helper('Validation', 'Javascript') ?>
+<div class="contentBox">
+<form name="FORMadd" id="IDFORMadd"
+	action="<?php echo url_for('reports/incomeTax') ?>" method="post">
+<table width="100%" class="table bordered condensed" border="0" cellpadding="4"
+	cellspacing="0">
+	<tr>
+		<td class="bg-clearBlue alignRight">Employee</td>
+		<td class="FORMcell-right" nowrap><?php
+		echo HTMLForm::Error('employee_no');
+		echo select_tag('employee_no',
+		options_for_select(HrEmployeePeer::GetEmployeeNameListAll(),
+		$sf_params->get('employee_no') ) );
+		?> <span class="negative"> *</span></td>
+	</tr>
+		<tr>
+		<td class="bg-clearBlue alignRight">Company</td>
+		<td class="FORMcell-right" nowrap><?php
+		echo select_tag('company',
+		options_for_select(HrCompanyPeer::GetCompanyListName(),
+		$sf_params->get('company') ) );		
+		?> <span class="negative"> * Must Select Company if you want to see the list</span></td>
+	</tr>
+	<tr>
+		<td class="bg-clearBlue alignRight">Designation</td>
+		<td class="FORMcell-right" nowrap><?php
+		$assign = array('ADMIN/STAFF'=>'ADMIN/STAFF',  'MANAGER'=>'MANAGER', 'TECHNICIAN'=>'TECHNICIAN', 'OTHER'=>'OTHER');
+		echo select_tag('assign',
+		options_for_select($assign,
+		$sf_params->get('assign') ) );
+		echo '&nbsp;&nbsp;&nbsp;';
+		echo input_tag('nassign', $sf_params->get('nassign'), 'size="35"');
+
+		?> &nbsp;&nbsp; <input type="submit" name="retrieve_from_ic" value=" Get Data From IC " class="submit-button"> 
+		<span class="negative"></span></td>
+	</tr>	
+	<tr>
+		<td class="bg-clearBlue alignRight">Income Tax for the Year</td>
+		<td class="FORMcell-right" nowrap><?php
+		//$status = sfConfig::get('years');
+		$status = HrFiscalYearPeer::GetFiscalYearList1();
+		echo HTMLForm::Error('cyear');
+		echo select_tag('cyear',
+		options_for_select($status,
+		$sf_params->get('cyear') ) );
+
+		?> <span class="negative"> *</span></td>
+	</tr>
+	<tr>
+		<td class="bg-clearBlue alignRight">Employer Details</td>
+		<td class="FORMcell-right" nowrap></td>
+	</tr>
+	<tr>
+		<td class="bg-clearBlue alignRight">Employer</td>
+		<td class="FORMcell-right" nowrap><?php
+		echo HTMLForm::Error('erName');
+		echo input_tag('erName', $sf_params->get('erName'), 'size="35"');
+		?></td>
+	</tr>
+	<tr>
+		<td class="bg-clearBlue alignRight">Tax Ref No. (RCB No.)</td>
+		<td class="FORMcell-right" nowrap><?php
+		echo HTMLForm::Error('rcb_no');
+		echo input_tag('rcb_no', $sf_params->get('rcb_no'), 'size="20"');
+		?></td>
+	</tr>
+	<tr>
+		<td class="bg-clearBlue alignRight">Address</td>
+		<td class="FORMcell-right" nowrap><?php
+		echo HTMLForm::Error('erAddr');
+		echo input_tag('erAddr', $sf_params->get('erAddr'), 'size="55"');
+		?></td>
+	</tr>
+	<tr>
+		<td class="bg-clearBlue alignRight">Contact Person</td>
+		<td class="FORMcell-right" nowrap><?php
+		echo HTMLForm::Error('erCPer');
+		echo input_tag('erCPer', $sf_params->get('erCPer'), 'size="25"');
+		?></td>
+	</tr>
+	<tr>
+		<td class="bg-clearBlue alignRight">Designation</td>
+		<td class="FORMcell-right" nowrap><?php
+		echo HTMLForm::Error('designation');
+		echo input_tag('designation', $sf_params->get('designation'), 'size="25"');
+		?></td>
+	</tr>
+	<tr>
+		<td class="bg-clearBlue alignRight">Contact #</td>
+		<td class="FORMcell-right" nowrap><?php
+		echo HTMLForm::Error('contact_no');
+		echo input_tag('contact_no', $sf_params->get('contact_no'), 'size="25"');
+		?></td>
+	</tr>
+	
+<tr>
+    <td class="bg-clearBlue alignRight" nowrap>Date Prepared</td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::DrawDateInput('d_prep', $sf_params->get('d_prep'), XIDX::next(), XIDX::next(), 'size="15"');
+    //echo date('Y-m-d');
+    ?>
+    </td>    
+</tr>	
+	<tr>
+		<td class="bg-clearBlue alignRight" nowrap></td>
+		<td class="FORMcell-right" nowrap>
+		<input type="submit" name="monthly" value=" Show Monthly / Show Listing " class="submit-button">
+		<input type="submit" name="show" value=" Generate Form " class="submit-button">
+		</td>
+	</tr>
+</table>
+<div id="divBorder">
+<table width="100%" class="FORMtable" border="0" cellpadding="4"
+	cellspacing="0">
+	<tr>
+		<td colspan="2" height="25" width="100" nowrap>
+		<div class="tk-style53 alignCenter">
+		<h2>IR8A MONTHLY</h2>
+		</div>
+		</td>
+	</tr>
+	<tr>
+		<td><?php
+		if ($showMonthly)
+		{
+			//echo ($contrib->getNbResults());
+			if ($contrib->getNbResults() > 0)
+			{
+				$gridVars = array(
+			    'searchTemplate' => '',
+			    'pagerTemplate' => 'ir8a_pager_list',
+			    'baseURL' => $sf_request->getModuleAction(), 
+			    'pager' => $contrib,
+			    'searchContainerID' => XIDX::next(),
+			    'headers' => sfConfig::get('app_ir8a_grid_headers')
+				);
+				include_partial('global/datagrid/container', $gridVars);
+			}
+		}
+		?></td>
+	</tr>
+</table>
+<table width="100%" class="FORMtable" border="0" cellpadding="4"
+	cellspacing="0">
+	<tr>
+		<td colspan="2" height="25" width="100" nowrap>
+		<div class="tk-style53 alignCenter">
+		<h2>EMPLOYEE LISTS</h2>
+		</div>
+		</td>
+	</tr>
+	<tr>
+		<td><?php
+		if (isset($pager))
+		{
+			//echo ($contrib->getNbResults());
+			if ($pager->getNbResults() > 0)
+			{
+				$gridVars1 = array(
+			    'searchTemplate' => '',
+			    'pagerTemplate' => 'ir8agrp_pager_list',
+			    'baseURL' => $sf_request->getModuleAction(), 
+			    'pager' => $pager,
+			    'searchContainerID' => XIDX::next(),
+			    'headers' => sfConfig::get('app_ir8agroup_grid_headers')
+				);
+				include_partial('global/datagrid/container', $gridVars1);
+			}
+		}
+		?></td>
+	</tr>
+</table>
+</div>
+
+</form>

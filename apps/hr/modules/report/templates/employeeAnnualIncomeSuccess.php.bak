@@ -1,0 +1,117 @@
+<?php use_helper('Form', 'Javascript'); ?>
+<div class="contentBox">
+<form name="FORMadd" id="IDFORMadd"
+	action="<?php echo url_for('report/employeeAnnualIncome') ?>"
+	method="post">
+<div class="panel" data-role="panel">
+<div class="panel-header bg-lightBlue">
+<span class="fg-white">EMPLOYEE LEDGER ANNUAL</span>
+</div>
+<div class="panel-content">
+	<table class="table bordered" >
+		<tr>
+			<td class="FORMcell-left FORMlabel bg-clearBlue span1" nowrap><label>Year</label></td>
+			<td class="FORMcell-right span4" nowrap><?php
+			echo HTMLLib::CreateSelect('year', $sf_params->get('year'), $year, 'span2'); ?>
+			</td>
+		</tr>
+		<tr>
+			<td class="FORMcell-left FORMlabel bg-clearBlue span1" nowrap><label>Name</label></td>
+			<td>
+			<?php 
+				echo HTMLLib::CreateSelectSearch('name', $sf_params->get('name'), $empList); 
+			?>
+			</td>
+		</tr>
+		<tr>
+			<td class="FORMcell-left FORMlabel bg-clearBlue span1" nowrap><label>Sources</label></td>
+			<td>
+			<?php 
+				$source = array('taxable'=>' - Taxable (bank/check)- ' , 'all'=>' - All (bank/cash/check)- ', 'bank'=>' - Bank - ', 'cash'=>' - Cash - ', 'cheque'=>' - Check - ' );
+				echo HTMLLib::CreateSelectSearch('source', $sf_params->get('source'), $source, 'span4'); 
+			?>
+			</td>
+		</tr>
+		<tr>
+			<td class="FORMcell-left FORMlabel bg-clearBlue span1" nowrap><label></label></td>
+			<td><small>
+			<?php 
+				//echo AjaxLib::AjaxScript('show_ledger', 'report/showLedgerAnnual', 'name,year', '', 'DIVShowLedger');
+				echo HTMLLib::CreateSubmitButton('show_ledger', 'Show Ledger');
+			?>
+			</small></td>
+		</tr>
+	</table>
+</div>
+</div>
+</form>
+
+<?php if ($data):?>
+<div class="panel" >
+	<div class="panel-header bg-lightBlue">
+		<span class="fg-white">EMPLOYEE LEDGER DETAIL</span>
+	</div>
+	<div class="panel-content">
+			<?php $dataTableID = HrLib::randomID(10); ?>
+			<?php echo PagerJson::ExportToExcel($dataTableID) ?>
+		<table class="table bordered striped condensed" id="<?php echo $dataTableID ?>">
+		<tr>
+			<td class="bg-orange span1 alignCenter fg-white" nowrap><label>Seq</label></td>
+			<td class="bg-orange span1 alignCenter fg-white" nowrap><label>Name</label></td>
+			<?php
+				foreach($periodList as $period): 
+					$cdate = HrLib::GetDateByPeriod($period);
+					$month = DateUtils::DUFormat('M', $cdate);
+			?>
+			<td class="bg-orange span1 alignCenter fg-white" nowrap><label><?php echo $month; ?></label></td>
+			<?php	
+				endforeach;
+			?>
+			<td class="bg-orange span1 alignCenter fg-white" nowrap><label>Total</label></td>
+		</tr>
+		<?php 
+			$seq = 0;
+			foreach($empList as $empNo => $name):
+				$seq ++;
+				$highlight = '';
+				$total = 0;
+		?>
+			<tr>
+				<td class="alignLeft <?php echo $highlight ?>" nowrap><small><?php echo $seq ?></small></td>
+				<td class="alignRight <?php echo $highlight ?>" nowrap><small><?php echo substr($name,0, 15) ?></small></td>
+				<?php 
+					foreach($periodList as $period): 
+						$total += $data[$name][$period][$sf_params->get('account')];
+				?>
+				<td class="alignRight <?php echo $highlight ?>" nowrap><small><?php echo number_format($data[$name][$period][$sf_params->get('account')],2) ?></small></td>
+				<?php 
+					endforeach;
+				?>
+				<td class="alignRight <?php echo $highlight ?>" nowrap><small><?php echo number_format($total, 2); ?></small></td>
+			</tr>
+		<?php 
+			endforeach;
+		?>
+		<tr>
+		<td></td>
+		<td class="alignRight" >Total</td>
+		<?php 
+			$gtotal = 0;
+			foreach($periodList as $period): 
+				$total = 0;
+				foreach($empList as $empNo => $name):
+					$total += $data[$name][$period][$sf_params->get('account')];
+				endforeach;
+				$gtotal += $total;
+		?>
+		<td class="alignRight" ><small><?php echo number_format($total, 2) ?></small></td>
+		<?php 
+			endforeach;
+		?>
+		<td class="alignRight" ><small><?php echo number_format($gtotal, 2) ?></small></td>
+		</tr>
+		</table>
+	</div>
+</div>
+<?php endif;?>
+</div>

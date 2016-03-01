@@ -1,0 +1,165 @@
+body {
+	background: #ddd;
+	font-size: 11px;
+	font-family: Arial;
+	padding: 0;
+	margin: 0;
+}
+
+.rowTitleHeader {
+	padding: 3px;
+	background: #c00000;
+	border: 0px solid #c00000;
+	-webkit-print-color-adjust: exact; 
+	font-size: 22px;
+	color: #fff;
+}
+
+.calendarHeader {
+	padding: 3px;
+	background: #2B5797;
+	border: 1px solid #c00000;
+	-webkit-print-color-adjust: exact; 
+	font-size: 22px;
+	color: #fff;
+}
+
+.calendarNumber {
+	padding: 3px;
+	background: #fff;
+	border: 1px solid #fff;
+	-webkit-print-color-adjust: exact; 
+	font-size: 15px;
+}
+
+.wrapper {
+	width: 960px;
+	min-height: 500px;
+	background: #fff;
+	margin: 0 auto;
+	
+	padding: 15px;
+	border-radius: 10px;
+}
+
+table {
+	width: 100%;
+	margin-bottom: 15px;
+}
+
+table tr th {
+	padding: 3px;
+	background: #2B5797;
+	border: 2px solid #000;
+	-webkit-print-color-adjust: exact; 
+	font-size: 20px;
+	color: #fff;
+}
+
+table tr td {
+	padding: 0;
+	font-size: 13px;
+	padding: 5px 0;
+}
+
+table tr.border td {
+	border-top: 2px solid #000;
+	color: #333;
+	font-size: 15px;
+}
+
+table tr.border2 td {
+	border-bottom: 2px solid #000;
+	color: #333;
+	font-size: 15px;
+}
+
+table tr.bigger td {
+	font-size: 18px;
+	/*padding-bottom: 5px;*/
+}
+
+table tr td.noborder {
+	border: none !important;
+}
+
+table tr.center td {
+	text-align: center;
+}
+
+table tr td.right {
+	text-align: right;
+}
+
+table tr td.left {
+	text-align: left;
+}
+
+table tr td.center {
+	text-align: center;
+}
+
+.print {
+	width: 960px;
+	margin: 10px auto;
+	/*background: orange;*/
+	height: 60px;
+	padding: 10px 0 0 0;
+}
+
+.pull-right {
+	float: right;
+}
+
+.clearfix {
+	clear: both;
+}
+
+@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+
+    .details {
+    	-webkit-print-color-adjust: exact; 
+    }
+}
+
+table tr.bold td {
+	font-weight: bolder;
+	font-size: 14px;
+}
+
+.details {
+	border: 2px solid #000;
+	padding: 5px 20px;
+}
+
+.details tr td,
+.details tr.bold td {
+	font-size: 18px;
+}
+
+.details h3 {
+	font-size: 30px;
+}
+
+
+.oec_receit tr td {
+    padding: 0 !important;
+}
+
+.oec_receit {
+    margin: 0 auto 0 auto;
+}
+
+.oec_receit table {
+    margin: 0;
+}
+
+.oec_receit .details {
+    padding-top: 0;
+}
+

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings> 
+  <font>Tahoma</font>              
+  <text_color>7F8DA9</text_color>
+    
+  <column>
+    <width>85</width>              
+    <spacing>0</spacing>           
+    <grow_time>3</grow_time>
+    <sequenced_grow>true</sequenced_grow>       
+  </column>
+
+     
+  <plot_area>                      
+    <margins>                      
+      <left>54</left>               
+      <top>0</top>                  
+      <right>0</right>             
+      <bottom>20</bottom>          
+    </margins>
+  </plot_area>
+  
+  <grid>                           
+    <category>                                                                          
+      <alpha>5</alpha>             
+      <dashed>true</dashed>        
+    </category>
+
+    <value>                              
+      <alpha>5</alpha>             
+      <dashed>true</dashed>        
+      <dash_length>5</dash_length> 
+    </value>
+  </grid>
+  
+  <values>                         
+    <category>                     
+      <frequency>2</frequency>     
+      <rotate>45</rotate>                
+      <text_size>10</text_size>        
+    </category>
+
+    <value>                        
+      <min>0</min>                 
+      <skip_last>true</skip_last>  
+    </value>
+  </values>
+  
+  <axes>                           
+    <category>                     
+      <color>#7F8DA9</color>       
+      <width>1</width>             
+    </category>
+
+    <value>                        
+      <color>#7F8DA9</color>       
+      <width>1</width>             
+    </value>
+  </axes>  
+    
+  <legend>                        
+    <enabled>false</enabled>      
+  </legend>
+  
+  <labels>                        
+    <label>
+      <x>0</x>                    
+      <y>290</y>                  
+      <rotate>90</rotate>         
+      <text>                      
+        <![CDATA[<b>Temperature anomaly, C (1950 - 2005)</b>]]>
+
+      </text>        
+    </label>
+    <label>
+      <x>0</x> 
+      <y>350</y>
+      <align>right</align>  
+      <text>                   
+        <![CDATA[Source: <a href="http://www.cru.uea.ac.uk/cru/info/warming/" target="_blank"><u>Climatic Research Unit</u></a>]]>
+      </text>        
+    </label>
+
+  </labels>
+  
+  <graphs>                                          
+    <graph gid="1">                                 
+      <title>Anomaly</title>                        
+      <color>DB4C3C</color>                         
+      <balloon_text>
+        <![CDATA[Anomaly in {series}: {value}C]]>   
+      </balloon_text>       
+    </graph>
+
+    <graph gid="2">
+
+      <type>line</type>        
+      <color>FEC514</color>                             
+      <title>Smoothed</title>                               
+      <balloon_text>
+        <![CDATA[Anomaly in {series}: {value}C (Smoothed)]]> 
+      </balloon_text>                                         
+    </graph>
+  </graphs>
+  
+  <guides>
+    <guide>
+
+      <start_value>0</start_value>
+      <end_value>0.8</end_value>
+      <alpha>0</alpha>
+      <fill_color>#FFFFFF,#CC0000</fill_color>
+      <fill_alpha>20</fill_alpha>
+    </guide>
+
+    <guide>
+      <start_value>0</start_value>
+      <end_value>-0.4</end_value>
+      <alpha>0</alpha>
+      <fill_color>#FFFFFF,#0000CC</fill_color>
+      <fill_alpha>20</fill_alpha>
+
+    </guide>    
+  </guides>
+</settings>

@@ -1,0 +1,765 @@
+<?php use_helper('Form', 'Javascript');
+?>
+<form name="FORMadd" id="IDFORMadd"
+	action="<?php echo url_for('payroll/payrollTrend'). '?id=' . $sf_params->get('id');?>"
+	method="post">
+<div class="contentBox">
+<div class="panel">
+    <div class="panel-header bg-lightBlue fg-white">
+        MONTHLY HR PAYROLL
+    </div>
+    <div class="panel-content">
+        <table class="bordered condensed table">
+		<tr>
+			<td class="alignRight bg-clearBlue">Month</td>
+			<td class="">
+				<?php 
+					echo HTMLLib::CreateSelect('month_start', $sf_params->get('month_start'), $monthList, 'span2');
+					echo HTMLLib::CreateSelect('year_1', $sf_params->get('year_1'), $yearList, 'span1');
+					echo ' to ';
+					echo HTMLLib::CreateSelect('month_end', $sf_params->get('month_end'), $monthList, 'span2'); 
+					echo HTMLLib::CreateSelect('year_2', $sf_params->get('year_2'), $yearList, 'span1');
+					echo ' | ' . HTMLLib::CreateCheckBox('current_month_estimate', ' Include Current Month Estimates', 'checked');
+				?>
+			</td>
+		</tr>
+		<tr>
+			<td class="alignRight bg-clearBlue">Company</td>
+			<td class="">
+				<?php 
+					//echo AjaxLib::AjaxScriptOnChange('company', 'hrforecast/getTeamAjax', 'company', '', 'teamSelect');
+					echo HTMLLib::CreateSelect('company', $sf_params->get('company'), $companyList, 'span2');
+					
+				?>
+			</td>
+		</tr>
+		<tr>
+			<td class="alignRight bg-clearBlue">Note</td>
+			<td class="">
+				The Data shown is based on the actual monthly payroll
+			</td>
+		</tr>
+		<tr>
+			<td class="alignRight bg-clearBlue"></td>
+			<td class="">
+				<?php 
+					echo HTMLLib::CreateSubmitButton('compute', 'Compute Monthly Cost');
+					echo '&nbsp;';
+					echo HTMLLib::CreateSubmitButton('filter_name', 'Show the Below Name(s) Only');
+					echo '&nbsp;';
+					echo HTMLLib::CreateSubmitButton('daily_update', 'Update Data');
+				?>
+			</td>
+		</tr>
+	</table>
+    </div>
+</div>
+<br>
+<?php 
+$cnt = 0;
+$total = array();
+$grandTotal = 0;
+$internalBilling = 6130; //fixed monthly
+$totInternal = 0;
+//echo '<pre>';
+//print_r($monthlyData);
+//echo '</pre>';
+//exit();
+//var_dump($sf_params->get('company'));
+if ($benchmark):
+?>
+	<div class="panel " data-role="panel">
+	    <div class="panel-header bg-lightBlue fg-white">
+	        EMPLOYEE LIST <small>(Can Filter More Information Here)</small>
+	    </div>
+	    <div class="panel-content" style="display: none;" >
+
+			<?php 
+			if (isset($pager))
+			{
+				
+			    $filename = hrPager::PayrollTrendSearchEmployee($pager, $employeeList);
+				$cols = array('seq', 'action', 'employee_no', 'name', 'company', 'team', 'type', 'work-schedule', 'resigned', 'pass-type'); //
+				echo PagerJson::AkoDataTableForTicking($cols, $filename,'','',sizeof($filename), 'action'); //create the table
+			}
+			echo '<br>';
+			//echo '<input class="success" type="submit" id="filter_name" name="filter_name" value="Show the Above Name(s) Only" >';
+			echo HTMLLib::CreateSubmitButton('filter_name', 'Show the Above Name(s) Only');
+			?>
+	    	</div>
+	</div>
+	<br>
+	<?php $validUsers = array('emmanuel', 'terence', 'melvin', 'charlie');?>
+	<?php if (in_array(HrLib::GetUser(), $validUsers)  ):?>
+	<?php $cnt = 0;?>
+	<div class="panel" data-role="panel" >
+    <div class="panel-header bg-lightBlue fg-white">
+        EMPLOYEE COMPUTATION
+    </div>
+    <div class="panel-content" style="display: none;">
+		<table class="bordered table condensed hovered">
+			<th class="bg-clearBlue"><small>Seq</small></th>
+			<th class="bg-clearBlue"><small>Name</small></th>
+			<?php foreach($months as $month):?>
+				<th class="bg-clearBlue"><small><?php echo DateUtils::DUFormat('M-Y', HrLib::GetDateByPeriod( $month) ) ?></small></th>
+			<?php endforeach; ?>
+			<th class="bg-clearBlue">Total</th>
+			
+			<?php foreach($employeeList as $empno => $name): $cnt++ ?>
+			<?php //var_dump ( HrEmployeePeer::IsResigned($empno)? 'bg-crimson' : '' ); var_dump($name); exit();?>
+			<tr class="<?php echo HrEmployeePeer::IsResigned($empno)? 'bg-clearRed ' : '' ?>">
+				<td><small><?php echo $cnt; ?></small></td>
+				<td><small><?php echo substr($name,0, 15); //$empno .' : '. $name ?></small></td>
+				<?php foreach($months as $month):?>
+					<td class="alignRight">
+						<small>
+							<a href="#" data-hint="basic pay"><?php echo number_format($monthlyData[$month][$empno]['basic'] ,2) ;  ?></a>
+						+	<a href="#" data-hint="ot"><?php echo number_format($monthlyData[$month][$empno]['ot'],2) ;  ?></a>
+						+	(<a href="#" data-hint="cpf-em"><?php echo number_format($monthlyData[$month][$empno]['cpf_em'] * -1, 2) ;  ?></a>)
+						+	<a href="#" data-hint="cpf-er"><?php echo number_format($monthlyData[$month][$empno]['cpf_er'] * -1, 2) ;  ?></a>
+						+	<a href="#" data-hint="levy"><?php echo number_format($monthlyData[$month][$empno]['levy'], 2) ;  ?></a>
+						
+						</small>
+					</td>
+				<?php endforeach; ?>
+				<td class="alignRight"><small><?php echo number_format($totalPerEmployee[$empno],2) ?></small></td>
+			</tr>
+			<?php endforeach;?>
+			
+			
+			<!-- ADD INTERNAL BILLING FOR ACRO -->
+			<?php //echo $sf_params->get('company');  exit(); ?>
+			<?php if ($sf_params->get('company') == 'Acro Solution'):  ?>
+			<tr  class="bg-clearGreen ">
+				<td><small><?php echo $cnt; ?></small></td>
+				<td><small>Nanoclean Bill Acro</small></td>
+				<?php foreach($months as $month):?>
+					<td class="alignRight"><small><?php echo number_format($internalBilling,  2) ?></small></td>
+				<?php 
+					$totInternal += $internalBilling;
+				endforeach;?>
+				<td class="alignRight"><small><?php echo number_format($totInternal,  2) ?></small></td>
+			</tr>
+			<?php endif; // if company?> 
+			
+			<tr  class="bg-clearRed alignRight">
+				<td colspan="2">Total</td>
+				<?php foreach($months as $month):?>
+					<td><small>
+					<?php 
+						$netTotal = 0;
+						if ($sf_params->get('company') == 'Acro Solution'):
+							$netTotal = $totalPerMonth[$month]['total'] + $internalBilling;
+						else:
+							$netTotal = $totalPerMonth[$month]['total'] ;
+						endif;
+						echo number_format( $netTotal , 2) ;
+						$grandTotal +=  $netTotal ;
+					?></small></td>
+				<?php endforeach;?>
+				<td ><small><?php echo number_format($grandTotal,2 ); ?></small></td>
+			</tr>
+			
+		</table>
+	</div>
+	</div>
+	<?php endif; //valid users ?>
+</form>
+<br>
+	<div class="panel"  >
+    <div class="panel-header bg-lightBlue fg-white">
+        EMPLOYEE DATA SUMMARY
+    </div>
+    <div class="panel-content" >
+		<table class="table bordered condensed"> 
+			<tr  class="bg-clearRed alignRight">
+				<td colspan="2">Total</td>
+				<?php foreach($months as $month):?>
+					<td><small>
+					<?php 
+						$netTotal = 0;
+						if ($sf_params->get('company') == 'Acro Solution'):
+							$netTotal = $totalPerMonth[$month]['total'] + $internalBilling;
+						else:
+							$netTotal = $totalPerMonth[$month]['total'] ;
+						endif;
+						echo number_format( $netTotal , 2) ;
+						$grandTotal +=  $netTotal ;
+					?></small></td>
+				<?php endforeach;?>
+				<td ><small><?php echo number_format($grandTotal,2 ); ?></small></td>
+			</tr>
+			
+		</table>
+	</div>
+	</div>
+	<br>
+	<?php 
+		$cnt = 0; 
+		$otTotal = 0;
+		$otGrandTotal = 0;
+	?>
+	<div class="panel " data-role="panel" >
+    <div class="panel-header bg-lightBlue fg-white">
+        EMPLOYEE OVERTIME HOURS DETAIL
+    </div>
+    <div class="panel-content"  style="display: none;">
+		<table class="bordered table condensed ">
+			<th rowspan="2" class="bg-clearBlue"><small>Seq</small></th>
+			<th rowspan="2" class="bg-clearBlue"><small>Name</small></th>
+			<?php foreach($months as $month):?>
+				<th colspan="4" class="bg-clearBlue"><small><?php echo DateUtils::DUFormat('M-Y', HrLib::GetDateByPeriod( $month) ) ?></small></th>
+			<?php endforeach; ?>
+			<th rowspan="2" class="bg-clearBlue">Total</th>
+			<tr>
+				<?php foreach($months as $month):?>
+					<td class="alignCenter bg-clearBlue"><small>1.5</small></td>
+					<td class="alignCenter bg-clearBlue"><small>2.0</small></td>
+					<td class="alignCenter bg-clearBlue"><small>2.5</small></td>
+					<td class="alignCenter bg-clearBlue"><small>T</small></td>
+				<?php endforeach; ?>
+			</tr>
+				
+			
+			<?php foreach($employeeList as $empno => $name): $cnt++ ?>
+			<?php 
+				$otTotal = 0;
+				$otGrandTotal = 0;
+			?>
+			<tr class="<?php echo HrEmployeePeer::IsResigned($empno)? 'bg-clearRed ' : '' ?>">
+				<td><small><?php echo $cnt; ?></small></td>
+				<td><small><?php echo substr($name,0, 15); //$empno .' : '. $name ?></small></td>
+				<?php foreach($months as $month):?>
+					<td class="alignRight hovered">
+						<small><a href="#" data-hint="1.5 ot"><?php echo ($monthlyData[$month][$empno]['ot_normal']) ;  ?></a></small>
+					</td>
+					<td class="alignRight hovered">
+						<small><a href="#" data-hint="2.0 ot"><?php echo ($monthlyData[$month][$empno]['ot_offday']) ;  ?></a></small>
+					</td>
+					<td class="alignRight hovered">
+						<small><a href="#" data-hint="2.5 ot"><?php echo ($monthlyData[$month][$empno]['ot_holiday']) ;  ?></a></small>
+					</td>
+					<td class="alignRight bg-clearRed hovered">
+						<small><a href="#" data-hint="total ot">
+						<?php 
+							$otTotal = $monthlyData[$month][$empno]['ot_normal'] + $monthlyData[$month][$empno]['ot_offday'] + $monthlyData[$month][$empno]['ot_holiday']; 
+							$otGrandTotal += $otTotal;
+							echo $otTotal;  
+						?></a></small>
+					</td>
+				<?php endforeach; ?>
+				<td class="alignRight bg-clearRed"><small><?php 
+					 echo $otGrandTotal;
+					?></small></td>
+			</tr>
+			
+			<?php endforeach;?>
+			<?php 
+				$otTotal = 0;
+				$otGrandTotal = 0;
+			?>
+			<tr  class="bg-clearGreen alignRight">
+				<td colspan="2">Total</td>
+				<?php foreach($months as $month):?>
+					<td><small><?php echo $totalPerMonth[$month]['ot_normal'] ;?></small></td>
+					<td><small><?php echo $totalPerMonth[$month]['ot_offday'] ;?></small></td>
+					<td><small><?php echo $totalPerMonth[$month]['ot_holiday'] ;?></small></td>
+					<td class="bg-clearRed"><small>
+					<?php 
+						$otTotal =  $totalPerMonth[$month]['ot_normal'] +  $totalPerMonth[$month]['ot_offday'] +  $totalPerMonth[$month]['ot_holiday']; 
+						$otGrandTotal += $otTotal;
+						echo $otTotal;
+					?></small></td>
+					
+				<?php endforeach;?>
+				<td class="bg-clearRed"><small><?php echo $otGrandTotal; ?></small></td>
+			</tr>
+		</table>
+	</div>
+	</div>
+<?php 
+
+?>
+	<br>
+<!--	<div class="panel " data-role="panel">-->
+<!--	    <div class="panel-header bg-lightBlue fg-white">-->
+<!--	        TREND CHART-->
+<!--	    </div>-->
+<!--	    <div class="panel-content" style="display: none;" >-->
+
+<?php 
+//prepare graph data
+$perWeekTotalTrend = array();
+foreach($months as $month):
+	$perWeekTotalTrend[] = array(
+	  'month' => DateUtils::DUFormat('M-Y', HrLib::GetDateByPeriod( $month) )
+	, 'total' => $totalPerMonth[$month]['total'] - $totalPerMonth[$month]['ot'] - $totalPerMonth[$month]['cpf_tot'] - $totalPerMonth[$month]['levy']
+	, 'ot' => $totalPerMonth[$month]['ot']
+	, 'cpf_tot' => $totalPerMonth[$month]['cpf_tot']
+	, 'levy' => $totalPerMonth[$month]['levy']
+	, 'internal_billing' => $internalBilling
+	, 'ot_normal' => $totalPerMonth[$month]['ot_normal']
+	, 'ot_offday' => $totalPerMonth[$month]['ot_offday']
+	, 'ot_holiday' => $totalPerMonth[$month]['ot_holiday']
+	); 
+endforeach;
+$perWeekTotalTrendJson = json_encode($perWeekTotalTrend);
+
+//                    echo '<pre>';
+//		            print_r($totalPerMonth);
+//		            echo '</pre>';
+//		            exit();
+?>
+<?php //echo $perWeekTotalTrendJson; ?>
+		
+		<br>
+		
+	<div class="panel " >
+	    <div class="panel-header bg-lightBlue fg-white">
+	        ANALYSIS CHART
+	    </div>
+	    <div class="panel-content" >		
+		<script type="text/javascript">
+            var chart;
+            
+            var chartData = <?php echo $perWeekTotalTrendJson; ?>;
+
+            AmCharts.ready(function () {
+                // SERIAL CHART
+                chart = new AmCharts.AmSerialChart();
+                chart.dataProvider = chartData;
+                chart.categoryField = "month";
+                chart.plotAreaBorderAlpha = 0.2;
+
+                // AXES
+                // category
+                var categoryAxis = chart.categoryAxis;
+                categoryAxis.gridAlpha = 0.1;
+                categoryAxis.axisAlpha = 0;
+                categoryAxis.gridPosition = "start";
+
+                // value
+                var valueAxis = new AmCharts.ValueAxis();
+                valueAxis.stackType = "regular";
+                valueAxis.gridAlpha = 0.1;
+                valueAxis.axisAlpha = 0;
+                chart.addValueAxis(valueAxis);
+
+                // GRAPHS
+                // first graph    
+                var graph = new AmCharts.AmGraph();
+                graph.title = "Salary";
+                graph.labelText = "[[percents]]%";
+                graph.valueField = "total";
+                graph.type = "column";
+                graph.lineAlpha = 0;
+                graph.fillAlphas = 1;
+                graph.lineColor = "#CC0000";
+                graph.balloonText = "<span style='color:#555555;'>[[category]]</span><br><span style='font-size:14px'>[[title]]:<b>[[value]]</b></span>";
+                chart.addGraph(graph);
+
+                // second graph              
+                graph = new AmCharts.AmGraph();
+                graph.title = "Overtime";
+                graph.labelText = "[[percents]]%";
+                graph.valueField = "ot";
+                graph.type = "column";
+                graph.lineAlpha = 0;
+                graph.fillAlphas = 1;
+                graph.lineColor = "#FA6800";
+                graph.balloonText = "<span style='color:#555555;'>[[category]]</span><br><span style='font-size:14px'>[[title]]:<b>[[value]]</b></span>";
+                chart.addGraph(graph);    
+
+                // third              
+                graph = new AmCharts.AmGraph();
+                graph.title = "CPF Total";
+                graph.labelText = "[[percents]]%";
+                graph.valueField = "cpf_tot";
+                graph.type = "column";
+                graph.lineAlpha = 0;
+                graph.fillAlphas = 1;
+                graph.lineColor = "#339900";
+                graph.balloonText = "<span style='color:#555555;'>[[category]]</span><br><span style='font-size:14px'>[[title]]:<b>[[value]]</b></span>";
+                chart.addGraph(graph);   
+
+                // fourth             
+                graph = new AmCharts.AmGraph();
+                graph.title = "Levy";
+                graph.labelText = "[[percents]]%";
+                graph.valueField = "levy";
+                graph.type = "column";
+                graph.lineAlpha = 0;
+                graph.fillAlphas = 1;
+                graph.lineColor = "#FCD209";
+                graph.balloonText = "<span style='color:#555555;'>[[category]]</span><br><span style='font-size:14px'>[[title]]:<b>[[value]]</b></span>";
+                chart.addGraph(graph);            
+
+             // LEGEND                  
+                var legend = new AmCharts.AmLegend();
+                legend.borderAlpha = 0.2;
+                legend.horizontalGap = 10;
+                chart.addLegend(legend);
+
+                // WRITE
+                chart.write("stackedChart");
+            });
+
+            // this method sets chart 2D/3D
+            function setDepth() {
+                if (document.getElementById("rb1").checked) {
+                    chart.depth3D = 0;
+                    chart.angle = 0;
+                } else {
+                    chart.depth3D = 25;
+                    chart.angle = 30;
+                }
+                chart.validateNow();
+            }
+        </script>
+        <div id="stackedChart" style="height: 400px;"></div>
+        <div style="margin-left:30px;">
+	        <input type="radio" checked="true" name="group" id="rb1" onclick="setDepth()">2D
+	        <input type="radio" name="group" id="rb2" onclick="setDepth()">3D
+		</div>
+	</div>
+	</div>	
+	
+<!-- 	LEVY CHART -->
+	<br>
+	<div class="panel " >
+	    <div class="panel-header bg-lightBlue fg-white">
+	        LEVY AND CPF ANALYSIS CHART
+	    </div>
+	    <div class="panel-content" >		
+
+		
+		
+		<script type="text/javascript">
+            var chart;
+            var graph;
+
+            var chartData = <?php echo $perWeekTotalTrendJson; ?>;
+
+
+            AmCharts.ready(function () {
+                // SERIAL CHART
+                chart = new AmCharts.AmSerialChart();
+                chart.pathToImages = "../../js/amcharts/images/";
+                chart.dataProvider = chartData;
+                chart.marginLeft = 10;
+                chart.categoryField = "month";
+
+                // AXES
+                // category
+                var categoryAxis = chart.categoryAxis;
+                categoryAxis.dashLength = 3;
+                categoryAxis.minorGridEnabled = true;
+                categoryAxis.minorGridAlpha = 0.1;
+
+                // value
+                var valueAxis = new AmCharts.ValueAxis();
+                valueAxis.axisAlpha = 0;
+                valueAxis.inside = true;
+                valueAxis.dashLength = 3;
+                chart.addValueAxis(valueAxis);
+
+                // GRAPH 1
+                graph = new AmCharts.AmGraph();
+                graph.type = "smoothedLine"; // this line makes the graph smoothed line.
+                graph.lineColor = "#FCD209";
+                graph.negativeLineColor = "#637bb6"; // this line makes the graph to change color when it drops below 0
+                graph.bulletBorderColor = "#FFFFFF";
+                graph.bullet = "round";
+                graph.bulletSize = 8;
+                graph.bulletBorderAlpha = 1;
+                graph.bulletBorderThickness = 2;
+                graph.lineThickness = 2;
+                graph.title = "levy";
+                graph.valueField = "levy";
+                graph.balloonText = "<b>[[title]]:</b> [[category]]<br><b><span style='font-size:14px;'>[[value]]</span></b>";
+                chart.addGraph(graph);
+
+                // GRAPH
+                graph = new AmCharts.AmGraph();
+                graph.type = "smoothedLine"; // this line makes the graph smoothed line.
+                graph.lineColor = "#339900";
+                graph.negativeLineColor = "#637bb6"; // this line makes the graph to change color when it drops below 0
+                graph.bulletBorderColor = "#FFFFFF";
+                graph.bullet = "square";
+                graph.bulletSize = 8;
+                graph.bulletBorderAlpha = 1;
+                graph.bulletBorderThickness = 2;
+                graph.lineThickness = 2;
+                graph.title = "er share";
+                graph.valueField = "cpf_tot";
+                graph.balloonText = "<b>[[title]]:</b> [[category]]<br><b><span style='font-size:14px;'>[[value]]</span></b>";
+                chart.addGraph(graph);
+
+                // CURSOR
+                var chartCursor = new AmCharts.ChartCursor();
+                chartCursor.cursorAlpha = 0;
+                chartCursor.cursorPosition = "mouse";
+                chart.addChartCursor(chartCursor);
+
+                // SCROLLBAR
+                var chartScrollbar = new AmCharts.ChartScrollbar();
+                chart.addChartScrollbar(chartScrollbar);
+                
+
+                chart.addListener("dataUpdated", zoomChart);
+                // this method is called when chart is first inited as we listen for "dataUpdated" event
+                function zoomChart() {
+                // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+               		chart.zoomToIndexes(chartData.length - 40, chartData.length - 1);
+                }                
+               
+                chart.creditsPosition = "bottom-right";
+
+                // WRITE
+                chart.write("levyChart");
+            });
+
+
+        </script>
+        <div id="levyChart" style="width:100%; height:400px;"></div>
+  	</div>
+	</div>
+
+	<br>
+	<div class="panel " >
+	    <div class="panel-header bg-lightBlue fg-white">
+	        OVERTIME ANALYSIS CHART
+	    </div>
+	    <div class="panel-content" >		
+		<script type="text/javascript">
+            var chart;
+            
+            var chartData = <?php echo $perWeekTotalTrendJson; ?>;
+
+            AmCharts.ready(function () {
+                // SERIAL CHART
+                chart2 = new AmCharts.AmSerialChart();
+                chart2.dataProvider = chartData;
+                chart2.categoryField = "month";
+                chart2.plotAreaBorderAlpha = 0.2;
+
+                // AXES
+                // category
+                var categoryAxis = chart2.categoryAxis;
+                categoryAxis.gridAlpha = 0.1;
+                categoryAxis.axisAlpha = 0;
+                categoryAxis.gridPosition = "start";
+
+                // value
+                var valueAxis = new AmCharts.ValueAxis();
+                valueAxis.stackType = "regular";
+                valueAxis.gridAlpha = 0.1;
+                valueAxis.axisAlpha = 0;
+                chart2.addValueAxis(valueAxis);
+
+                // GRAPHS
+                // first graph    
+                var graph = new AmCharts.AmGraph();
+                graph.title = "OT Normal";
+                graph.labelText = "[[percents]]%";
+                graph.valueField = "ot_normal";
+                graph.type = "column";
+                graph.lineAlpha = 0;
+                graph.fillAlphas = 1;
+                graph.lineColor = "#CC0000";
+                graph.balloonText = "<span style='color:#555555;'>[[category]]</span><br><span style='font-size:14px'>[[title]]:<b>[[value]]</b></span>";
+                chart2.addGraph(graph);
+
+                // second graph              
+                graph = new AmCharts.AmGraph();
+                graph.title = "OT Offday";
+                graph.labelText = "[[percents]]%";
+                graph.valueField = "ot_offday";
+                graph.type = "column";
+                graph.lineAlpha = 0;
+                graph.fillAlphas = 1;
+                graph.lineColor = "#FA6800";
+                graph.balloonText = "<span style='color:#555555;'>[[category]]</span><br><span style='font-size:14px'>[[title]]:<b>[[value]]</b></span>";
+                chart2.addGraph(graph);    
+
+                // third              
+                graph = new AmCharts.AmGraph();
+                graph.title = "OT Holiday";
+                graph.labelText = "[[percents]]%";
+                graph.valueField = "ot_holiday";
+                graph.type = "column";
+                graph.lineAlpha = 0;
+                graph.fillAlphas = 1;
+                graph.lineColor = "#339900";
+                graph.balloonText = "<span style='color:#555555;'>[[category]]</span><br><span style='font-size:14px'>[[title]]:<b>[[value]]</b></span>";
+                chart2.addGraph(graph);   
+
+                // LEGEND                  
+                var legend = new AmCharts.AmLegend();
+                legend.borderAlpha = 0.2;
+                legend.horizontalGap = 10;
+                chart2.addLegend(legend);
+
+                // WRITE
+                chart2.write("overtimeChart");
+            });
+
+            
+        </script>
+        <div id="overtimeChart" style="height: 400px;"></div>
+        <div style="margin-left:30px;">
+	        <input type="radio" checked="true" name="group" id="rb1" onclick="setDepth()">2D
+	        <input type="radio" name="group" id="rb2" onclick="setDepth()">3D
+		</div>
+	</div>
+	</div>	
+
+	<br>
+	<?php 
+		$cnt = 0; 
+		$grossArticle = 0;
+		?>
+	<div class="panel" data-role="panel" >
+    <div class="panel-header bg-lightBlue fg-white">
+        SALES QUANTITY
+    </div>
+    <div class="panel-content" style="display: none;">
+    	<?php 
+    	if (!$sf_params->get('company')) :
+    		 echo '<h3>Must Choose a Company</h3>';
+    	else: ?>
+		<table class="bordered table condensed hovered">
+			<th class="bg-clearBlue"><small>Seq</small></th>
+			<th class="bg-clearBlue"><small>Name</small></th>
+			<?php foreach($months as $month):?>
+				<th class="bg-clearBlue"><small><?php echo DateUtils::DUFormat('M-Y', HrLib::GetDateByPeriod( $month) ) ?></small></th>
+			<?php endforeach; ?>
+			<th class="bg-clearBlue">Total</th>
+			
+			<?php foreach($articleData as $article => $whatever): $cnt++ ; $totalArticle = 0;?>
+			<tr>
+				<td><small><?php echo $cnt; ?></small></td>
+				<td><small><?php echo strtoupper(substr($article,0, 15)); //$empno .' : '. $name ?></small></td>
+				<?php foreach($months as $month):?>
+					<td class="alignRight">
+						<small><?php 
+							$monthlyArticle = isset($monthlyData[$month][$article])? $monthlyData[$month][$article] : 0 ; 
+							echo number_format($monthlyArticle);
+							$totalArticle += $monthlyArticle;
+							?></small>
+					</td>
+				<?php endforeach; ?>
+				<td class="alignRight"><small><?php echo  number_format($totalArticle) ?></small></td>
+			</tr>
+			<?php endforeach;?>
+			
+			<?php $grossArticle = 0; ?>
+			<tr  class="bg-clearRed alignRight">
+				<td colspan="2">Total</td>
+				<?php foreach($months as $month):?>
+					<td><small>
+					<?php 
+						$grossArticle += $totalPerMonth[$month]['article'];
+						echo number_format($totalPerMonth[$month]['article']);
+					?></small></td>
+				<?php endforeach;?>
+				<td ><small><?php echo number_format($grossArticle ); ?></small></td>
+			</tr>
+		</table>
+		<?php endif; //must select company?>
+	</div>
+	</div>
+	<br>
+<?php 	
+$perMonthTotalArticle = array();
+foreach($months as $month):
+	$perMonthTotalArticle[] = array(
+	  'month' => DateUtils::DUFormat('M-Y', HrLib::GetDateByPeriod( $month) )
+	, 'total' => $totalPerMonth[$month]['article'] 
+	, 'average' => round($grossArticle/sizeof($months))
+	); 
+endforeach;
+$perMonthTotalArticleJson = json_encode($perMonthTotalArticle);
+?>
+		<div class="panel " >
+	    <div class="panel-header bg-lightBlue fg-white">
+	        SALES QUANTITY CHART
+	    </div>
+	    <div class="panel-content" >		
+		<script type="text/javascript">
+            var chart2;
+            
+            var chartDataSalesQuantity = <?php echo $perMonthTotalArticleJson; ?>;
+
+            AmCharts.ready(function () {
+                // SERIAL CHART
+                chart2 = new AmCharts.AmSerialChart();
+                chart2.dataProvider = chartDataSalesQuantity;
+                chart2.categoryField = "month";
+                chart2.plotAreaBorderAlpha = 0.2;
+
+                // AXES
+                // category
+                var categoryAxis = chart2.categoryAxis;
+                categoryAxis.gridAlpha = 0.1;
+                categoryAxis.axisAlpha = 0;
+                categoryAxis.gridPosition = "start";
+
+                // value
+                var valueAxis = new AmCharts.ValueAxis();
+                valueAxis.stackType = "regular";
+                valueAxis.gridAlpha = 0.1;
+                valueAxis.axisAlpha = 0;
+                chart2.addValueAxis(valueAxis);
+
+                // GRAPHS
+                // first graph    
+                var graph = new AmCharts.AmGraph();
+                graph.title = "article";
+                graph.labelText = "[[value]]";
+                graph.valueField = "total";
+                graph.type = "column";
+                graph.lineAlpha = 0;
+                graph.fillAlphas = 1;
+                graph.lineColor = "#CC0000";
+                graph.balloonText = "<span style='color:#555555;'>[[category]]</span><br><span style='font-size:14px'>[[title]]:<b>[[value]]</b></span>";
+                chart2.addGraph(graph);
+      
+             	// line graph
+                var graph2 = new AmCharts.AmGraph();
+                graph2.type = "line";
+                graph2.lineColor = "#27c5ff";
+                graph2.bulletColor = "#FFFFFF";
+                graph2.bulletBorderColor = "#27c5ff";
+                graph2.bulletBorderThickness = 2;
+                graph2.bulletBorderAlpha = 1;
+                graph2.title = "Average";
+                graph2.valueField = 'average';
+                graph2.lineThickness = 2;
+                graph2.bullet = "round";
+                graph2.fillAlphas = 0;
+                graph2.balloonText = "<span style='font-size:13px;'>[[title]] in [[category]] : <b>[[value]]</b></span>";
+                chart2.addGraph(graph2);
+                
+                // LEGEND                  
+                var legend = new AmCharts.AmLegend();
+                legend.borderAlpha = 0.2;
+                legend.horizontalGap = 10;
+                chart2.addLegend(legend);
+
+                // WRITE
+                chart2.write("salesQuantityChart");
+            });
+
+            
+        </script>
+        <div id="salesQuantityChart" style="height: 400px;"></div>
+	</div>
+	</div>	
+	
+<?php 	
+endif;
+?>		
+
+
+</div>

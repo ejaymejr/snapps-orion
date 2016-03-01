@@ -1,0 +1,16 @@
+<?php use_helper('Form', 'Javascript'); ?>
+<div class="contentBox">
+<?php echo HTMLLib::CreateBackBanner('', 'PAYSLIP', 'Manual Entry') ?>
+<nav class="breadcrumbs">
+	<ul>
+		<li class=""><a href="<?php //echo url_for('payroll/payslipEditableAdd?name=' ?> " >Add New Entry</a></li>
+	</ul>
+</nav>
+<?php
+    $filename = hrPager::NanoPayslip();
+	$cols = array('seq', 'action','month', 'period_code', 'from', 'to');
+    //$cols = array('seq');
+    echo PagerJson::AkoDataTableForTicking($cols, $filename); //create the table
+?>
+</div>
+

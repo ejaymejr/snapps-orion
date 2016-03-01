@@ -1,0 +1,433 @@
+---
+forecast: 
+  _attributes: 
+    package: lib.model.forecast
+  company: 
+    _attributes: 
+      idMethod: native
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    comp_code: 
+      type: VARCHAR
+      size: 12
+      required: true
+      default: null
+    comp_name: 
+      type: VARCHAR
+      size: 40
+      required: true
+      default: null
+    comp_address: 
+      type: VARCHAR
+      size: 250
+    comp_header: 
+      type: VARCHAR
+      size: 250
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP
+  finance_summary: 
+    _attributes: 
+      idMethod: native
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    trans_date: 
+      type: DATE
+      required: true
+       
+    company_id: 
+      type: BIGINT
+      required: true
+       
+    component: 
+      type: VARCHAR
+      size: 100
+      required: true
+       
+    value: 
+      type: FLOAT
+      size: 9
+      scale: 2
+      required: true
+       
+    income_expense: 
+      type: VARCHAR
+      size: 10
+      required: true
+       
+    classification: 
+      type: VARCHAR
+      size: 45
+      required: true
+       
+    gst: 
+      type: DECIMAL
+      size: 10
+      scale: 2
+    sales_source: 
+      type: VARCHAR
+      size: 20
+      required: true
+      default: DO
+    created_by: 
+      type: VARCHAR
+      size: 45
+      required: true
+       
+    date_created: 
+      type: TIMESTAMP
+      required: true
+       
+    modified_by: 
+      type: VARCHAR
+      size: 45
+      required: true
+       
+    date_modified: 
+      type: TIMESTAMP
+      required: true
+       
+    _indexes: 
+      trans_date: 
+        - trans_date
+      company_id: 
+        - company_id
+      income_expense: 
+        - income_expense
+      component: 
+        - component
+  power_usage: 
+    _attributes: 
+      idMethod: native
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    date: 
+      type: DATE
+    time: 
+      type: TIMESTAMP
+      required: true
+       
+    ampm: 
+      type: CHAR
+      size: 2
+      required: true
+      default: am
+    reading: 
+      type: FLOAT
+      size: 10
+      scale: 2
+      required: true
+       
+    consumption: 
+      type: FLOAT
+      size: 10
+      scale: 2
+      required: true
+      default: 0.00
+    unit: 
+      type: VARCHAR
+      size: 40
+    unit_price: 
+      type: FLOAT
+      size: 12
+      scale: 2
+      required: true
+       
+    conversion_factor: 
+      type: FLOAT
+      size: 9
+      scale: 2
+      required: true
+      default: 0.00
+    total_cost: 
+      type: FLOAT
+      size: 12
+      scale: 2
+      required: true
+       
+    created_by: 
+      type: VARCHAR
+      size: 45
+      required: true
+       
+    date_created: 
+      type: TIMESTAMP
+      required: true
+       
+    modified_by: 
+      type: VARCHAR
+      size: 45
+      required: true
+       
+    date_modified: 
+      type: TIMESTAMP
+      required: true
+       
+  power_usage_backup: 
+    id: 
+      type: BIGINT
+      required: true
+      default: 0
+    date: 
+      type: DATE
+    time: 
+      type: TIMESTAMP
+      required: true
+    ampm: 
+      type: CHAR
+      size: 2
+      required: true
+      default: am
+    reading: 
+      type: FLOAT
+      size: 10
+      scale: 2
+      required: true
+      default: 0.00
+    consumption: 
+      type: FLOAT
+      size: 10
+      scale: 2
+      required: true
+      default: 0.00
+    unit: 
+      type: VARCHAR
+      size: 40
+    unit_price: 
+      type: FLOAT
+      size: 12
+      scale: 2
+      required: true
+      default: 0.00
+    conversion_factor: 
+      type: FLOAT
+      size: 9
+      scale: 2
+      required: true
+      default: 0.00
+    total_cost: 
+      type: FLOAT
+      size: 12
+      scale: 2
+      required: true
+      default: 0.00
+    created_by: 
+      type: VARCHAR
+      size: 45
+      required: true
+       
+    date_created: 
+      type: TIMESTAMP
+      required: true
+    modified_by: 
+      type: VARCHAR
+      size: 45
+      required: true
+       
+    date_modified: 
+      type: TIMESTAMP
+      required: true
+  product_group_to_department: 
+    _attributes: 
+      idMethod: native
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    product_group: 
+      type: VARCHAR
+      size: 50
+    department: 
+      type: VARCHAR
+      size: 45
+    company_id: 
+      type: BIGINT
+      required: true
+      default: 0
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP
+  sales_quantity_summary: 
+    _attributes: 
+      idMethod: native
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    product_group: 
+      type: VARCHAR
+      size: 50
+    quantity: 
+      type: INTEGER
+    date_transaction: 
+      type: DATE
+    company_id: 
+      type: BIGINT
+      required: true
+       
+    created_by: 
+      type: VARCHAR
+      size: 45
+    date_created: 
+      type: TIMESTAMP
+    modified_by: 
+      type: VARCHAR
+      size: 45
+    date_modified: 
+      type: TIMESTAMP
+    _indexes: 
+      date_transaction: 
+        - date_transaction
+  temp_finance_summary: 
+    id: 
+      type: BIGINT
+      required: true
+      default: 0
+    trans_date: 
+      type: DATE
+      required: true
+       
+    company_id: 
+      type: BIGINT
+      required: true
+       
+    component: 
+      type: VARCHAR
+      size: 100
+      required: true
+       
+    value: 
+      type: FLOAT
+      size: 9
+      scale: 2
+      required: true
+       
+    income_expense: 
+      type: VARCHAR
+      size: 10
+      required: true
+       
+    classification: 
+      type: VARCHAR
+      size: 45
+      required: true
+       
+    gst: 
+      type: DECIMAL
+      size: 10
+      scale: 2
+    sales_source: 
+      type: VARCHAR
+      size: 20
+      required: true
+      default: DO
+    created_by: 
+      type: VARCHAR
+      size: 45
+      required: true
+       
+    date_created: 
+      type: TIMESTAMP
+      required: true
+       
+    modified_by: 
+      type: VARCHAR
+      size: 45
+      required: true
+       
+    date_modified: 
+      type: TIMESTAMP
+      required: true
+       
+  water_usage: 
+    _attributes: 
+      idMethod: native
+    id: 
+      type: BIGINT
+      required: true
+      autoIncrement: true
+      primaryKey: true
+    date: 
+      type: DATE
+    time: 
+      type: TIMESTAMP
+      required: true
+    ampm: 
+      type: CHAR
+      size: 2
+      required: true
+      default: am
+    reading: 
+      type: FLOAT
+      size: 10
+      scale: 2
+      required: true
+      default: 0.00
+    consumption: 
+      type: FLOAT
+      size: 10
+      scale: 2
+      required: true
+      default: 0.00
+    unit: 
+      type: VARCHAR
+      size: 40
+    unit_price: 
+      type: FLOAT
+      size: 12
+      scale: 2
+      required: true
+      default: 0.00
+    conversion_factor: 
+      type: FLOAT
+      size: 9
+      scale: 2
+      required: true
+      default: 0.00
+    total_cost: 
+      type: FLOAT
+      size: 12
+      scale: 2
+      required: true
+      default: 0.00
+    created_by: 
+      type: VARCHAR
+      size: 45
+      required: true
+       
+    date_created: 
+      type: TIMESTAMP
+      required: true
+    modified_by: 
+      type: VARCHAR
+      size: 45
+      required: true
+       
+    date_modified: 
+      type: TIMESTAMP
+      required: true

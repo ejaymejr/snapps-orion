@@ -1,0 +1,33 @@
+<?php use_helper('Validation', 'Javascript') ?>
+<?php //echo AjaxLib::AjaxScript('upload_photo', 'employee/ajaxPhotoUpload', 'employee_photo,record_id', null, 'DIVUploadPhoto' ); ?>
+<form name="FORMUploadPhoto" id="FORMUploadPhoto" 
+	action="<?php echo url_for('employee/photoUpload?id='.$sf_params->get('id') )?>" method="post"
+	enctype="multipart/form-data"
+	>
+<table class="table bordered bg-white" >
+	<tr height="130">
+		<td>
+		<?php 
+		$myphoto = HrEmployeePeer::GetPhoto($id);
+		echo link_to(image_tag('employee/' . $myphoto,'size="130x200"'),'#', 'id="uploadPhoto" ') ;
+		echo input_tag('record_id', $id, 'type=hidden');
+		echo input_tag('id', $sf_params->get('id'),'type=hidden');
+		?></center>
+		</td>
+	</tr>
+	<tr>
+		<td><?php 
+		echo HTMLLib::CreateFileSelect('employee_photo', 'span4');
+		//echo input_file_tag('employee_photo', array('size'=>50));
+		echo HTMLLib::CreateSubmitButton('upload_photo', 'upload'); 
+		//echo submit_tag('upload', array('onclick'=>remote_function($ajaxUploadHeader) . ';return false;', 'style'=>'cursor:pointer', 'class'=> "success", 'id' => 'upload_photo'));
+		
+		?>
+</form>
+		</td><!--
+	</tr>	
+		<td>
+			<?php echo HTMLLib::CreateSubmitButton('upload_photo', 'upload'); ?>
+		</td>
+	<tr>
+--></table>

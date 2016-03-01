@@ -1,0 +1,35 @@
+default:
+  is_secure: off
+
+timeKeeper:
+  is_secure: on
+  credentials: [[hr_admin, hr_timekeeper, hr_basic, hr_super]]
+  
+teamAssignment:
+  is_secure: on
+  credentials: [[hr_admin, hr_timekeeper]]
+
+displayTimeKeeper:
+  is_secure: on
+  credentials: [[hr_admin, hr_timekeeper]]
+
+adjustTime:
+  is_secure: on
+  credentials: [[hr_admin, hr_timekeeper]]
+
+individualPaySlip:
+  is_secure: on
+  credentials: [[hr_admin, hr_supervisor]]
+
+multipleScanIn:
+  is_secure: on
+  credentials: [[hr_admin, hr_supervisor]]  
+  
+uploadRawData:
+  is_secure: on
+  credentials: [[hr_admin]]  
+  
+passwordChange:
+  is_secure: on
+  credentials: [[hr_admin, hr_timekeeper, hr_supervisor, hr_basic]]    
+  

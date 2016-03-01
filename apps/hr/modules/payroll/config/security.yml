@@ -1,0 +1,7 @@
+default:
+  is_secure: on
+  credentials: [hr_admin]
+
+payslipManualEntry:
+  is_secure: on
+  credentials: [[hr_admin, hr_supervisor]]

@@ -1,0 +1,5 @@
+all:
+    apps_name:      MAINTENANCE ENTRY    
+    page_heading:   MAINTENANCE ENTRY
+    menu_name:      MaintenanceEntry    
+    

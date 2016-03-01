@@ -1,0 +1,7 @@
+default:
+  is_secure: on
+  credentials: [hr_admin]
+
+employeeSearch:
+  is_secure: on
+  credentials: [[hr_admin]]

@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------------------
+http://app.micronclean/sym/finance/api/exportTransactions
+
+POST http://app.micronclean/sym/finance/api/exportTransactions HTTP/1.1
+Host: 10.10.1.253
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 130
+Accept-Encoding: gzip
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9) Gecko/2008052906 Firefox/3.0
+Connection: Close
+
+k=Yx8a7pqmfN4D8o4IrdLfm3z2i11q4qS9&cats=BALLAST+WATER+TREATMENT+LAB%7C%7CLAB+EXPENSES+-+FERRATE%7C%7CTRAVELLING+EXPENSES+-+FERRATE
+
+HTTP/1.0 200 OK
+Date: Tue, 16 Feb 2016 03:31:41 GMT
+Server: Apache
+Set-Cookie: snappsSym=0r23np7e1hjhtrl768rvssvuu5; path=/
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+Pragma: no-cache
+Content-Type: text/html
+X-Cache: MISS from ugarte.micronclean
+Proxy-Connection: close
+
+<... See page contents in /opt/sites/int/app.micronclean/symfony/snapps-orion/log/phphttp/1.html ...>
+
+------ Transferred 125kb in 2.0 sec ------

@@ -1,0 +1,140 @@
+<?php
+
+/**
+ * Subclass for performing query and update operations on the 'hr_employee_mcbenefit' table.
+ *
+ * 
+ *
+ * @package lib.model.hr
+ */ 
+class HrEmployeeMcbenefitPeer extends BaseHrEmployeeMcbenefitPeer
+{
+	const MONTHLY_BENEFIT = 30;
+	const SEMI_ANNUAL = 120;
+	
+	public static function SetActive($empNo, $user)
+	{
+		$emp = self::CheckEmployee($empNo);
+		if (!$emp):
+			$emp = new HrEmployeeMcbenefit();
+			$emp->setDateCreated(DateUtils::DUNow());
+			$emp->setCreatedBy($user);
+			$emp->setDateModified(DateUtils::DUNow());
+			$emp->setModifiedBy($user);
+			$emp->setEmployeeNo($empNo);
+			$emp->setName(HrEmployeePeer::GetNamebyEmployeeNo($empNo) );
+		endif;
+		if ($emp->getIsActive() <> 'Y'):
+			$emp->setMonthly(self::MONTHLY_BENEFIT);
+			$emp->setMidYear(self::SEMI_ANNUAL);
+			$emp->setIsActive('Y');
+			$emp->save();
+			return $emp->getName() .' WITH Benefit. <br>';
+		endif;
+		return;
+	}
+	
+	public static function SetInActive($empNo, $user)
+	{
+		$emp = self::CheckEmployee($empNo);
+		if ($emp):
+			if ($emp->getIsActive() == 'Y'):
+				$emp->setDateModified(DateUtils::DUNow());
+				$emp->setModifiedBy($user);
+				$emp->setIsActive('N');
+				$emp->save();
+				return $emp->getName() .' as No Benefit. <br>';
+			endif;
+			return;
+		endif;
+		return '';
+	}
+	
+	public static function CheckEmployee($empNo)
+	{
+		$c = new Criteria();
+		$c->add(self::EMPLOYEE_NO, $empNo);
+		$rs = self::doSelectOne($c);
+		return $rs;
+	}
+	
+	
+	public static function IsActive($empNo)
+	{
+		$c = new Criteria();
+		$c->add(self::EMPLOYEE_NO, $empNo);
+		$rs = self::doSelectOne($c);
+		$isActive = false;
+		if ($rs):
+			//echo $rs->getIsActive();
+			if (strtoupper($rs->getIsActive()) == 'Y') $isActive = true;
+		endif;
+		return $isActive;
+		
+	}
+	
+	public static function GetMonthlyBenefit($empNo, $empDet = null, $pcode)
+	{
+		$cyear = substr($pcode, 0, 4);
+		$deduct = 0;
+		$benefit = 0;
+		$monthly = self::MONTHLY_BENEFIT;
+		$dob = '';
+		//if (self::IsActive($empNo)) :
+// 		var_dump($empDet);
+// 		exit();
+		if ($empDet['mcleave'] == 0):
+			if ( $empDet['mcleave'] == 0 ):
+				$benefit = self::MONTHLY_BENEFIT;
+			endif;
+			
+			if ($pcode == $cyear .'1201-'.$cyear.'1231-ALL-MONTHLY' || $pcode == $cyear.'0601-'.$cyear.'0630-ALL-MONTHLY'):
+				$commence = HrEmployeePeer::GetOptimizedDatabyEmployeeNo($empNo, array('commence_date') );
+				//------------- check if at least 6months working
+				if ( DateUtils::DateDiff('d', $commence->get('COMMENCE_DATE'), self::GetStartDate($pcode)) >= 180 ): 
+					//------------- check if there are is no MC application
+					$stdt = DateUtils::DUFormat('Y-m-01', DateUtils::AddDate(self::GetStartDate($pcode), -180) );
+					$endt = DateUtils::AddDate(self::GetStartDate($pcode), -1);
+// 					var_dump($endt);
+// 					exit();
+					if ( ! HrEmployeeLeavePeer::IsOnMCleave($empNo, $stdt, $endt) ):
+						$benefit += self::SEMI_ANNUAL;
+					endif;
+				endif;
+			endif;
+		else:
+			return 0;
+		endif;
+		return $benefit;
+	}
+	
+	public static function GetSemiAnnualBenefit($empNo)
+	{
+		if (self::IsActive($empNo)) :
+			return self::SEMI_ANNUAL;
+		else:
+			return 0;
+		endif;
+	}
+	
+	public static function GetDataByEmployeeNo($empNo)
+	{
+		$c = new Criteria();
+		$c->add(self::EMPLOYEE_NO, $empNo);
+		$rs = self::doSelectOne($c);
+		return $rs;		
+	}
+	
+	public static function GetStartDate($pcode)
+	{
+		$dt = substr($pcode, 0, 8);
+		//return DateUtils::DUFormat('Y-m-d', mktime(1, 1, 1, strval(substr($dt, 4, 2)), strval(substr($dt, 6, 2)), strval(substr($dt, 0, 4)) ) );
+		return date('Y-m-d', mktime(1, 1, 1, intval(substr($dt, 4, 2)), intval(substr($dt, 6, 2)), intval(substr($dt, 0, 4)) ) );
+	}
+	
+	public static function GetEndDate($pcode)
+	{
+		$dt = substr($pcode, 9, 8);
+		return date('Y-m-d', mktime(1, 1, 1, intval(substr($dt, 4, 2)), intval(substr($dt, 6, 2)), intval(substr($dt, 0, 4)) ) );
+	}
+}

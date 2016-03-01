@@ -1,0 +1,9 @@
+        <ul class="element-menu">
+            <li>
+                <a class="dropdown-toggle" href="#">POWER/WATER CONSUMPTION</a>
+                <ul class="dropdown-menu dark" data-role="dropdown">
+                    <li><?php echo link_to('Power Consumption', 'expenses/powerConsumptionSearch'  )?></li>
+                    <li><?php echo link_to('Water Consumption', 'expenses/waterConsumptionSearch'  )?></li>
+                </ul>
+            </li>
+   

@@ -1,0 +1,86 @@
+<?php
+
+?>
+<style type="text/css">
+#clockDiv {
+	border: solid 1px red;
+	float: left;
+}
+</style>
+
+<?php use_helper('Form', 'Javascript', 'PagerNavigation'); ?>
+
+
+<form name="FORMadd" id="IDFORMadd"
+	action="<?php echo url_for('dtr/scanInMobile'). '?id=' . $sf_params->get('id');?>"
+	method="post">
+<table width="100%" class="FORMtable" border="0" cellpadding="0"
+	cellspacing="0">
+	<tr>
+		<td width='15%' rowspan="3" class="FORMcell-left FORMlabel">
+		<table border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td align="center"><script type="text/javascript"
+					src="http://www.worldtimeserver.com/clocks/embed.js"></script><script
+					type="text/javascript" language="JavaScript">objSG=new Object;objSG.wtsclock="wtsclock001.swf";objSG.color="FF9900";objSG.wtsid="SG";objSG.width=100;objSG.height=100;objSG.wmode="transparent";showClock(objSG);</script></td>
+			</tr>
+			<tr>
+				<td align="center">
+				<h2>Singapore City</h2>
+				</td>
+			</tr>
+		</table>
+		</td>
+		<td class="FORMcell-right" nowrap></td>
+	</tr>
+	<tr>
+		<td class="FORMcell-left FORMlabel" width='20%'>IC #</td>
+		<td class="FORMcell-right" nowrap><?php
+		$nameString = '';
+		echo HTMLForm::Error('employee_no');
+		echo input_tag('employee_no','', 'id="empId"  size="30" onLoad="this.setfocus()"' );
+		echo '&nbsp;&nbsp;&nbsp;';
+		$qParams = "'empNo=' + \$F('empId')";
+		$ajaxOption = array(
+            'url'      => 'dtr/ajaxDtr',
+            'with'     => $qParams,
+            'update'   => 'scanInfo',
+            'script'   => true,
+            'loading'  => 'stop_remote_pager();',
+            'before'   => 'showLoader();',
+            'complete' => 'hideLoader();formatFormStyle();',
+            'type'     => 'synchronous',
+		);
+		echo submit_tag('save',  array('onclick'=>remote_function($ajaxOption) . ';clearField(this.form);return false; ', 'name'=>'scan' ) );
+		//echo submit_tag('xxx', array('onclick'=>'showAndClearField(this.form)' ));
+		?> <span class="negative">*</span> </td>
+	</tr>
+	<tr>
+		<td class="FORMcell-left FORMlabel">NAME</td>
+		<td class="FORMcell-right" nowrap>
+		<div id='empName' class='tk-style28'></div>
+		</td>
+	</tr>
+</table>
+</form>
+<div id="scanInfo"><?php
+
+if (isset($pager))
+{
+	$gridVars = array(
+        'searchTemplate' => 'dtrsearch_list_header_search',
+        'pagerTemplate' => 'dtrsearch_pager_list',
+        'baseURL' => $sf_request->getModuleAction() . '?id=' . $sf_params->get('id'),
+        'pager' => $pager,
+        'searchContainerID' => XIDX::next(),
+        'headers' => sfConfig::get('app_dtrsearch_grid_headers')
+	);
+
+	include_partial('global/datagrid/container', $gridVars );
+}
+?></div>
+
+<?php echo javascript_tag("\$('empId').focus();"); ?>
+<span style="color:white">024747352100513</span>
+
+

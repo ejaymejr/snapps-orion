@@ -1,0 +1,3 @@
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/mapper/VolGroup00-LogVol01
+                      117G   81G   30G  74% /

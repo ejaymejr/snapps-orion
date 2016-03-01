@@ -1,0 +1,73 @@
+<?php use_helper('Validation', 'Javascript') ?>
+<table class="grid-toolbar-2" border="0" cellspacing="0" width="100%">
+  <tr>
+    <td width="60" class="alignCenter">
+        <?php
+         echo image_tag('hr/paySlipPrintIcon.gif') ;
+        ?>
+    </td>
+    <td class="tk-style19" width="20%">
+    <?php
+    echo '&nbsp;&nbsp;Internal Billing';
+    ?>
+    </td>
+    <td class="alignLeft" width="100%">
+    <?php //echo HTMLForm::DrawButton('pushbutton2', 'button2', 'Print Bank Payslip', url_for('reports/oldPayslipBank')); ?>
+    </td>
+</table>
+
+<form name="FORMadd" id="IDFORMadd" action="<?php echo url_for('report/internalBilling') ?>" method="post">
+<table width="100%" class="FORMtable" border="0" cellpadding="4" cellspacing="0">
+<tr>
+    <td class="FORMcell-left FORMlabel">&nbsp;</td>
+    <td class="FORMcell-right" nowrap>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel">Period Code</td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+        echo HTMLForm::Error('period_code'); 
+        echo select_tag('period_code', 
+             options_for_select(PayEmployeeLedgerArchivePeer::GetPeriodCode(), 
+             $sf_params->get('period_code') ) );    
+    ?>
+    <span class="negative">*</span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel">SDL Rounding Error</td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+        echo HTMLForm::Error('rounding_error'); 
+        echo input_tag('rounding_error', $sf_params->get('rounding_error') , 'size="10"');    
+    ?>
+    <span class="negative"> MFG CPF + SVS CPF the difference <+/- $4> is Considered Rounding Error </span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel">Penalty Interest</td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+        echo HTMLForm::Error('penalty_interest'); 
+        echo input_tag('penalty_interest', $sf_params->get('penalty_interest') , 'size="10"');    
+    ?>
+    <span class="negative"></span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap></td>
+    <td class="FORMcell-right" nowrap>
+    <input type="submit" name="printBilling" value=" Internal Billing " class="submit-button" onclick="return confirm('LEVY Submission is done and i want to proceed... ');" >
+    <?php 
+//    echo '
+//    <input type="submit" name="dinner" value=" Dinner List " class="submit-button">
+//    <input type="submit" name="employment" value=" Employment Group " class="submit-button">
+//    '; ?>
+    
+    </td>
+</tr>
+
+</table>
+</form>
+

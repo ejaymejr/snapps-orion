@@ -1,0 +1,90 @@
+<div class="contentBox">
+<form name="FORMadd" id="IDFORMadd" action="<?php echo url_for('report/journalListing') ?>" method="post">
+<table class="table bordered condensed">
+<tr>
+    <td class="bg-clearBlue alignRight"></td>
+    <td class="FORMcell-right" nowrap><pre class="bg-clearRed">Notice: Do not use this for internal Use.  OT is split to Overtime and Others</pre>
+    </td>
+</tr>
+<tr>
+    <td class="bg-clearBlue alignRight">Period Code</td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+        echo HTMLLib::CreateSelect('period_code', $sf_params->get('period_code'), PayEmployeeLedgerArchivePeer::GetPeriodCode(), 'span3');
+    ?>
+    <span class="negative">*</span>
+    </td>
+</tr>
+<tr>
+    <td class="bg-clearBlue alignRight">Company</td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+    	$coList = array_merge(array('ALL'=>'ALL'), HrCompanyPeer::OptCompanyNameList());  
+        echo HTMLLib::CreateSelect('company', $sf_params->get('company'), $coList, 'span3');
+             
+    ?>
+    <span class="negative">*</span>
+    </td>
+</tr>
+<tr>
+    <td class="bg-clearBlue alignRight">Source</td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+        //$source = array('ALL'=>' - ALL -', 'BANK'=>' - BANK - ', 'CHEQUE'=>' - CHEQUE - ', 'CASH'=>' - CASH - ', 'CHEQUEANDBANK'=>' - CHEQUEANDBANK - ');
+        $source = array('CHEQUEANDBANK'=>' - CHEQUEANDBANK - ', 'BANK'=>' - BANK - ', 'CHEQUE'=>' - CHEQUE - ');     
+        echo HTMLLib::CreateSelect('source', $sf_params->get('source'), $source, 'span3');
+    ?>
+    </td>
+</tr>
+<tr>
+    <td class="bg-clearBlue alignRight">Type</td>
+    <td class="FORMcell-right" nowrap>
+    <?php   
+        $nricType = array(''=>' - Choose Type- ', 'SPR'=>' - SPR - ', 'FW'=>' - FORIEGN WORKER - ');
+        echo HTMLLib::CreateSelect('nric_type', $sf_params->get('nric_type'), $nricType, 'span3');
+             
+    ?>
+    <span class="negative">*</span>
+    </td>
+</tr>
+<tr>
+    <td class="bg-clearBlue alignRight">MOM Group</td>
+    <td class="FORMcell-right" nowrap>
+    <?php   
+        $momGroup = array(''=>' - Choose Group- ', 'T.C. Khoo Mfg'=>' - MANUFACTURING - ', 'T.C. Khoo Svs'=>' - SERVICE - ');
+        echo HTMLLib::CreateSelect('mom_group', $sf_params->get('mom_group'), $momGroup, 'span3');
+             
+    ?>
+    <span class="negative">*</span>
+    </td>
+</tr>
+<tr>
+    <td class="bg-clearBlue alignRight">Employment Group</td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+        echo HTMLLib::CreateSelect('egroup', $sf_params->get('egroup'), HrEmployeePeer::OptionEmploymentGroup(), 'span2');
+        $target = array('pdf'=>' - PDF - ', 'csv'=>' - CSV - ');
+        echo HTMLLib::CreateSelect('target', $sf_params->get('target'), $target, 'span2');
+             
+    ?>
+    <span class="negative">*</span>
+    </td>
+</tr>
+<tr>
+    <td class="bg-clearBlue alignRight" nowrap></td>
+    <td class="FORMcell-right" nowrap>
+    <input type="submit" name="journal" value=" Preview Journal Listing " class="success">
+    <input type="submit" name="income_only" value=" Preview Journal Listing Income Only" class="success">
+    <?php 
+//    echo '
+//    <input type="submit" name="dinner" value=" Dinner List " class="submit-button">
+//    <input type="submit" name="employment" value=" Employment Group " class="submit-button">
+//    '; ?>
+    
+    </td>
+</tr>
+
+</table>
+</form>
+</div>
+

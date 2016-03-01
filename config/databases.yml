@@ -1,0 +1,117 @@
+#all:
+#  propel:
+#    class:          sfPropelDatabase
+#    param:
+#      dsn:          mysql://root@localhost/dbname
+
+all:
+  sfguard:
+    class:    sfPropelDatabase
+    param:
+      phptype:  mysql
+      persistent: true
+      host:     10.10.10.2
+      database: orion_snapps_sfguard
+      username: snapps
+      password: athousandless
+
+  general:
+    class:    sfPropelDatabase
+    param:
+      phptype:  mysql
+      persistent: true
+      host:     10.10.1.249
+      database: snapps_general
+      username: snapps
+      password: athousandless      
+      
+  hr:
+    class:    sfPropelDatabase
+    param:
+      phptype:  mysql
+      persistent: true
+      host:     10.10.10.2
+      database: orion_snapps_hr
+      username: snapps
+      password: athousandless
+
+  forecast:
+    class:    sfPropelDatabase
+    param:
+      phptype:  mysql
+      persistent: true
+      host:     10.10.10.2
+      database: orion_snapps_forecast
+      username: snapps
+      password: athousandless
+	  
+  hgas:
+    class:    sfPropelDatabase
+    param:
+      phptype:  mysql
+      persistent: true
+      host:     10.10.1.249
+      database: snapps_philips
+      username: snapps
+      password: athousandless
+      
+  mercury_online_garment:
+    class:    sfPropelDatabase
+    param:
+      phptype:  mysql
+      persistent: true
+      host:     10.10.1.250
+      database: mercury_online_garment
+      username: orion249
+      password: orion249
+ 
+  rental:
+    class:    sfPropelDatabase
+    param:
+      phptype:  mysql
+      persistent: true
+      host:     10.10.1.249
+      database: snapps_garment_rental
+      username: snapps
+      password: athousandless
+      
+  hpreels:
+    class:    sfPropelDatabase
+    param:
+      phptype:  mysql
+      persistent: true
+      host:     10.10.1.249
+      database: snapps_hpreels
+      username: snapps
+      password: athousandless
+      
+  reject_photo:
+    class:    sfPropelDatabase
+    param:
+      phptype:  mysql
+      persistent: true
+      host:     10.10.1.249
+      database: snapps_reject_photo
+      username: snapps
+      password: athousandless
+	  
+  hgas3:
+    class:    sfPropelDatabase
+    param:
+      phptype:  mysql
+      persistent: true
+      host:     localhost
+      database: snapps_hgas3
+      username: seagate
+      password: seagate123until1000      
+	  
+  iso:
+    class:    sfPropelDatabase
+    param:
+      phptype:  mysql
+      persistent: true
+      host:     10.10.10.2
+      database: orion_snapps_iso
+      username: snapps
+      password: athousandless
+ 

@@ -1,0 +1,35 @@
+default:
+  is_secure: off
+  
+attendanceLog:
+  is_secure: on
+  credentials: [[hr_admin, hr_supervisor]]  
+
+requestTicket:
+  is_secure: on
+  credentials: [[hr_admin, hr_supervisor, hr_user]]
+
+hiringAdd:
+  is_secure: on
+  credentials: [[hr_admin, hr_supervisor]]
+  
+hrLogSearch:
+  is_secure: on
+  credentials: [[hr_admin, hr_supervisor]]
+  
+index:
+  is_secure: on
+  credentials: [[hr_admin, hr_supervisor]]
+
+workRight:
+  is_secure: on
+  credentials: [[hr_admin, hr_supervisor]]
+  
+mfgQoutaCalculator:
+  is_secure: on
+  credentials: [[hr_admin, hr_supervisor]]
+  
+svsQoutaCalculator:
+  is_secure: on
+  credentials: [[hr_admin, hr_supervisor]]
+  

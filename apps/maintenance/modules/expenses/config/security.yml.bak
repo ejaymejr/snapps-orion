@@ -1,0 +1,33 @@
+default:
+  is_secure: off
+index:
+  is_secure: on
+powerConsumptionSearch:
+  is_secure: on
+  credentials: [[admin, PowerDataEntry, finance_level_1, finance_level_2]] 
+powerConsumptionAdd:
+  is_secure: on
+  credentials: [[admin, PowerDataEntry, finance_level_1, finance_level_2]]
+
+powerConsumptionEdit:
+  is_secure: on
+  credentials: [[admin, PowerDataEntry, finance_level_1, finance_level_2]]
+  
+powerConsumptionDelete:
+  is_secure: on
+  credentials: [[admin, PowerDataEntry, finance_level_1, finance_level_2]]
+
+waterConsumptionSearch:
+  is_secure: on
+  credentials: [[admin, PowerDataEntry, finance_level_1, finance_level_2]] 
+waterConsumptionAdd:
+  is_secure: on
+  credentials: [[admin, PowerDataEntry, finance_level_1, finance_level_2]]
+
+waterConsumptionEdit:
+  is_secure: on
+  credentials: [[admin, PowerDataEntry, finance_level_1, finance_level_2]]
+  
+waterConsumptionDelete:
+  is_secure: on
+  credentials: [[admin, PowerDataEntry, finance_level_1, finance_level_2]]

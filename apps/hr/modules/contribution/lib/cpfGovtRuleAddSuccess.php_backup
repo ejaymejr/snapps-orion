@@ -1,0 +1,242 @@
+<?php use_helper('Validation', 'Javascript') ?>
+
+<form name="FORMadd" id="IDFORMadd" action="<?php echo url_for('contribution/cpfGovtRuleAdd'). '?id=' . $sf_params->get('id');?>" method="post">
+
+<table width="100%" class="FORMtable" border="0" cellpadding="4" cellspacing="0" >
+
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap></td>
+    <td width="70%" class="FORMcell-right" nowrap></td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Company Type</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo $sf_params->get('company_type')
+//    echo HTMLForm::Error('company_type');
+//    echo input_tag('company_type',  $sf_params->get('company_type'), 'size="25"');
+    ?>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Description</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::Error('description');
+    echo input_tag('description',  $sf_params->get('description'), 'size="55"');
+    ?>
+    <span class="negative">*</span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Effectivity From</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::Error('from_date');
+    echo HTMLForm::DrawDateInput('from_date', $sf_params->get('from_date', date('Y-m-d')), XIDX::next(), XIDX::next(), ' size="10" ');
+    ?>
+    <span class="negative">*</span>
+    <span class="positive">- effectivity date start
+    </span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Effectivity To</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::Error('to_date');
+    echo HTMLForm::DrawDateInput('to_date', $sf_params->get('to_date', date('Y-m-d')), XIDX::next(), XIDX::next(), ' size="10" ');
+    ?>
+    <span class="negative"></span>
+    <span class="positive">- effectivity date limit
+    </span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Age Min</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::Error('age_min');
+    echo input_tag('age_min',  $sf_params->get('age_min'), 'size="5"');
+    ?>
+    <span class="negative">*</span>
+    <span class="positive">- minimum age bracket
+    </span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Age Max</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::Error('age_max');
+    echo input_tag('age_max',  $sf_params->get('age_max'), 'size="5"');
+    ?>
+    <span class="negative">*</span>
+    <span class="positive">- maximum age bracket
+    </span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>NetPay Min</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::Error('pay_min');
+    echo input_tag('pay_min',  $sf_params->get('pay_min'), 'size="15"');
+    ?>
+    <span class="negative">*</span>
+    <span class="positive">- minimum net pay /take-home pay bracket
+    </span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>NetPay Max</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::Error('pay_max');
+    echo input_tag('pay_max',  $sf_params->get('pay_max'), 'size="15"');
+    ?>
+    <span class="negative">*</span>
+    <span class="positive">- maximum net pay /take-home pay bracket
+    </span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Income %</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::Error('income');
+    echo input_tag('income',  $sf_params->get('income'), 'size="5"');
+    ?>
+    <span class="negative">*</span>
+    <span class="positive">- total Percentage taken from Net Income
+    </span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Base Amount</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::Error('base_amount');
+    echo input_tag('base_amount',  $sf_params->get('base_amount'), 'size="15"');
+    ?>
+    <span class="negative">*</span>
+    <span class="positive">- base amount for the difference between base and Net Income
+    </span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Add-On %</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::Error('base_percent');
+    echo input_tag('base_percent',  $sf_params->get('base_percent'), 'size="5"');
+    ?>
+    <span class="negative">*</span>
+    <span class="positive">- total percentage to be taken from the base amount
+    </span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Add-On Amount</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::Error('addon_amt');
+    echo input_tag('addon_amt',  $sf_params->get('addon_amt'), 'size="15"');
+    ?>
+    <span class="negative">*</span>
+    <span class="positive">- Fixed Addon Amount ($120 for 35 & Below) 
+    </span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Pay Limit</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::Error('max_limit');
+    echo input_tag('max_limit',  $sf_params->get('max_limit'), 'size="15"');
+    ?>
+    <span class="negative">*</span>
+    <span class="positive">- specify the limit 'UP TO' if stated 
+    </span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Employer Share</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::Error('er_share');
+    echo input_tag('er_share',  $sf_params->get('er_share'), 'size="15"');
+    ?>
+    <span class="negative">*</span>
+    <span class="positive">- employer share
+    </span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Employee Share</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::Error('em_share');
+    echo input_tag('em_share',  $sf_params->get('em_share'), 'size="15"');
+    ?>
+    <span class="negative">*</span>
+    <span class="positive">- employee share
+    </span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Ordinary</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::Error('ordinary');
+    echo input_tag('ordinary',  $sf_params->get('ordinary'), 'size="15"');
+    ?>
+    <span class="negative">*</span>
+    <span class="positive">- ordinary account
+    </span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Special</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::Error('special');
+    echo input_tag('special',  $sf_params->get('special'), 'size="15"');
+    ?>
+    <span class="negative">*</span>
+    <span class="positive">- special account
+    </span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Medisave</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::Error('medisave');
+    echo input_tag('medisave',  $sf_params->get('medisave'), 'size="15"');
+    ?>
+    <span class="negative">*</span>
+    <span class="positive">- medisave
+    </span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Remark</td>
+    <td width="70%" class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::Error('remark');
+    echo textarea_tag('remark',  $sf_params->get('remark'), 'size=50x5');
+    ?>
+    <span class="negative">*</span>
+    <span class="positive">- please paste/key-in the original statement/rule here
+    </span>
+    </td>
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap></td>
+    <td class="FORMcell-right" nowrap>
+        <input type="submit" name="save" value=" Save Details " class="submit-button">
+    </td>
+</tr>
+</table>
+</form>

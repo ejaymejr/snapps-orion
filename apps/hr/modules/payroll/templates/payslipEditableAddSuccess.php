@@ -1,0 +1,80 @@
+<?php use_helper('Validation', 'Javascript') ?>
+<div class="contentBox">
+<?php echo HTMLLib::CreateBackBanner('', 'PAYSLIP', 'Manual Entry') ?>
+<form name="FORMadd" id="IDFORMadd" action="<?php echo url_for('payroll/payslipEditableAdd'). '?id=' . $sf_params->get('id');?>" method="post">
+<table class="table condensed bordered"> 
+<tr>
+    <td class="bg-clearBlue alignRight" nowrap>Employee Name</td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+	if ($sf_params->get('name')):
+		echo $sf_params->get('name');
+		echo input_tag('name',  $sf_params->get('name'), 'size="35" type=hidden');
+		echo input_tag('archiveID',  $sf_params->get('archiveID'), 'size="35" type=hidden');
+	else:
+    	echo HTMLLib::CreateSelectSearch('name',  $sf_params->get('name'), HrEmployeePeer::GetActiveEmployeeList(), 'span4');
+    endif;
+    ?>
+    <span class="negative"></span>
+    </td>
+</tr>
+<tr>
+    <td class="bg-clearBlue alignRight" nowrap>Account Code</td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+    //echo HTMLForm::Error('acct_code');
+    //echo input_tag('acct_code',  $sf_params->get('acct_code'), 'size="15"');
+    //echo select_tag('acct_code', options_for_select(PayAccountCodePeer::GetAcctCodeList(), $sf_params->get('acct_code')));    
+    echo HTMLLib::CreateSelect('acct_code', $sf_params->get('acct_code'), PayAccountCodePeer::GetAcctCodeList(), 'span3');
+    ?>
+    <span class="negative"></span>
+    </td>
+</tr>
+<tr>
+    <td class="bg-clearBlue alignRight" nowrap>Additional Description</td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+    	echo HTMLLib::CreateInputText('add_desc',  $sf_params->get('add_desc'), 'span6');
+    ?>
+    <span class="negative"> Extra Label</span>
+    </td>
+</tr>
+<tr>
+    <td class="bg-clearBlue alignRight" nowrap>Amount</td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+    	echo HTMLLib::CreateInputText('amount',  $sf_params->get('amount'), 'span2');
+    ?>
+    <span class="negative">* Do not put negative sign</span>
+    </td>
+</tr>
+<tr>
+    <td class="bg-clearBlue alignRight" nowrap>Income / Expense</td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+    	$incExp = array('1'=>'- INCOME -', '2'=>'- EXPENSE -');
+    	echo HTMLLib::CreateSelect('inc_exp', $sf_params->get('inc_exp'), $incExp, 'span2');
+    ?>
+    <span class="negative"></span>
+    </td>
+</tr>
+<tr>
+    <td class="bg-clearBlue alignRight" nowrap>Bank / Cash</td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+    $bc = array('BANK'=>'- BANK -', 'CASH'=>'- CASH -', 'CHEQUE'=>'- CHEQUE -', 'CASH-CHECK'=>'- CASH-CHECK -'); 
+    echo HTMLLib::CreateSelect('bank_cash', $sf_params->get('bank_cash'), $bc, 'span2');
+    ?>
+    <span class="negative"></span>
+    </td>
+</tr>
+
+<tr>
+    <td class="bg-clearBlue alignRight" nowrap></td>
+    <td class="FORMcell-right" nowrap>
+        <input type="submit" name="save" value=" SAVE DETAILS " class="success">
+    </td>
+</tr>
+</table>
+</form>
+</div>

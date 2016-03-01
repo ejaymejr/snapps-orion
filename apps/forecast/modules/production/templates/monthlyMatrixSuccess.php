@@ -1,0 +1,534 @@
+<?php use_helper('Form', 'Javascript');
+sfConfig::set('app_page_heading', 'Trend Income and Expense(s) Summary'); 
+?>
+<div class="contentBox">
+<form name="FORMadd" id="IDFORMadd" action="<?php echo url_for('production/monthlyMatrix'). '?id=' . $sf_params->get('id');?>" method="post">
+<table class="table bordered condensed">
+<tr>
+    <td width="20%" class="bg-clearBlue text-right" nowrap><small>Month From</small></td>
+    <td colspan="3"  class="" nowrap>
+    <?php
+    $year1 = HrFiscalYearPeer::GetFiscalYearListYK();
+    $year2 = $year1;
+//     $year1 = array('2008'=>'2008', '2009'=>'2009', '2010'=>'2010', '2011'=>'2011', '2012'=>'2012');
+//     $year2 = array('2008'=>'2008', '2009'=>'2009', '2010'=>'2010', '2011'=>'2011', '2012'=>'2012');
+    $months1 = sfconfig::get('monthlyCalendar');
+    $months2 = sfconfig::get('monthlyCalendar');
+    
+//     echo select_tag('months1', 
+//          options_for_select($months1, 
+//          $sf_params->get('months1') ) );
+    
+    
+//     echo select_tag('year1', 
+//          options_for_select($year1, 
+//          $sf_params->get('year1') ) );    
+         
+//     echo "<span class=''>&nbsp;&nbsp;&nbsp;to</span>";         
+//     $months2 = sfconfig::get('monthlyCalendar');
+//     echo select_tag('months2', 
+//          options_for_select($months2, 
+//          $sf_params->get('months2') ) );    
+
+//     echo select_tag('year2', 
+//          options_for_select($year2, 
+//          $sf_params->get('year2') ) );    
+         
+    
+    echo HTMLLib::CreateSelect('months1',  $sf_params->get('months1') , $months1, 'span2');
+    echo HTMLLib::CreateSelect('year1',  $sf_params->get('year1') , $year1, 'span1');
+    echo "<span class=''>&nbsp;&nbsp;&nbsp;to</span>";
+    echo HTMLLib::CreateSelect('months2',  $sf_params->get('months2') , $months2, 'span2');
+    echo HTMLLib::CreateSelect('year2',  $sf_params->get('year2') , $year2, 'span1');
+    ?>
+    </td>
+</tr>
+<tr>
+    <td class="bg-clearBlue text-right" nowrap><small>Company</small></td>
+    <td colspan="3" class="" nowrap>
+    <?php
+    $company = array ("1"=>"Micronclean", "2"=>"Acro Solution", 
+                      "5"=>"NanoClean", "4"=>"T.C. Khoo", "0"=>"- ALL -" );
+//     echo select_tag('company', 
+//          options_for_select($company, 
+//          $sf_params->get('company') ) );
+    
+    echo HTMLLib::CreateSelect('company',  $sf_params->get('company') , $company, 'span3');
+    ?>
+    </td>    
+</tr>
+
+<tr>
+    <td class="bg-clearBlue text-right" nowrap><small>Frequency</small></td>
+    <td colspan="3" class="" nowrap>
+    <?php
+    $freq = array ( "monthly"=>" - Monthly - ");
+//     echo select_tag('frequency', 
+//          options_for_select($freq, 
+//          $sf_params->get('frequency') ) );
+    echo HTMLLib::CreateSelect('frequency',  $sf_params->get('frequency') , $freq, 'span3');
+    ?>
+    </td>    
+</tr>
+<tr>
+    <td class="bg-clearBlue text-right" nowrap><small>Department(s)</small></td>
+    <td width="20" class="" nowrap><small>
+    <?php
+        echo checkbox_tag('cleanroompacking', 'CLEANROOM PACKING', $sf_params->get('cleanroompacking')) . ' - CLEANROOM PACKING';
+    ?>
+    </small></td>
+    <td width="20" class="" nowrap><small>
+    <?php
+        echo checkbox_tag('incoming', 'INCOMING(SORTING JUMPSUIT)', $sf_params->get('incoming')) . ' - INCOMING(SORTING JUMPSUIT)';
+    ?>
+    </small></td>    
+    <td width="100%" class="" nowrap><small>
+    <?php
+        echo checkbox_tag('mcsother', 'MCS OTHER', $sf_params->get('mcsother')) . ' - MCS OTHER';
+    ?>
+    </small></td>    
+</tr>
+<tr>
+    <td class="bg-clearBlue text-right" nowrap><small>    <span class="negative">&nbsp;&nbsp;(no selection means no filter)</span></small></td>
+    <td class="" nowrap><small>
+    <?php
+        echo checkbox_tag('shoewashing', 'SHOE WASHING', $sf_params->get('shoewashing')) . ' - SHOE WASHING';
+    ?>
+    </small></td>  
+    <td class="" nowrap><small>
+    <?php
+        echo checkbox_tag('shoepacking', 'SHOE PACKING', $sf_params->get('shoepacking')) . ' - SHOE PACKING';
+    ?>
+    </small></td>        
+</tr>
+<tr>
+    <td class="bg-clearBlue text-right" nowrap>&nbsp;</td>
+    <td class="" nowrap><small>
+    <?php
+        echo checkbox_tag('shoesvacuumpack', 'SHOES VACUUM PACK', $sf_params->get('shoesvacuumpack')) . ' - SHOES VACUUM PACK';
+    ?>
+    </small></td>
+    <td class="" nowrap><small>
+    <?php
+        echo checkbox_tag('mcssupport', 'MCS SUPPORT', $sf_params->get('mcssupport')) . ' - MCS SUPPORT';
+    ?>
+    </small></td>    
+</tr>
+<tr>
+    <td class="bg-clearBlue text-right" nowrap>&nbsp;</td>
+    <td class="" nowrap><small>
+    <?php
+        echo checkbox_tag('packingjumpsuit', 'PACKING (JUMPSUIT)', $sf_params->get('packingjumpsuit')) . ' - PACKING (JUMPSUIT)';
+    ?>
+    </small></td>
+    <td class="" nowrap><small>
+    <?php
+        echo checkbox_tag('outsideshoepacking', 'OUTSIDE SHOE PACKING', $sf_params->get('outsideshoepacking')) . ' - OUTSIDE SHOE PACKING';
+    ?>
+    </small></td>    
+</tr>
+
+<tr>
+    <td class="bg-clearBlue text-right" nowrap></td>
+    <td class="" nowrap>
+    <input type="submit" name="benchmark" value=" Show Monthly Matrix " class="success">
+    </td>
+</tr>
+</table>
+</form>
+
+<?php
+
+	if (isset($benchmark))
+	{
+	    
+	     
+		$colors = sfConfig::get('app_amcharts_colors');
+		$col = array('#CC0000', '#339900', '#478FB7', '#333366', '#F39308', '#A1C51D', '#F6BD0E', '#73B1B7', '#AF4035',
+					 '#FEE68C', '#C264C2', '#CCFF00', '#CC9900', '#663333', '#006699', '#336633', '#73B1B7', '#AF4035',
+				     '#CC0000', '#339900', '#478FB7', '#333366', '#F39308', '#A1C51D', '#F6BD0E', '#73B1B7', '#AF4035',
+				     '#FEE68C', '#C264C2', '#CCFF00', '#CC9900', '#663333', '#006699', '#336633', '#73B1B7', '#AF4035', 
+                     '#CC0000', '#339900', '#478FB7', '#333366', '#F39308', '#A1C51D', '#F6BD0E', '#73B1B7', '#AF4035',
+				     '#FEE68C', '#C264C2', '#CCFF00', '#CC9900', '#663333', '#006699', '#336633', '#73B1B7', '#AF4035',
+					 '#FEE68C', '#C264C2', '#CCFF00', '#CC9900');
+        $sdt1 = $sf_params->get('year1').DateUtils::DUFormat('-m-01', $sf_params->get('months1'));
+        $edt1 = DateUtils::GetLastDate($sdt1);
+        $sdt2 = $sf_params->get('year2').DateUtils::DUFormat('-m-d',  DateUtils::GetLastDate($sf_params->get('months2')));
+        $edt2 = DateUtils::GetLastDate($sdt2);
+
+        $empNo = $sf_params->get('employee_no');
+   		$month1    = DateUtils::DUFormat('M', $sdt1);
+		$month2    = DateUtils::DUFormat('M', $sdt2);
+        $co   = ($sf_params->get('company') <> '0') ? $sf_params->get('company') : null;
+        $egrp = ($sf_params->get('eGroup')  <> 'ALL')  ? $sf_params->get('eGroup') : null;
+		$gCost = 0;
+		$proof = '';
+		$ballonLabels = '';
+		$tickLabels = '';
+		$pos = 0;
+		$pData      = array();
+		$comp       = array();
+		$ginc       = 0;
+		$gexp       = 0;
+		$dinc       = 0;
+		$dexp       = 0;
+		$tinc       = array();
+		$tded       = array();
+		$gTinc      = array();
+		$gTded      = array();
+
+        $months = FinanceSummaryPeer::GetMonths($sdt1, $edt2);
+        $monthSeries = array();
+        $ginc = 0;
+        $gexp = 0;
+        $pos = 0;
+        $mTotal = array();
+        $summTable = '';
+        
+//        $dept = array(
+//            $sf_params->get('cleanroompacking'), 
+//            $sf_params->get('incoming'),
+//            $sf_params->get('shoewashing'), 
+//            $sf_params->get('shoepacking'),
+//            $sf_params->get('shoesvacuumpack'), 
+//            $sf_params->get('mcssupport'),
+//            $sf_params->get('packingjumpsuit'), 
+//            $sf_params->get('outsideshoepacking'),
+//            $sf_params->get('mcsother')            
+//            );
+
+         $dept = array();
+         $dept = $sf_params->get('cleanroompacking')? array_merge($dept, array($sf_params->get('cleanroompacking'))) : $dept;
+         $dept = $sf_params->get('incoming')? array_merge($dept, array($sf_params->get('incoming'))) : $dept;
+         $dept = $sf_params->get('shoewashing')? array_merge($dept, array($sf_params->get('shoewashing'))) : $dept;
+         $dept = $sf_params->get('shoepacking')? array_merge($dept, array($sf_params->get('shoepacking'))) : $dept;
+         $dept = $sf_params->get('shoesvacuumpack')? array_merge($dept, array($sf_params->get('shoesvacuumpack'))) : $dept;
+         $dept = $sf_params->get('mcssupport')? array_merge($dept, array($sf_params->get('mcssupport'))) : $dept;
+         $dept = $sf_params->get('packingjumpsuit')? array_merge($dept, array($sf_params->get('packingjumpsuit') )) : $dept;
+         $dept = $sf_params->get('outsideshoepacking')? array_merge($dept, array($sf_params->get('outsideshoepacking'))) : $dept;
+         $dept = $sf_params->get('mcsother')? array_merge($dept, array($sf_params->get('mcsother'))) : $dept;            
+
+        foreach($months as $mStart=>$mEnd)
+        {
+            $empData = TkDtrsummaryPeer::GetTotalManWorkingbyDateRange($mStart, $mEnd, 'Micronclean', $dept);
+            if (isset($empData['list'] ))
+            {
+    
+                $empList = $empData['list'];
+                $empCnt  = $empData['cnt'];
+                $monthSeries[$mStart]= array('ave_man_hours', 'no_staff', 'total_employee');
+                $mdura = 0;  //monthly duration
+                foreach ($empList as $empNo=>$ve)
+                {
+                   $eData = TkDtrsummaryPeer::GetAcDurabyEmployeeNoDateRange($empNo, $mStart, $mEnd ); //work duration per hour
+                   $mdura = $mdura + $eData['dura'];
+                }        	
+                $monthSeries[$mStart]['ave_man_hours'] = $mdura;
+                $monthSeries[$mStart]['total_employee'] = $empCnt;
+                $monthSeries[$mStart]['no_staff'] = sizeof($empList);
+                //echo $mStart.' = '.$mdura . ' - ' . sizeof($empList) .' - '. $empCnt. '<br>';
+            }
+            $cSpan = sizeof($months) + 4;
+    		
+    		$summTable = '
+    		<table class="table bordered condensed striped">
+    		  <tr>
+    		  	<td class="bg-clearGreen text-right" colspan="'. (sizeof($months) + 5) .'">
+    		  	MICRONCLEAN PRODUCTIVITY CHART ( numbers below are articles  ) | <em><small>Gloves not included<small></em>
+    		  	</td>
+    		  </tr>
+    		  <tr>
+    		  	<td class="bg-clearBlue text-center "><small>SEQ</small></td>
+    		    <td colspan="2" class="bg-clearBlue text-center "><small>PARTICULAR</small></td>
+    		    ';
+    			foreach($months as $km=>$vm)
+    			{
+    				$summTable = $summTable . '<td class="bg-clearBlue text-center " ><small>'.strtoupper(DateUtils::DUFormat('M-y', $vm)).'</small></td>';
+    			}
+    			$summTable = $summTable. '
+    		    <td class="bg-clearBlue text-center " ><small>TOTAL</small></td>
+    		  </tr>
+    		';
+        }
+        
+       //********************************************************* ARTICLES
+        $seq = 1;	
+		$artData = SalesQuantitySummaryPeer::GetOptimizedDatabyProductGroupDateRange($sdt1, $edt2, $dept);
+		$mqty = array();
+		foreach($artData as $component=>$name)
+		{
+		    $bgclr = ($seq % 2 == 0)? 'tk-gray' : 'tk-lgra';
+            $summTable = $summTable . '
+    		  <tr>
+    		  	<td height="30" class="text-right"  ><small>'.$seq++.'.</small></td>
+    		    <td colspan="2" class="text-right"><small>'.$name.'</small></td>
+    		    ';
+                $tqty = 0;
+                $pos = 0;
+    		    foreach($months as $ke=>$ve)
+                {
+                    $qty = SalesQuantitySummaryPeer::GetOptimizedDatabyProductGroupQuantityDateRange($component, $ke, $ve);
+                    $mtot[$ke][] = $qty;  
+                    $tqty = $qty  + $tqty;
+                    $summTable = $summTable . '
+                    <td class="text-right"><small>'.number_format($qty).'</small></td>
+                    ';
+                }
+            $summTable = $summTable . '
+    		    <td class="text-right"><small>'.$tqty.'</td>
+    		  </tr>
+            ';
+		}
+		//********************************************************* ARTICLES
+    			
+            //*********************************************************** SUMMARY    			
+    	    //------------------------- TOTAL ARTICLE
+            foreach($months as $ke=>$ve)
+            {
+                $tmon = 0;
+                foreach($mtot[$ke] as $mke=>$mve)
+                {
+                    $tmon = $tmon + $mve;	
+                }
+                $art[] = $tmon;
+            }   
+//             echo '<pre>' 	    ;
+//             print_r($mtot);
+//             echo '<pre>' 	    ;
+//             exit();
+    	    $pos = 0;
+    	    $garticle = 0;
+            $summTable = $summTable . '
+    		  <tr>
+    		    <td colspan="3" class="text-right bg-clearYellow"><small>TOTAL ARTICLE</small></td>
+    		    ';
+                foreach($months as $ke=>$ve)
+                {
+                    $article = isset($art[$pos])? $art[$pos] : 0;
+                    $garticle = $garticle + $article;
+                    $summTable = $summTable . '
+                    <td class="text-right bg-clearYellow"><small>'.number_format($article).'</small></td>
+                    ';
+                    $pos++;
+                }
+            $summTable = $summTable . '
+    		    <td class="text-right bg-clearYellow"><small>'.number_format($garticle).'</small></td>
+    		  </tr>
+            ';
+            
+    	    //------------------------- TOTAL MAN HOURS
+    	    $gavgmh = 0;
+            $summTable = $summTable . '
+    		  <tr>
+    		    <td colspan="3" class="text-right bg-clearYellow"><small>TOTAL MAN HOURS</small></td>
+    		    ';
+                foreach($months as $ke=>$ve)
+                {
+                    
+                    $mhrs = isset($monthSeries[$ke]['ave_man_hours'])? $monthSeries[$ke]['ave_man_hours'] : 0;
+                    $temploy  = isset($monthSeries[$ke]['total_employee'])? $monthSeries[$ke]['total_employee'] : 0;
+                    $avgmh = ($mhrs <> 0 ) ? $mhrs: 0;
+                    $gavgmh = $gavgmh + $avgmh;
+                    $summTable = $summTable . '
+                    	<td class="text-right bg-clearYellow"><small>'.number_format($avgmh).'</small></td>
+                    ';
+   
+                }
+            $summTable = $summTable . '
+    		   <td class="text-right bg-clearYellow"><small>'.number_format($gavgmh).'</small></td>
+    		  </tr>
+            ';
+    
+    	    //------------------------- Direct Staff
+    	    $gds = 0;
+            $summTable = $summTable . '
+    		  <tr>
+    		    <td colspan="3" class="text-right bg-clearYellow"><small>NUMBER DIRECT STAFF</small></td>
+    		    ';
+                foreach($months as $ke=>$ve)
+                {
+                    $ds = isset($monthSeries[$ke]['no_staff']) ? $monthSeries[$ke]['no_staff'] : 0;
+                    $gds = $gds + $ds;
+                    $summTable = $summTable . '
+                    	<td class="text-right bg-clearYellow"><small>'.number_format($ds).'</small></td>
+                    ';    
+                }
+            $summTable = $summTable . '
+    		   <td class="text-right bg-clearYellow"><small>'.number_format($gds).'</small></td>
+    		  </tr>
+            ';
+    
+    	    //------------------------- PRODUCTIVITY
+    	    $pos = 0;
+    	    $prod = 0;
+    	    $mprod = array();
+            $summTable = $summTable . '
+    		  <tr class="bg-clearRed">
+    		    <td colspan="3" class="text-right "><small>PRODUCTIVITY</small></td>
+    		    ';
+                foreach($months as $ke=>$ve)
+                {
+                    $mhrs = isset($monthSeries[$ke]['ave_man_hours'])? $monthSeries[$ke]['ave_man_hours'] : 0;
+                    $temploy  = isset($monthSeries[$ke]['total_employee'])? $monthSeries[$ke]['total_employee'] : 0;
+                    $avgmh = ($mhrs <> 0 ) ? $mhrs : 0;
+                    $ds = isset($monthSeries[$ke]['no_staff']) ? $monthSeries[$ke]['no_staff'] : 0;
+                    $article = isset($art[$pos]) ? $art[$pos] : 0;
+                    $prod = ($article && $avgmh) ? $article / $avgmh : 0;
+                    $prod  = ($prod) ? $prod : 0;
+                    $summTable = $summTable . '
+                    	<td class="text-right "><small>'.number_format($prod,1).'</small></td>
+                    ';
+                    $mprod[] = number_format($prod, 1);
+                    $pos ++;    
+                }
+            $summTable = $summTable . '
+    		   <td class="text-right span1"><small>'.number_format($garticle / $gavgmh  , 1).'</small></td>
+    		  </tr>
+            ';        
+        
+        $summTable = $summTable . '		
+		</table>
+		';		
+		echo $summTable;			
+    $pos = 0;
+	foreach($months as $ke=>$ve)
+	{	
+        $ballonLabels[] = $art[$pos];
+        $tickLabels[]   = DateUtils::DUFormat('F-Y', $ke);
+        $pos++;
+	}
+    $colors = sfConfig::get('app_amcharts_colors');
+    $para = array(
+    	'ballonLabels'=>$ballonLabels 
+    	,'tickLabels'=>$tickLabels
+    );
+    
+    $lab = array('label 1', 'label 2', 'label 3');
+    $plot = array();
+    $data = array(1.5, 2.5, 2);
+
+    
+//     include_partial('production/single_chart', array_merge($para, array('title'=>'Productivity','plotDatas'=>$mprod,'units'=>''), array('colors'=>'#CC0000')));
+//     include_partial('production/single_chart', array_merge($para, array('title'=>'Total of Monthly Article','plotDatas'=>$art, 'units'=>'pcs'), array('colors'=>$colors[0])));		
+    
+    //--------------------- prepare data here
+    $article  = 0;
+    foreach($powerData as $month => $val):
+    	$tarticle  = 0;
+    	foreach($mtot[$month] as $article):
+    		$tarticle += $article;
+    	endforeach;
+    	$totalArticle[$month] = $tarticle;
+    endforeach;
+    
+  	?>
+  	<br>
+  	<table class="table bordered condensed">
+  		<tr><td class="bg-clearGreen alignRight" colspan="<?php echo sizeof($powerData) + 1?>"> ARTICLE PER KILLOWATT HOUR (ELECTRICITY) </td></tr>
+  		<tr>
+  			<td class="text-right  bg-clearBlue span2"><small>MONTH</td>
+  			<?php foreach($powerData as $month => $val): ?>
+  			<td class="text-right" ><small><?php echo DateUtils::DUFormat('M-y', $month) ?></small></td>
+  			<?php endforeach;?>
+  		</tr>
+  		<tr>
+  			<td class="text-right  bg-clearBlue"><small>POWER COST / KWH</small></td>
+  			<?php foreach($powerData as $month => $val): ?>
+  			<td class="text-right"><small><?php echo number_format($val) ?></small></td>
+  			<?php endforeach;?>
+  		</tr>
+  		<tr>
+  			<td class="text-right  bg-clearBlue"><small>ARTICLE</small></td>
+  			<?php foreach($totalArticle as $month => $val): ?>
+  			<td class="text-right"><small><?php echo number_format($val) ?></small></td>
+  			<?php endforeach;?>
+  		</tr>
+  		<tr class="bg-clearRed" >
+  			<td class="text-right  "><small>ARTICLE/KWH</small></td>
+  			<?php $articleperkwhData = array(); ?>
+  			<?php foreach($totalArticle as $month => $val): ?>
+  			<td class="text-right"><small>
+  				<?php 
+  					$articleperkwh = 0;
+  					$articleperkwh = number_format($totalArticle[$month] / $powerData[$month]);
+  					//$articleperkwh = $articleperkwh? $articleperkwh : 220;
+  					$powertrend = 2; //based on 2015 data
+  					echo $articleperkwh; 
+  					
+  					//--------------graphData
+  					$articleperkwhData[] = array(
+  							  'month' => DateUtils::DUFormat('M-Y', $month )
+  							, 'total' => $articleperkwh
+  							, 'average' => $powertrend
+  					);
+  				?></small></td>
+  			<?php 
+  				endforeach;
+  				$articleperkwhJson = json_encode($articleperkwhData);
+//   				echo '<pre>';
+//   				print_r($articleperkwhData);
+//   				echo '</pre>';
+  			?>
+  		</tr>
+  	</table>
+  	<?php 
+    	echo include_partial('articleperkwh', array('articleperkwhJson' => $articleperkwhJson ) );
+	?>
+	<br>
+  	<table class="table bordered condensed">
+  		<tr><td class="bg-clearGreen alignRight" colspan="<?php echo sizeof($powerData) + 1?>"> ARTICLE PER CUBIC METER (WATER) </td></tr>
+  		<tr>
+  			<td class="text-right  bg-clearBlue span2"><small>MONTH</td>
+  			<?php foreach($waterData as $month => $val): ?>
+  			<td class="text-right" ><small><?php echo DateUtils::DUFormat('M-y', $month) ?></small></td>
+  			<?php endforeach;?>
+  		</tr>
+  		<tr>
+  			<td class="text-right  bg-clearBlue"><small>WATER COST/M<sup>3</sup> </small></td>
+  			<?php foreach($waterData as $month => $val): ?>
+  			<td class="text-right"><small><?php echo number_format($val) ?></small></td>
+  			<?php endforeach;?>
+  		</tr>
+  		<tr>
+  			<td class="text-right  bg-clearBlue"><small>ARTICLE</small></td>
+  			<?php foreach($totalArticle as $month => $val): ?>
+  			<td class="text-right"><small><?php echo number_format($val) ?></small></td>
+  			<?php endforeach;?>
+  		</tr>
+  		<tr class="bg-clearRed" >
+  			<td class="text-right  "><small>ARTICLE/M<sup>3</sup></small></td>
+  			<?php $articleperkwhData = array(); ?>
+  			<?php foreach($totalArticle as $month => $val): ?>
+  			<td class="text-right"><small>
+  				<?php 
+  					$articleperm3 = 0;
+  					$articleperm3 = number_format($totalArticle[$month] / $waterData[$month]);
+  					$watertrend = 122; //based on 2014 data
+  					echo $articleperm3; 
+  					
+  					//--------------graphData
+  					$articleperm3Data[] = array(
+  							  'month' => DateUtils::DUFormat('M-Y', $month )
+  							, 'total' => $articleperm3
+  							, 'average' => $watertrend
+  					);
+  				?></small></td>
+  			<?php 
+  				endforeach;
+  				$articleperm3Json = json_encode($articleperm3Data);
+//   				echo '<pre>';
+//   				print_r($articleperm3Data);
+//   				echo '</pre>';
+  			?>
+  		</tr>
+  	</table>
+	<?php 
+	echo include_partial('articleperm3', array('articleperm3Json' => $articleperm3Json ) );
+	
+	
+	}		
+	
+
+	
+?>
+</div>

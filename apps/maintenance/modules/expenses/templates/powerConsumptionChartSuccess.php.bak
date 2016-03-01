@@ -1,0 +1,129 @@
+
+
+<form name="FORMadd" id="IDFORMadd" action="<?php echo url_for('expenses/powerConsumptionChart'). '?id=' . $sf_params->get('id');?>" method="post">
+<table width="100%" class="FORMtable" border="0" cellpadding="4" cellspacing="0">
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Daily</td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+    echo HTMLForm::DrawDateInput('sdate', $sf_params->get('sdate'), XIDX::next(), XIDX::next(), 'size="15"' );
+    echo "<span class='FORMcell-right'>&nbsp;&nbsp;&nbsp;to</span>";
+    echo HTMLForm::DrawDateInput('edate', $sf_params->get('edate'), XIDX::next(), XIDX::next(), 'size="15" ' );
+    ?>
+    </td>    
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Week From</td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+    $week1 = DateUtils::GetWeeksOfYear(HrFiscalYearPeer::getFiscalYear());
+    echo select_tag('week1', 
+         options_for_select($week1, 
+         $sf_params->get('week1') ) );
+    echo "<span class='FORMcell-right'>&nbsp;&nbsp;&nbsp;to</span>";
+    $week2 = DateUtils::GetWeeksOfYear(HrFiscalYearPeer::getFiscalYear());
+    echo select_tag('week2', 
+         options_for_select($week2, 
+         $sf_params->get('week2')) );
+    ?>
+    </td>    
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Month From</td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+    $months1 = sfconfig::get('monthlyCalendar');
+    echo select_tag('months1', 
+         options_for_select($months1, 
+         $sf_params->get('months1') ) );    
+    echo "<span class='FORMcell-right'>&nbsp;&nbsp;&nbsp;to</span>";         
+    $months2 = sfconfig::get('monthlyCalendar');
+    echo select_tag('months2', 
+         options_for_select($months2, 
+         $sf_params->get('months2') ) );    
+    
+    ?>
+    </td>    
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap>Frequency</td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+    $freq = array ( "monthly"=>" - Monthly - ", "daily"=>" - Daily - ", "weekly"=>" - Weekly - ");
+    echo select_tag('frequency', 
+         options_for_select($freq, 
+         $sf_params->get('frequency') ) );
+             
+    echo select_tag('ampm', 
+         options_for_select(array('AM'=>'- AM -', 'PM'=>'- PM -'), 
+         $sf_params->get('ampm') ) );    
+         
+    ?>
+    </td>    
+</tr>
+<tr>
+    <td class="FORMcell-left FORMlabel" nowrap></td>
+    <td class="FORMcell-right" nowrap>
+    <input type="submit" name="power" value=" Show Power Consumption " class="submit-button">
+    </td>
+</tr>
+</table>
+</form>
+
+<?php echo javascript_tag("
+
+
+function onWeekChanged(ev, args) {
+    
+    obj = YAHOO.util.Event.getTarget(ev);
+    alert(obj.options[obj.selectedIndex].value);
+}
+
+YAHOO.util.Event.addListener('week2', 'change', onWeekChanged);
+YAHOO.util.Event.addListener('week1', 'change', onWeekChanged);
+
+") 
+
+?>
+
+
+<?php
+	if (isset($benchmark))
+	{ 
+		
+		$colors = sfConfig::get('app_amcharts_colors');
+		$col = array('666633', '999966', 'CC6666', '663333', 'A97D5D', '5C755E', '336699', 'CC6600', '000063', '5A79A5', '9ACCA6', '0191C8', '005B9A');
+        $sdate = $sf_params->get('sdate');
+        $edate = $sf_params->get('edate');
+        $co = ($sf_params->get('company') <> 'ALL') ? $sf_params->get('company') : '';
+        		
+		if ($sf_params->get('frequency') == 'daily' )
+        {
+        	$pData = PowerUsagePeer::getConsumptionbyDateRange($sdate, $edate, $sf_params->get('ampm'));
+        	$pDate= array();
+        	$pCons= array();
+        	$tCost= array();
+        	$gCons= 0;
+        	$gCost= 0;
+        	$ballonLabels = array();
+        	$tickLabels = array();
+        	while ($pData->next())
+        	{
+        		$pDate[] = $pData->get('DATE');
+        		$pCons[] = $pData->get('CONSUMPTION');
+        		$tCost[] = $pData->get('TOTAL_COST');
+        		$ballonLabels[] = $pData->get('DATE');
+        		$tickLabels[]   = DateUtils::DUFormat('M-d', $pData->get('DATE'));
+        		$gCons = $gCons + $pData->get('CONSUMPTION');
+        		$gCost = $gCost + $pData->get('TOTAL_COST');
+        	}
+        } //daily
+        
+		$para = array('sdate'=>$sdate, 'edate'=>$edate
+				,'ballonLabels'=>$ballonLabels, 'tickLabels'=>$tickLabels
+        		);
+		include_partial('expenses/single_chart', array_merge($para, array('title'=>'Payable Amount\nFrom '.DateUtils::DUFormat('M-d', $sdate).' to '.DateUtils::DUFormat('M-d', $edate).'\n\n\n\n\nTotal Amount: '.number_format($gCost, 0),'plotDatas'=>$tCost), array('colors'=>$col[2]), array('units'=>'Amount')));
+        include_partial('expenses/single_chart', array_merge($para, array('title'=>'Killo Watt Hour Consumption\nFrom '.DateUtils::DUFormat('M-d', $sdate).' to '.DateUtils::DUFormat('M-d', $edate).'\n\n\n\n\nTotal Consumption: '.number_format($gCons, 0),'plotDatas'=>$pCons), array('colors'=>$col[3]), array('units'=>'KWH')));
+		
+	};
+	

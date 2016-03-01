@@ -1,0 +1,22 @@
+all:
+    apps_name:      FORECAST    
+    page_heading:   Forecast   
+    menu_name:      FinanceMenu
+    menu:
+        items:        
+            - ['Home',              'home',       'index']         
+            - ['Hr Forecast',       'hrforecast', 'index']
+            - ['Production',        'production', 'index']
+            - ['Reports',           'reports',    'index']
+
+    submenu:
+
+    ampie:
+        public_path: /cityhall/js/ampie/
+        public_swf: /cityhall/js/ampie/ampie.swf
+    amline:
+        public_path: /cityhall/js/ampline/
+        public_swf: /cityhall/js/amline/amline.swf
+    amcolumn:
+        public_path: /cityhall/js/amcolumn/
+        public_swf: /cityhall/js/amcolumn/amcolumn.swf  

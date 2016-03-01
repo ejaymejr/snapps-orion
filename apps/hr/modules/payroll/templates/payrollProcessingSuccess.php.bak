@@ -1,0 +1,522 @@
+<?php use_helper('Validation', 'Javascript') ?>
+<div class="contentBox">
+<h1><?php echo link_to('<i class="icon-arrow-left-3 fg-darker smaller"></i>', '') ?>
+	PAYROLL <small>PROCESSING</small></h1>
+<?php
+	$proc = PayrollProcessPeer::GetRecentPeriod();
+	$bgcolor = array("#e6e6e6","#e6e6e6","#e6e6e6","#9DB28B","#ECE9D8","#9DB28B","#ECE9D8","#9DB28B","#ECE9D8","#9DB28B");
+	$bgpointer = "#FCCA7C";
+	$payslip = PayEmployeeLedgerPeer::CheckIfThereIsData();
+ ?>
+
+<form name="FORMadd" id="IDFORMadd" action="<?php echo url_for('payroll/payrollProcessing'). '?id=' . $sf_params->get('id');?>" method="post">
+
+<table class="table condensed bordered" > 
+<tr>
+	<td bgcolor="<?= ($pos == 1? $bgpointer : $bgcolor[0]) ?>" rowspan="3" width="100px" class="alignCenter FORMlabel" nowrap><?= ProcessingHeader($pos, 1) ?></td>
+    <td class="alignRight" bgcolor="<?= ($pos == 1? $bgpointer : $bgcolor[0]) ?>" width = "100px"class="" nowrap><label>Period Code</label></td>
+    <td bgcolor="<?= ($pos == 1? $bgpointer : $bgcolor[0]) ?>" width="400px" class="FORMcell-right" nowrap>
+    <?php
+	echo input_tag('period_code',  $sf_params->get('period_code'), 'size="15" type="hidden"');
+	echo '<h2>'.$sf_params->get('period_code') .'</h2>';
+    ?>
+    <span  class="negative"></span></td>
+    <td bgcolor= "<?= $bgpointer ?>" rowspan="40" class="FORMcell-right" >
+    <div class="alignCenter">
+    	<?= ProcessingRemark($pos) ?>
+    </div>
+    </td>
+</tr>
+<tr bgcolor="<?= ($pos == 1? $bgpointer : $bgcolor[0]) ?>">
+    <td rowspan="2" class="alignRight" valign="middle" nowrap><label>Date Between</label></td>
+    <td class="FORMcell-right" nowrap>
+    <?php
+    //echo HTMLForm::DrawDateInput('sdate', $sf_params->get('sdate'), XIDX::next(), XIDX::next(), 'size="15"');
+    echo HTMLLib::CreateDateInput('start_date', $sf_params->get('start_date'), 'span2' );
+    echo ' TO ';
+    echo HTMLLib::CreateDateInput('end_date', $sf_params->get('end_date'), 'span2' );
+    ?>
+    </td>
+</tr>
+<tr bgcolor="<?= ($pos == 1? $bgpointer : $bgcolor[0]) ?>">
+    <td class="FORMcell-right" nowrap>
+    <?php
+    $resetBtn = '<input type="submit" name="reset" value=" Reset Processing " class="warning">';
+    if ($proc) {
+    	if ($proc->getPayslip() == "OK") $resetBtn = '';
+    } else{
+    	if (! $sf_params->get('period_code')) {
+    		$resetBtn = '<input type="submit" name="newperiod" value=" Create Period Code" class="success">';
+    	}
+    }// $resetBtn = '<input type="submit" name="reset" value=" Reset Processing " class="submit-button">';
+	echo $resetBtn;    
+    ?>
+	</td>
+</tr>
+<tr>&nbsp;</tr>
+<tr>
+	<td bgcolor="<?= ($pos == 2? $bgpointer : $bgcolor[0]) ?>" rowspan="2" class="alignCenter FORMlabel" nowrap><?= ProcessingHeader($pos, 2) ?></td>
+    <td rowspan="2" class="alignRight" bgcolor="<?= ($pos == 2? $bgpointer : $bgcolor[0]) ?>" class="" nowrap>Review Employees</td>
+    <td bgcolor="<?= ($pos == 2? $bgpointer : $bgcolor[0]) ?>" class="FORMcell-right" nowrap>
+    <?php
+    if ($proc) {
+		if (! ($proc->getPayslip() &&  $payslip)) { 
+	    	echo link_to('&nbsp;&nbsp;REVIEW DETAILS&nbsp;&nbsp;', 'payroll/payrollCheckList', 'class="mylink" target="_blank"' );
+	    }
+   	}     
+	
+    ?>
+    <span  class="negative"></span></td>
+</tr>
+<tr bgcolor="<?= ($pos == 2? $bgpointer : $bgcolor[0]) ?>">
+    <td class="FORMcell-right" nowrap>
+    
+    <?php 
+     
+    if ($proc) {
+	   	if ($proc->getEmployeeData() == 'ON') { 
+    		echo '<input type="submit" name="employeedetail" value=" Finished Reviewing Employee" class="success">';
+    	}
+    	if ($proc->getEmployeeData() == 'OK') {
+    		echo '<span class="negative">Employee Details Review, Done...</span>';
+    	}
+    }
+    ?>
+	</td>
+</tr>
+<tr>&nbsp;</tr>
+<tr>
+	<td bgcolor="<?= ($pos == 3? $bgpointer : $bgcolor[0]) ?>" rowspan="2" class="alignCenter FORMlabel" nowrap><?= ProcessingHeader($pos, 3) ?></td>
+    <td bgcolor="<?= ($pos == 3? $bgpointer : $bgcolor[0]) ?>" class="" nowrap>Process Leaves</td>
+    <td bgcolor="<?= ($pos == 3? $bgpointer : $bgcolor[0]) ?>" class="FORMcell-right" nowrap>
+    <?php
+	//echo input_tag('period_code',  $sf_params->get('period_code'), 'size="15" type="hidden"');
+	//echo $sf_params->get('period_code');
+	//echo link_to('Goto LEAVE APPLICATION', 'leave/leaveApplySearch', 'target="_blank"');
+    if ($proc) {
+    	if (! ($proc->getPayslip() &&  $payslip)) { 
+	    	echo link_to('&nbsp;&nbsp;LEAVE APPLICATION&nbsp;&nbsp;', 'leave/leaveApplicationSearch', 'class="" target="_blank"' );
+	    }
+   	} 	
+    ?>
+    <span  class="negative"></span></td>
+</tr>
+<tr bgcolor="<?= ($pos == 3? $bgpointer : $bgcolor[0]) ?>">
+    <td class="" nowrap></td>
+    <td class="FORMcell-right" nowrap>
+    
+    <?php 
+  
+    if ($proc) {
+	   	if ($proc->getEmpLeave() == 'ON') { 
+    		echo '<input type="submit" name="leave" value=" Finished Processing Leaves" class="button success">';
+    	}
+    	if ($proc->getEmpLeave() == 'OK') {
+    		echo '<span class="negative">Leave Entry, Done..</span>';
+    	}
+    }
+    ?>
+	</td>
+</tr>
+<tr>&nbsp;</tr>
+<tr>
+	<td bgcolor="<?= ($pos == 4? $bgpointer : $bgcolor[0]) ?>" rowspan="2" class="alignCenter FORMlabel" nowrap><?= ProcessingHeader($pos, 4) ?></td>
+    <td bgcolor="<?= ($pos == 4? $bgpointer : $bgcolor[0]) ?>" class="" nowrap>Process Other Income</td>
+    <td bgcolor="<?= ($pos == 4? $bgpointer : $bgcolor[0]) ?>" class="FORMcell-right" nowrap>
+    <?php
+//	echo input_tag('period_code',  $sf_params->get('period_code'), 'size="15" type="hidden"');
+//	echo $sf_params->get('period_code');
+    ?>
+    <?php
+    if ($proc) {
+    	if (! ($proc->getPayslip() &&  $payslip)) { 
+	    	echo link_to('&nbsp;&nbsp;SCHEDULED INCOME&nbsp;&nbsp;', 'payroll/scheduledIncomeSearch', 'class="button info" target="_blank"' );
+	    }
+   	}    
+	 //echo link_to('&nbsp;&nbsp;SCHEDULED INCOME&nbsp;&nbsp;', 'payroll/scheduledIncomeSearch', 'class="mylink" target="_blank"' );
+    ?>
+   
+    <span  class="negative"></span></td>
+</tr>
+<tr bgcolor="<?= ($pos == 4? $bgpointer : $bgcolor[0]) ?>">
+    <td class="" nowrap></td>
+    <td class="FORMcell-right" nowrap>
+    
+    <?php 
+    if ($proc) {
+	   	if ($proc->getIncome() == 'ON') { 
+    		echo '<input type="submit" name="income" value=" Finished Other Income" class="success">';
+    	}
+    	if ($proc->getIncome() == 'OK') {
+    		echo '<span class="negative">Income Entry, Done..</span>';
+    	}
+    }
+    ?>
+	</td>
+</tr>
+<tr>&nbsp;</tr>
+<tr>
+	<td bgcolor="<?= ($pos == 5? $bgpointer : $bgcolor[0]) ?>" rowspan="2" class="alignCenter FORMlabel" nowrap><?= ProcessingHeader($pos, 5) ?></td>
+    <td bgcolor="<?= ($pos == 5? $bgpointer : $bgcolor[0]) ?>" class="" nowrap>Process Other Deduction</td>
+    <td bgcolor="<?= ($pos == 5? $bgpointer : $bgcolor[0]) ?>" class="FORMcell-right" nowrap>
+    <?php
+//	echo input_tag('period_code',  $sf_params->get('period_code'), 'size="15" type="hidden"');
+//	echo $sf_params->get('period_code');
+    ?>
+    <?php
+    if ($proc) {
+    	if (! ($proc->getPayslip() &&  $payslip)) { 
+	    	echo link_to('&nbsp;&nbsp;SCHEDULED DEDUCTION&nbsp;&nbsp;', 'payroll/scheduledDeductionSearch', 'class="button info" target="_blank"' );
+	    }
+   	}
+   	//echo link_to('&nbsp;&nbsp;SCHEDULED DEDUCTION&nbsp;&nbsp;', 'payroll/scheduledDeductionSearch', 'class="mylink" target="_blank"' );
+    ?>    
+    <span  class="negative"></span></td>
+</tr>
+<tr bgcolor="<?= ($pos == 5? $bgpointer : $bgcolor[0]) ?>">
+    <td class="" nowrap></td>
+    <td class="FORMcell-right" nowrap>
+    
+    <?php 
+    if ($proc) {
+	   	if ($proc->getDeduction() == 'ON') { 
+    		echo '<input type="submit" name="deduction" value=" Finished Other Deduction" class="success">';
+    	}
+    	if ($proc->getDeduction() == 'OK') {
+    		echo '<span class="negative">Deduction Entry, Done..</span>';
+    	}
+    }
+    ?>
+	</td>
+</tr>
+<tr>&nbsp;</tr>
+<tr>
+	<td bgcolor="<?= ($pos == 6? $bgpointer : $bgcolor[0]) ?>" rowspan="2" class="alignCenter FORMlabel" nowrap><?= ProcessingHeader($pos, 6) ?></td>
+    <td bgcolor="<?= ($pos == 6? $bgpointer : $bgcolor[0]) ?>" class="" nowrap>Process Attendance</td>
+    <td bgcolor="<?= ($pos == 6? $bgpointer : $bgcolor[0]) ?>" class="FORMcell-right" nowrap>
+   
+    <?php
+	$jsAttendanceString = "'sdate=' + \$F('start_date') "
+					."+ '&edate=' + \$F('end_date') "  
+					."+ '&employee_no=' + \$F('employee_no') "
+					."+ '&inc=true'"
+	;	
+	
+
+	$ajaxAttendance = array(
+			'url'		=>'payroll/ajaxAttendanceProcess',
+			'with'		=> $jsAttendanceString,
+            'update' 	=> 'DIVAttendance',
+            'script'    => true,
+            'loading'   => 'stop_remote_pager();',
+            'before'   	=> 'showLoader();',
+            'complete'  => 'hideLoader();formatFormStyle();',
+            'type'      => 'synchronous',			
+	);    
+	//$payslip = PayEmployeeLedgerPeer::CheckIfThereIsData();
+	//var_dump($payslip);
+    //echo '<input type="submit" name="attendance" value=" Compute Attendance" class="submit-button">';
+    //echo input_tag('employee_no', '', 'type="hidden"');
+    //echo submit_tag('Compute Attendance', array('onclick'=>remote_function($ajaxAttendance) . ';return false;'));
+    //echo link_to(' Compute Attendance ', '#', array('onclick'=>remote_function($ajaxAttendance) . ';return false;') );
+	//$payslip = FALSE;
+//    if ($proc) {
+//	   	if ($proc->getAttendance() == 'ON' && !$payslip) { 
+//    		echo '<input type="submit" name="attendance" value=" Attendance Processing" class="submit-button">';
+//    	}else{
+//    		echo '<span class="negative">Attendance Computed...</span>';
+//    	}
+//    }
+	
+    ?>
+    <span  class="negative"></span></td>
+</tr>
+<tr bgcolor="<?= ($pos == 6? $bgpointer : $bgcolor[0]) ?>">
+    <td class="" nowrap></td>
+    <td class="FORMcell-right" nowrap>
+    <?php 
+    if ($proc) {
+    	if ($proc->getAttendance() == 'ON'){
+    		echo '<input type="submit" name="attendance" value=" Attendance Processing" class="info">';
+    	}
+    	if ($proc->getAttendance() == 'OK') {
+    		echo '<span class="negative">Attendance Computed...</span>';
+    	}
+    }
+    ?>
+	</td>
+</tr>
+<tr>
+	<td bgcolor="<?= ($pos == 7? $bgpointer : $bgcolor[0]) ?>" rowspan="2" class="alignCenter FORMlabel" nowrap><?= ProcessingHeader($pos, 7) ?></td>
+    <td bgcolor="<?= ($pos == 7? $bgpointer : $bgcolor[0]) ?>" class="" nowrap>Preview Deficiency</td>
+    <td bgcolor="<?= ($pos == 7? $bgpointer : $bgcolor[0]) ?>" class="FORMcell-right" nowrap>
+    <span  class="negative"></span></td>
+</tr>
+<tr bgcolor="<?= ($pos == 7? $bgpointer : $bgcolor[0]) ?>">
+    <td class="" nowrap></td>
+    <td class="FORMcell-right" nowrap>
+    <?php 
+    if ($proc) {
+    	if ($proc->getDeficiency() == 'ON' || $proc->getDeficiency() == 'OK'){
+    		echo '<input type="submit" name="deficiency" value=" Preview Deficiency" class="info">';
+    		echo '&nbsp; &nbsp; <input type="submit" name="proceed2Processing" value=" Proceed to Processing" class="info" onclick="alert(\'Very important to review the detail of suspected Error(s) before proceeding.\')">';
+    	}
+    	
+    }
+    //var_dump(sfContext::getInstance()->getUser()->getUsername());
+    ?>
+	</td>
+</tr>
+
+<tr>&nbsp;</tr>
+<tr>
+	<td bgcolor="<?= ($pos == 8? $bgpointer : $bgcolor[0]) ?>" rowspan="2" class="alignCenter FORMlabel" nowrap><?= ProcessingHeader($pos, 8) ?></td>
+    <td bgcolor="<?= ($pos == 8? $bgpointer : $bgcolor[0]) ?>" class="" nowrap>Payslip Processing</td>
+    <td bgcolor="<?= ($pos == 8? $bgpointer : $bgcolor[0]) ?>" class="FORMcell-right" nowrap>
+    <?php
+    //echo '<input type="submit" name="payslip" value=" Payslip Processing" class="info">';
+    if ($proc) {
+	   	if ($proc->getPayslip() == 'ON' && !$payslip) { 
+    		echo '<input type="submit" name="payslip" value=" Payslip Processing" class="info">';
+    	}
+    	if ($proc->getPayslip() == 'OK' && $payslip) { 
+    		echo '<span class="negative">Payslip Has been processed.</span>';
+    	}
+    }
+	
+    ?>
+    <span  class="negative"></span></td>
+</tr>
+<tr bgcolor="<?= ($pos == 8? $bgpointer : $bgcolor[0]) ?>">
+    <td class="" nowrap></td>
+    <td class="FORMcell-right" nowrap>
+    
+    <?php 
+    if ($proc) {
+	   	if ($proc->getPayslip() == 'ON' && $payslip) { 
+			if (sfContext::getInstance()->getUser()->getUsername() == 'emmanuel'):
+    			echo '<input type="submit" name="lock" value=" Lock Payslip" class="info">';
+			endif;
+    	}
+    	if ($proc->getPayslip() == 'OK') {
+    		echo '<span class="negative">Payslip Has been locked.</span>';
+    	}
+    }
+    ?>
+	</td>
+</tr>
+
+<tr>&nbsp;</tr>
+<tr>
+	<td bgcolor="<?= ($pos == 9? $bgpointer : $bgcolor[0]) ?>" rowspan="2" class="alignCenter FORMlabel" nowrap><?= ProcessingHeader($pos, 9) ?></td>
+    <td bgcolor="<?= ($pos == 9? $bgpointer : $bgcolor[0]) ?>" class="" nowrap>Manual Entry</td>
+    <td bgcolor="<?= ($pos == 9? $bgpointer : $bgcolor[0]) ?>" class="FORMcell-right" nowrap>
+    <?php
+//	echo input_tag('period_code',  $sf_params->get('period_code'), 'size="15" type="hidden"');
+//	echo $sf_params->get('period_code');
+    if ($proc) {
+    	if ($proc->getManual() == 'ON') {
+    		//$pID = PayEmployeeLedgerArchivePeer::GetIDByPeriodCode($sf_params->get('period_code')); 
+	    	echo link_to('&nbsp;&nbsp;MANUAL PAYSLIP&nbsp;&nbsp;', 'payroll/payslipPreview?period_code='.  $sf_params->get('period_code'), 'class="mylink" target="_blank"' );
+	    	echo link_to('|&nbsp;&nbsp;TO DO LIST&nbsp;&nbsp;', 'payroll/toDoList?period_code='.  $sf_params->get('period_code'), 'class="mylink" target="_blank"' );
+	    }
+   	} 
+    ?>
+    <span  class="negative"></span></td>
+</tr>
+<tr bgcolor="<?= ($pos == 9? $bgpointer : $bgcolor[0]) ?>">
+    <td class="" nowrap></td>
+    <td class="FORMcell-right" nowrap>
+    
+    <?php 
+    if ($proc) {
+	   	if ($proc->getManual() == 'ON') { 
+    		echo '<input type="submit" name="manual" value=" Finished Manual Entry" class="info">';
+    	}
+    	if ($proc->getManual() == 'OK') {
+    		echo '<span class="negative">Manual Entry, Done..</span>';
+    	}
+    }
+    ?>
+	</td>
+</tr>
+<tr>&nbsp;</tr>
+<tr>
+	<td bgcolor="<?= ($pos == 10? $bgpointer : $bgcolor[0]) ?>" rowspan="2" class="alignCenter FORMlabel" nowrap><?= ProcessingHeader($pos, 10) ?></td>
+    <td bgcolor="<?= ($pos == 10? $bgpointer : $bgcolor[0]) ?>" class="" nowrap>Levy Contribution</td>
+    <td bgcolor="<?= ($pos == 10? $bgpointer : $bgcolor[0]) ?>" class="FORMcell-right" nowrap>
+    <?php
+    if ($proc) {
+		if ($proc->getLevyContribution() == 'ON') { 
+			$levyId = PayEmployeeLedgerArchivePeer::GetIDByPeriodCode($sf_params->get('period_code'));
+			//$levyId = PayEmployeeLedgerArchivePeer::GetIDByPeriodCode('20100101-20100131-ALL-MONTHLY');
+			if (!$levyId) {
+				echo $sf_params->get('period_code'). ' this Period has not been found';
+			}else{
+	    		echo link_to('&nbsp;&nbsp;LEVY CONTRIBUTION&nbsp;&nbsp;', 'reports/levyListing?id=' . $levyId, 'class="mylink" target="_blank"' );
+			}
+	    }
+   	}     
+     ?>
+    <span  class="negative"></span></td>
+</tr>
+<tr bgcolor="<?= ($pos == 10? $bgpointer : $bgcolor[0]) ?>">
+    <td class="" nowrap></td>
+    <td class="FORMcell-right" nowrap>
+    
+    <?php 
+     
+    if ($proc) {
+	   	if ($proc->getLevyContribution() == 'ON') { 
+    		echo '<input type="submit" name="levy" value=" Finished Levy Entry" class="info">';
+    	}
+    	if ($proc->getLevyContribution() == 'OK') {
+    		echo '<span class="negative">Levy Entry Updated...</span>';
+    	}
+    }
+
+        
+    ?>
+	</td>
+</tr>
+<tr>&nbsp;</tr>
+<tr>
+	<td bgcolor="<?= ($pos == 11? $bgpointer : $bgcolor[0]) ?>" rowspan="2" class="alignCenter FORMlabel" nowrap><?= ProcessingHeader($pos, 11) ?></td>
+    <td bgcolor="<?= ($pos == 11? $bgpointer : $bgcolor[0]) ?>" class="" nowrap>Close Payroll</td>
+    <td bgcolor="<?= ($pos == 11? $bgpointer : $bgcolor[0]) ?>" class="FORMcell-right" nowrap>
+    <?php
+//	echo input_tag('period_code',  $sf_params->get('period_code'), 'size="15" type="hidden"');
+//	echo $sf_params->get('period_code');
+    ?>
+    <span  class="negative"></span></td>
+</tr>
+<tr bgcolor="<?= ($pos == 11? $bgpointer : $bgcolor[0]) ?>">
+    <td class="" nowrap></td>
+    <td class="FORMcell-right" nowrap>
+    
+    <?php 
+    if ($proc) {
+	   	if ($proc->getClosed() == 'ON') { 
+    		echo '<input type="submit" name="reset" value=" Close This Payroll Period " class="success">';
+    	}
+    	if ($proc->getClosed() == 'OK') {
+    		echo '<span class="negative">Period is Finalized</span>';
+    	}
+    }
+    ?>
+	</td>
+</tr>
+
+</table>
+</form>
+
+<?php
+
+	function ProcessingHeader($pos, $curr)
+	{
+		if ($pos == $curr) 
+		{
+			return '<h2>STEP<br>'.$pos.'</h2>';
+		}else{
+			return '<h4>STEP<br>'.$curr.'</h4>';
+		}
+	}
+	
+	function ProcessingRemark($pos)
+	{
+		$msg =  '<h1>STEP '.$pos.'</h1><br>';
+		
+		
+		switch($pos){
+			case 1:
+				$msg .= '<h2>CREATE NEW PAYROLL WORKSPACE</h2><br>';
+				$msg .= '<p class="tk-style17">
+				<span style="color:#1399EB; font-size:14px">Create Period Code </span>= Create a New Period Workspace.<br>
+				This will help determine the status of the payroll specified in the date. <br><br>';
+				break;
+			case 2:
+				$msg .= '<h2>REVIEW EMPLOYEE PAYROLL RELATED DETAILS</h2><br>';
+				$msg .= '<p class="tk-style17">
+				<span style="color:#1399EB; font-size:14px">Review Details </span>= Review of the Details will include:<br>
+				<ul>
+					<li> Company - to determine Internal Billing. </li>
+					<li> WorkSchedule - to compute Attendance Overtime/Undertime. </li>
+					<li> Basic Pay Details - for Computation Purposes </li>
+					<li> Birth Date - to determine CPF Age. </li>
+					<li> Race - to determine CPF Association Contribution. </li>
+				</ul>
+				<br><br>';
+				break;
+			case 3:
+				$msg .= '<h2>PROCESS LEAVES</h2><br>';
+				$msg .= '<p class="tk-style17">
+				<span style="color:#1399EB; font-size:14px">Goto LEAVE APPLICATION </span>= Add/Change Leave Application<br>
+				<br><br>';
+				break;
+			case 4:
+				$msg .= '<h2>SCHEDULED INCOME</h2><br>';
+				$msg .= '<p class="tk-style17">
+				<span style="color:#1399EB; font-size:14px">Goto SCHEDULED INCOME </span>= Add/Change Other Income<br>
+				This includes Allowances, Backpay or Other Income<br><br>';
+				break;
+			case 5:
+				$msg .= '<h2>SCHEDULED DEDUCTION</h2><br>';
+				$msg .= '<p class="tk-style17">
+				<span style="color:#1399EB; font-size:14px">Goto SCHEDULED DEDUCTION </span>= Add/Change Other Income<br>
+				This includes Advance Pay, Backpay or Other Deductions<br><br>';
+				break;				
+			case 6:
+				$msg .= '<h2>PROCESSING OF ATTENDANCE</h2><br>';
+				$msg .= '<p class="tk-style17">
+				<span style="color:#1399EB; font-size:14px">Process Attendance </span>= Based on the date Specified in STEP 1.<br>
+				The Date mentioned is inclusive.<br><br>';
+				break;
+			case 7:
+				$msg .= '<h2>DEFICIENCY PREVIEW</h2><br>';
+				$msg .= '<p class="tk-style17">
+				<span style="color:#1399EB; font-size:14px">Process Attendance </span>= Based on the date Specified in STEP 1.<br>
+				The Date mentioned is inclusive.<br><br>';
+				break;
+				
+			case 8:
+				$msg .= '<h2>PAYSLIP PROCESSING</h2><br>';
+				$msg .= '<p class="tk-style17">
+				<span style="color:#1399EB; font-size:14px">Payslip Processing </span>= Attendance + Income - Deduction - Contribution.  This sums up the computation and<br>
+				Compute the Contribution based on the Total Income<br><br>
+				<span style="color:#1399EB; font-size:14px">Lock Payslip </span>= Lock the payslip so it will be ready for printing Reports<br>
+				';
+				break;				
+			case 9:
+				$msg .= '<h2>MANUAL PAYSLIP</h2><br>';
+				$msg .= '<p class="tk-style17">
+				<span style="color:#1399EB; font-size:14px">Manual Payslip </span>= Should be used only when the payroll is locked.<br>
+				The Date mentioned is inclusive.<br><br>';
+				break;
+			case 10:
+				$msg .= '<h2>LEVY ENTRY</h2><br>';
+				$msg .= '<p class="tk-style17">
+				<span style="color:#1399EB; font-size:14px">LEVY CONTRIBUTION </span>= Amount must be accurate as the submission.<br>
+				The Date mentioned is inclusive.<br><br>';
+				break;
+				
+		}
+		$msg .= '<span style="color:#1399EB; font-size:14px">Reset Processing </span>= Totally Undo the whole Payroll Processing.<br>
+				You will have to start again from STEP 1.<br><br>';	
+		$msg .=	'</p>';
+		
+		return $msg;
+	}	
+	
+?>
+</div>
+
+
+
+
+
+
+
+
+
+
+

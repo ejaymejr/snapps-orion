@@ -1,0 +1,27 @@
+<?php 
+	$empDetail = HrEmployeePeer::GetDatabyEmployeeNo($currentEmployee);
+	$name = '';
+	if ($empDetail):	
+		$name = $empDetail->getName();
+		$emp = $empDetail->getEmployeeNo();
+		$currentMonth = HrCurrentMonthPeer::GetCurrent();
+		$sdt = $currentMonth['start'];
+		$edt = $currentMonth['end'];
+		
+		$c = new Criteria();
+		$c->add(TkDtrsummaryPeer::TRANS_DATE,  'DATE(' . TkDtrsummaryPeer::TRANS_DATE . ') >= \'' . $sdt . '\' AND DATE(' . TkDtrsummaryPeer::TRANS_DATE . ') <= \'' . $edt . '\'', TkDtrsummaryPeer::CUSTOM);
+		$c->add(TkDtrsummaryPeer::EMPLOYEE_NO, $emp );
+		$c->addDescendingOrderByColumn(TkDtrsummaryPeer::TRANS_DATE);
+		$pager = TkDtrsummaryPeer::doSelect($c);
+		
+		$cols = array('seq', 'action', 'name', 'time_in', 'time_out', 'hrs', 'meal', 'dura', 'req', 'ot', 'ut', 'mult', 'holiday', 'leave_type', 'd-off', 'amount', 'rate_hr', 'pt_inc', 'm_all', 'levy', 'att');
+		$content = hrPager::DtrPager($pager);
+		//HTMLLib::vardump($filename);
+		if ($content):
+			echo PagerJson::ShowInFlatTable($cols, $content, $name . ' TIMESHEET', array('meal', 'comp_dura', 'ot','att'));
+		else:
+			echo '<h2><strong>'.$name.'</strong> has <strong class="fg-red">NO ATTENDANCE</strong><br>('.TkDtrmasterPeer::GetWorkSchedulebyEmployeeNo($emp).')</h2><br>';
+			
+		endif;	
+	endif;
+?>

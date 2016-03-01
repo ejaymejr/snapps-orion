@@ -1,0 +1,8 @@
+dailyForeCast:
+  is_secure: on
+  credentials: [[admin, finance_level_1, finance_level_2]]
+
+monthlyTrend:
+  is_secure: on
+  credentials: [[admin, finance_level_2]]
+

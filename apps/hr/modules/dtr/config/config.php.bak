@@ -1,0 +1,104 @@
+<?php
+//$leave = link_to('Here', 'leave/leaveEmployeeApply');
+//sfConfig::set('app_page_heading', 'DAILY TIME RECORD Click '. $leave .' to apply Leave');
+
+//sfConfig::set('app_submenu_items', 
+//    array(
+//        array('Scan In',       		'dtr/scanIn',      		'dtr', 'scanIn' ),
+//        array('Time-Keeper',   		'dtr/timeKeeper',       'dtr', 'timeKeeper'   ),
+//        array('Team Assignments',   'dtr/teamAssignment',   'dtr', 'teamAssignment'   ),
+//        array('Payslip',            'dtr/individualPaySlip',    'dtr', 'individualPaySlip'   ),
+//        array('Multiple DTR',       'dtr/multipleScanIn',      		'dtr', 'multipleScanIn' )
+//    ));
+
+    
+$proof = new DataGridColumnHeaders();
+$proof->addHeader(new DataGridColumnHeader('no',           'No',           false, false,                           50, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('Name',         'Name',         true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('TimeIn',       '',             true, false,       80, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('TimeOut',      '',             true, false,       80, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('duration',     'Duration',     true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('meal',         'Meal',         true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('',     'Comp-Dura',     true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('normal',       'Required',     true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('overtimes',    'OT',           true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('undertime',    'UnderTime',    true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('multiplier',   'Multiplier',   true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('holiday_code', 'Holiday',      true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('leave_type',   'leave',        true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('dayoff',       'DayOff',       true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('posted_amount','Amount',       true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('','Rate/Hr',       true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('','PT Income',       true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('','Allowance',       true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('','Levy',       true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$proof->addHeader(new DataGridColumnHeader('attendance',   'Attend',       true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$proof->setSortBy(sfContext::getInstance()->getRequest()->getParameter('sortBy', 'trans_date'));
+$proof->setSortOrder(sfContext::getInstance()->getRequest()->getParameter('sortOrder', 'ASC'));
+sfConfig::set('app_dtrprooflist_grid_headers', $proof);
+
+$ds = new DataGridColumnHeaders();
+$ds->addHeader(new DataGridColumnHeader('no',           'No',           false, false,                           20, 'alignCenter alignMiddle', 'nowrap'));
+$ds->addHeader(new DataGridColumnHeader('employee_no',  'Employee No',  true, TkDtrsummaryPeer::EMPLOYEE_NO,   50, 'alignCenter alignMiddle', 'nowrap'));
+$ds->addHeader(new DataGridColumnHeader('name',         'Name',         true, TkDtrsummaryPeer::NAME,           150, 'alignCenter alignMiddle', 'nowrap'));
+$ds->addHeader(new DataGridColumnHeader('trans_date',   'From',         true, TkDtrsummaryPeer::TRANS_DATE,       150, 'alignCenter alignMiddle', 'nowrap'));
+$ds->addHeader(new DataGridColumnHeader('trans_date',   'To',         true, TkDtrsummaryPeer::TRANS_DATE,       150, 'alignCenter alignMiddle', 'nowrap'));
+$ds->addHeader(new DataGridColumnHeader('overtimes',    'Overtime',     true, TkDtrsummaryPeer::OVERTIMES,   50, 'alignCenter alignMiddle', 'nowrap'));
+$ds->addHeader(new DataGridColumnHeader('undertime',    'Undertime',    true, TkDtrsummaryPeer::UNDERTIME,   50, 'alignCenter alignMiddle', 'nowrap'));
+$ds->setSortBy(sfContext::getInstance()->getRequest()->getParameter('sortBy', 'trans_date'));
+$ds->setSortOrder(sfContext::getInstance()->getRequest()->getParameter('sortOrder', 'ASC'));
+sfConfig::set('app_dtrsummary_grid_headers', $ds);
+
+$dtr = new DataGridColumnHeaders();
+$dtr->addHeader(new DataGridColumnHeader('no',          'No',           false, false,                            20, 'alignCenter alignMiddle', 'nowrap'));
+$dtr->addHeader(new DataGridColumnHeader('employeeNo',  'Employee #',   true,  TkAttendancePeer::EMPLOYEE_NO,   100, 'alignCenter alignMiddle', 'nowrap'));
+$dtr->addHeader(new DataGridColumnHeader('employeeName','Employee Name',true,  TkDtrmasterPeer::NAME,          200, 'alignCenter alignMiddle', 'nowrap'));
+$dtr->addHeader(new DataGridColumnHeader('timeIn',      'Time In',      true,  TkAttendancePeer::TIME_IN,        150, 'alignCenter alignMiddle', 'nowrap'));
+$dtr->addHeader(new DataGridColumnHeader('timeOut',     'Time Out',     true,  TkAttendancePeer::TIME_OUT,       150, 'alignCenter alignMiddle', 'nowrap'));
+$dtr->addHeader(new DataGridColumnHeader('duration',    'Duration (Per Hour)',     true,  TkAttendancePeer::DURATION,       100, 'alignCenter alignMiddle', 'nowrap'));
+$dtr->addHeader(new DataGridColumnHeader('company',     'Company',      false, false,                            80, 'alignCenter alignMiddle', 'nowrap'));
+$dtr->addHeader(new DataGridColumnHeader('department',  'Department',   false, false,                           80, 'alignCenter alignMiddle', 'nowrap'));
+$dtr->addHeader(new DataGridColumnHeader('employment',  'Employment',   false, false,                           80, 'alignCenter alignMiddle', 'nowrap'));
+$dtr->setSortBy(sfContext::getInstance()->getRequest()->getParameter('sortBy', 'date_modified'));
+$dtr->setSortOrder(sfContext::getInstance()->getRequest()->getParameter('sortOrder', 'DESC'));
+sfConfig::set('app_dtrsearch_grid_headers', $dtr);
+
+$mdtr = new DataGridColumnHeaders();
+$mdtr->addHeader(new DataGridColumnHeader('no',          'No',           false, false,                            20, 'alignCenter alignMiddle', 'nowrap'));
+$mdtr->addHeader(new DataGridColumnHeader('employeeNo',  'Employee #',   true,  TkAttendanceMultiplePeer::EMPLOYEE_NO,   100, 'alignCenter alignMiddle', 'nowrap'));
+$mdtr->addHeader(new DataGridColumnHeader('employeeName','Employee Name',true,  TkDtrmasterPeer::NAME,          200, 'alignCenter alignMiddle', 'nowrap'));
+$mdtr->addHeader(new DataGridColumnHeader('timeIn',      'Time In',      true,  TkAttendanceMultiplePeer::TIME_IN,        150, 'alignCenter alignMiddle', 'nowrap'));
+$mdtr->addHeader(new DataGridColumnHeader('timeOut',     'Time Out',     true,  TkAttendanceMultiplePeer::TIME_OUT,       150, 'alignCenter alignMiddle', 'nowrap'));
+$mdtr->addHeader(new DataGridColumnHeader('duration',    'Duration (Per Hour)',     true,  TkAttendanceMultiplePeer::DURATION,       100, 'alignCenter alignMiddle', 'nowrap'));
+$mdtr->addHeader(new DataGridColumnHeader('company',     'Company',      false, false,                            80, 'alignCenter alignMiddle', 'nowrap'));
+$mdtr->addHeader(new DataGridColumnHeader('team',  'Assign',   false, false,                           80, 'alignCenter alignMiddle', 'nowrap'));
+$mdtr->addHeader(new DataGridColumnHeader('employment',  'Employment',   false, false,                           80, 'alignCenter alignMiddle', 'nowrap'));
+$mdtr->setSortBy(sfContext::getInstance()->getRequest()->getParameter('sortBy', 'date_modified'));
+$mdtr->setSortOrder(sfContext::getInstance()->getRequest()->getParameter('sortOrder', 'DESC'));
+sfConfig::set('app_dtrmultiplesearch_grid_headers', $mdtr);
+
+
+$em = new DataGridColumnHeaders();
+$em->addHeader(new DataGridColumnHeader('no',               'No',               false, false,                          20, 'alignCenter alignMiddle', 'nowrap'));
+$em->addHeader(new DataGridColumnHeader('employee_no',      'Employee No',      true, HrEmployeePeer::EMPLOYEE_NO,   100, 'alignCenter alignMiddle', 'nowrap'));
+$em->addHeader(new DataGridColumnHeader('name',             'Employee Name',    true, HrEmployeePeer::NAME,          250, 'alignCenter alignMiddle', 'nowrap'));
+$em->addHeader(new DataGridColumnHeader('company',          'Company',          true, false,       100, 'alignCenter alignMiddle', 'nowrap'));
+$em->addHeader(new DataGridColumnHeader('team',             'Team',       		true, HrEmployeePeer::TEAM,    100, 'alignCenter alignMiddle', 'nowrap'));
+$em->addHeader(new DataGridColumnHeader('',                 'Employment',       true, false,    100, 'alignCenter alignMiddle', 'nowrap'));
+$em->addHeader(new DataGridColumnHeader('',       			'Employed As',       true, false,    100, 'alignCenter alignMiddle', 'nowrap'));
+$em->addHeader(new DataGridColumnHeader('',       			'Work-Schedule',       true, false,    250, 'alignCenter alignMiddle', 'nowrap'));
+$em->setSortBy(sfContext::getInstance()->getRequest()->getParameter('sortBy', 'name'));
+$em->setSortOrder(sfContext::getInstance()->getRequest()->getParameter('sortOrder', 'ASC'));
+sfConfig::set('app_employeesearch_grid_headers', $em);
+
+$adtr = new DataGridColumnHeaders();
+$adtr->addHeader(new DataGridColumnHeader('no',           'No',           false, false,                           50, 'alignCenter alignMiddle', 'nowrap'));
+$adtr->addHeader(new DataGridColumnHeader('Employee #',         'Employee Number',         true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$adtr->addHeader(new DataGridColumnHeader('Name',         'Name',         true, false,   50, 'alignCenter alignMiddle', 'nowrap'));
+$adtr->addHeader(new DataGridColumnHeader('',      'WorkSchedule',             true, false,       80, 'alignCenter alignMiddle', 'nowrap'));
+$adtr->addHeader(new DataGridColumnHeader('TimeIn',       'TimeIn',             true, false,       80, 'alignCenter alignMiddle', 'nowrap'));
+$adtr->addHeader(new DataGridColumnHeader('TimeOut',      'TimeOut',             true, false,       80, 'alignCenter alignMiddle', 'nowrap'));
+$adtr->addHeader(new DataGridColumnHeader('Duration',      'Duration',             true, false,       80, 'alignCenter alignMiddle', 'nowrap'));
+$adtr->setSortBy(sfContext::getInstance()->getRequest()->getParameter('sortBy', 'trans_date'));
+$adtr->setSortOrder(sfContext::getInstance()->getRequest()->getParameter('sortOrder', 'ASC'));
+sfConfig::set('app_adjtime_grid_headers', $adtr);
