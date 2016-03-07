@@ -160,7 +160,7 @@ if (isset($pager)):
     		</tr>
     	<?php endforeach;?>
 		<tr>
-			<td><<input type="submit" name="sendAll" value=" Send SMS To Selected Employee " class="submit-button"></td>
+			<td><input type="submit" name="sendAll" value=" Send SMS To Selected Employee " class="button success"></td>
 		</tr>
 	</table>
 <?php 
